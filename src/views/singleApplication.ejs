@@ -1,0 +1,22 @@
+<!-- view_application.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Application Details</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Application Details</h1>
+  <p>Name: <%= application.Name %></p>
+  <p>Username: <%= application.Username %></p>
+  <p>Email: <%= application.Email %></p>
+  <p>DOB: <%= application.DateofBirth %></p>
+  <p>HourlyRate: <%= application.HourlyRate %></p>
+  <p>Affiliation: <%= application.Affiliation %></p>
+  <p>Education Background: <%= application.EducationalBackground %></p>
+  <p>Date Submitted: <%= application.createdAt %></p>
+  <!-- Add other application details here -->
+  <a href="/admin/applications">Back to Application List</a>
+</body>
+</html>

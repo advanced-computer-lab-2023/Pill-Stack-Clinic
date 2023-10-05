@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/doc_register" method="POST" >
+        <!-- register as a doctor using username, name, email, password, 
+            date of birth, hourly rate, affiliation (hospital), educational background.  -->
+        <!-- name -->
+        <input type="text" id="name" name="name" placeholder="name"> <br>
+        <!-- username -->
+        <input type="text" name="username" placeholder="username"><br>
+        <!-- email -->
+        <input type="email" name="email" placeholder="email"><br>
+        <!-- password -->
+        <input type="password" name="password" placeholder="password"><br>
+        <!-- date of birth -->
+        <input type="date" name="dob" placeholder="date of birth"><br>
+        <!-- hourly rate -->
+        <input type="number" name="hourly_rate" placeholder="hourly rate"><br>
+        <!-- affiliation -->
+        <input type="text" name="affiliation" placeholder="affiliation"><br>
+        <!-- educational background -->
+        <input type="text" name="educational_background" placeholder="educational background"><br>
+        <input type="submit" value="Register">
+
+    </form>
+</body>
+</html>
