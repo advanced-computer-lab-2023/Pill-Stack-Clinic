@@ -1,0 +1,27 @@
+<!-- view_application.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Application Details</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Profile</h1>
+  <p>Name: <%= profile.Name %></p>
+  <p>Username: <%= profile.Username %></p>
+
+  <p>Email: <%= profile.Email %>
+    <a href="/doctor/profile/edit/<%= profile._id %>">Edit</a></p>
+  <p>DOB: <%= profile.DateofBirth %></p>
+  <p>HourlyRate: <%= profile.HourlyRate %>
+  <a href="/doctor/profile/edit/<%= profile._id %>">Edit</a></p>
+
+  <p>Affiliation: <%= profile.Affiliation %>
+    <a href="/doctor/profile/edit/<%= profile._id %>">Edit</a></p>
+
+  <p>Education Background: <%= profile.EducationalBackground %></p>
+  <!-- Add other application details here -->
+  <a href="/doctor">Back to home</a>
+</body>
+</html>

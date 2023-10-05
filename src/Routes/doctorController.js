@@ -1,5 +1,7 @@
 // const Doctor = require('../models/doctor');
-const docModel = require('../Models/Doc_Request.js');
+const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
+const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
+
 const { default: mongoose } = require('mongoose');
 
 
@@ -34,8 +36,59 @@ const createDocReq = async (req, res) => {
    // res.render('patient_home');
     res.status(200).send("Your Request has been sent to the admin.")
  }
+ const viewProfile= async(req,res)=>{
+   // const applicationId = req.params.id;
+     const profile = await doctorModel.findOne({});
+     res.render('doc_profile_view.ejs', { profile });
+ 
+  }
+ 
+  const editView=async(req,res)=>{
+    const { id } = req.params;
+ 
+   try {
+     // Find the profile by _id and email
+     const profile = await doctorModel.findOne({ _id: id});
+     if (!profile) {
+       return res.status(404).send('Profile not found');
+     }
+ 
+     // Render the edit email form with the profile data
+     res.render('doc_profile_edit.ejs', { profile });
+   } catch (error) {
+     console.error(error);
+     res.status(500).send('Internal Server Error');
+   }
+ 
+  }
+  const editProfile=async(req,res)=>{
+    
+       const { id } = req.params;
+     
+       try {
+         const profile = await doctorModel.findById(id);
+         if (!profile) {
+           return res.status(404).send('Profile not found');
+         }
+     
+         // Update the specific fields based on form submission
+         profile.Email = req.body.email;
+         profile.HourlyRate = req.body.hourlyRate;
+         profile.Affiliation = req.body.affiliation;
+     
+         await profile.save();
+     
+         // Redirect back to the profile view or show a success message
+         res.render('doc_profile_view.ejs', { profile });
+       } catch (error) {
+         console.error(error);
+         res.status(500).send('Internal Server Error');
+       }
+ 
+  }
+ 
 
 
 module.exports = {
-    createDocReq,
+    createDocReq,viewProfile,editView,editProfile
 };
