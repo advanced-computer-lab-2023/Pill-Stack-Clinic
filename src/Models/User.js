@@ -2,15 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  // Username: req.body.username, 
-  // Name: req.body.name, 
-  // Email:req.body.email, 
-  // Password:req.body.password,
-  // DateOfBirth: req.body.dob,
-  // Gender: req.body.gender,
-  // MobileNumber: req.body.mobile,
-  // EmergencyContact_Name: req.body.EmergencyContact_name,
-  // EmergencyContact_MobileNumber: req.body.EmergencyContact_mobileNumber
   Username: {
     type: String,
     required: true,
@@ -46,8 +37,36 @@ const userSchema = new Schema({
   EmergencyContact_MobileNumber: {
     type: Number,
     required: true,
-  }
-
+  },
+  familyMembers: [
+    new Schema({
+      MemberName: {
+        type: String,
+        required: true,
+        default: 'null' // You can set a default value here
+      },
+      NationalID: {
+        type: Number,
+        required: true,
+        default: 0 // Default value for NationalID
+      },
+      Age: {
+        type: Number,
+        required: true,
+        default: 0 // Default value for Age
+      },
+      Gender: {
+        type: String,
+        required: true,
+        default: 'Unknown' // Default value for Gender
+      },
+      Relation: {
+        type: String,
+        required: true,
+        default: 'Unknown' // Default value for Relation
+      },
+    })
+  ]
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

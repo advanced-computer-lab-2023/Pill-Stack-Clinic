@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,getUsers, updateUser, deleteUser} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers, updateUser, deleteUser} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 
 const MongoURI = process.env.MONGO_URI ;
@@ -62,6 +62,8 @@ app.route('/doc_register')
 console.log("hello world");
 app.use(express.json())
 app.post("/addUser",patientRegister);
+app.post("/addFamMem/:registeredUsername",addFamilyMem);
+
 app.get("/users", getUsers);
 app.put("/updateUser", updateUser);
 app.delete("/deleteUser", deleteUser);

@@ -4,32 +4,64 @@ const { default: mongoose } = require('mongoose');
 
 
 
-const patientRegister = async(req,res) => {
-   console.log(req.body.name);
-   // username, name, email, password, date of birth, gender, mobile number, emergency contact (full name, mobile number)
-   const user = new userModel({
-      Username: req.body.username, 
-      Name: req.body.name, 
-      Email:req.body.email, 
-      Password:req.body.password,
-      DateOfBirth: req.body.dob,
-      Gender: req.body.gender,
-      MobileNumber: req.body.mobile,
-      EmergencyContact_Name: req.body.emergency_name,
-      EmergencyContact_MobileNumber: req.body.emergency_phone
+const patientRegister = async (req, res) => {
+   try {
+      const user = new userModel({
+         Username: req.body.username, 
+         Name: req.body.name, 
+         Email: req.body.email, 
+         Password: req.body.password,
+         DateOfBirth: req.body.dob,
+         Gender: req.body.gender,
+         MobileNumber: req.body.mobile,
+         EmergencyContact_Name: req.body.emergency_name,
+         EmergencyContact_MobileNumber: req.body.emergency_phone
       });
+      registeredUsername = req.body.username;
+      await user.save();
+      console.log('User INSERTED!');
+      res.render('patient_home.ejs',{registeredUsername});
 
-      
-   user.save(function(err){
-      if (err) {
-         throw err;
-      }
-      console.log('INSERTED!');
-
-  });
-   res.render('patient_home');
-
+   } catch (error) {
+      console.error('Error inserting user:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
 }
+
+const addFamilyMem = async (req, res) => {
+   try {
+      const username = req.params.registeredUsername;
+
+      const user = await userModel.findOne({ Username: username });
+
+      if (!user) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+
+      console.log(req.body.username)
+      const member = ({
+         MemberName: req.body.username,
+         NationalID: req.body.nationalID,
+         Age: req.body.age,
+         Gender: req.body.gender,
+         Relation: req.body.relation
+      });
+      
+      if (!user.familyMembers) {
+         user.familyMembers = [];
+      }
+
+      user.familyMembers.push(member);
+      
+      await user.save();
+
+      res.status(201).json({ message: 'Family Member added successfully' });
+   } catch (error) {
+      console.error('Error adding family member:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+}
+
 
 
 const getUsers = async (req, res) => {
@@ -48,4 +80,4 @@ const deleteUser = async (req, res) => {
   }
 
 
-module.exports = {patientRegister, getUsers, updateUser, deleteUser};
+module.exports = {patientRegister,addFamilyMem, getUsers, updateUser, deleteUser};
