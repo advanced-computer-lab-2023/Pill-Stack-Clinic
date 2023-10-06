@@ -46,9 +46,21 @@ const doctorSchema = new Schema({
         type: String
     },
 
-    Availability:{
-        type:[],
-    }
+    Availability:
+      [
+        new Schema({
+          Date: Date,
+        })
+      ]
+    ,
+    BookedAppointments: [
+      new Schema({
+        PatientUsername: String,
+        PatientName:String,
+        Date:Date,
+        Status:{enum :['upcoming', 'completed', 'cancelled','rescheduled']},
+      })
+    ]
 
 }, { timestamps: true });
 
