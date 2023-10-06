@@ -44,6 +44,12 @@ mongoose.connect(MongoURI)
 
 /////////////////////////////////////
 
+// root route
+app.get("/", (req, res) => {
+  res.status(200).render('home')
+  });
+
+
 // /doctor routes
 app.use("/doctor", doctor);
 //Admin routes
@@ -57,6 +63,8 @@ app.get("/admin_home", (req, res) => {
 app.get("/register", (req, res) => {
   res.render('register')
   });
+
+
 
 app.route('/doc_register')
   .get((req, res) => { res.render('doc_register')})
