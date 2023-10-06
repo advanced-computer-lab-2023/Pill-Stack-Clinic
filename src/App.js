@@ -6,6 +6,7 @@ mongoose.set('strictQuery', false);
 require("dotenv").config();
 const {patientRegister ,addFamilyMem,getUsers, updateUser, deleteUser} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
+const {addAdmin} = require("./Routes/adminController");
 
 const MongoURI = process.env.MONGO_URI ;
 
@@ -47,6 +48,10 @@ mongoose.connect(MongoURI)
 app.use("/doctor", doctor);
 //Admin routes
 app.use("/admin",admin)
+app.get("/admin_home", (req, res) => {
+  res.render('admin_home')
+  });
+
 
 
 app.get("/register", (req, res) => {
