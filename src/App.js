@@ -26,6 +26,7 @@ const port = process.env.PORT || "8000";
 const user = require('./Models/User');
 const doctor = require("./Routers/doctorRoute");
 const admin = require("./Routers/adminRoute");
+const patient = require("./Routers/patientRoute");
 
 // #Importing the userController
 // configurations
@@ -54,6 +55,9 @@ app.get("/", (req, res) => {
 app.use("/doctor", doctor);
 //Admin routes
 app.use("/admin",admin)
+// patient routes
+app.use("/patient", patient);
+
 app.get("/admin_home", (req, res) => {
   res.render('admin_home')
   });
