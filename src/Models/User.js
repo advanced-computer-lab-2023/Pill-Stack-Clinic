@@ -71,8 +71,10 @@ const userSchema = new Schema({
       DoctorUsername: String,
       DoctorName:String,
       Date:Date,
-      Status:{enum :['upcoming', 'completed', 'cancelled','rescheduled']},
-    })
+      Status: {
+        type: String,
+        enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+      }    })
   ]
 }, { timestamps: true });
 
