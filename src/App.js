@@ -59,7 +59,7 @@ app.route('/doc_register')
 
 
 // #Routing to userController here
-
+console.log("hello world");
 app.use(express.json())
 app.post("/addUser",patientRegister);
 app.get("/users", getUsers);
