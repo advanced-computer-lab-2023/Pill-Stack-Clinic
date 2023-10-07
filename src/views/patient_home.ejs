@@ -3,245 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../App.js"></script>
+    <script src="../Routes/userController.js"></script>
     <title>Document</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            background-color: #3498db;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        #searchResults {
-            margin-top: 20px;
-        }
-
-        #searchResults h3 {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-
-        #searchResults p {
-            margin: 5px 0;
-        }
-
-        p.no-results {
-            text-align: center;
-            font-style: italic;
-            color: #555;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-       }
-
-/* Style for table header */
-        th {
-            background-color: #3498db;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px;
-            text-align: left;
-        }
-
-        /* Style for table rows */
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        /* Style for table data cells */
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* Hover effect for table rows */
-        tr:hover {
-            background-color: #e0e0e0;
-        }
-    </style>
 </head>
 <body>
-    <h1>Hello ya 3ayaan</h1>
-    <div class="container">
-        <h2>Add Family Member</h2>
-        <button id="addFamilyMemberBtn">Add Family Member</button>
-        <form id="familyMemberForm" style="display: none;" action="/addFamMem/<%=registeredUsername%>" method="POST">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="username" required><br><br>
+    <h1>Add Family Member</h1>
+    <button id="addFamilyMemberBtn">Add Family Member</button>
+    <form id="familyMemberForm" style="display: none;" action="/addFamMem/<%=registeredUsername%>" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="username" required><br><br>
         
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required><br><br>
-            
-            <label for="gender">Gender:</label>
-            <input type="text" id="gender" name="gender" required><br><br>
-            
-            <label for="relation">Relation:</label>
-            <input type="text" id="relation" name="relation" required><br><br>
-            
-            <label for="nationalID">National ID:</label>
-            <input type="text" id="nationalID" name="nationalID" required><br><br>
-            
-            <button type="submit" id="submitButton">Submit</button>
-        </form>
-
-        <form >
-            <label for="doctorName">Doctor Name:</label>
-            <input type="text" id="doctorName" >
-            <label for="doctorSpeciality">Doctor Speciality:</label>
-            <input type="text" id="doctorSpeciality" >
-            <button type="button" id="searchDoctorsBtn">Search Doctors</button>
-        </form>
-
-        <div id="searchResults">
-        </div>
-    </div>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+        
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" name="gender" required><br><br>
+        
+        <label for="relation">Relation:</label>
+        <input type="text" id="relation" name="relation" required><br><br>
+        
+        <label for="nationalID">National ID:</label>
+        <input type="text" id="nationalID" name="nationalID" required><br><br>
+        
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
 
     <script>
         const addFamilyMemberBtn = document.getElementById('addFamilyMemberBtn');
         const familyMemberForm = document.getElementById('familyMemberForm');
-        const doctorNameInput = document.getElementById('doctorName');
-        const doctorSpecialityInput = document.getElementById('doctorSpeciality');
-        const searchDoctorsBtn = document.getElementById('searchDoctorsBtn');       
-    
+        const nameInput = document.getElementById('name');
+        const submitButton = document.getElementById('submitButton');
+
+        // Check if a username is stored in Local Storage when the page loads
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            nameInput.value = storedUsername;
+        }
+
         addFamilyMemberBtn.addEventListener('click', () => {
-            if (familyMemberForm.style.display === 'none' || familyMemberForm.style.display === '') {
+            // Toggle the visibility of the form
+            if (familyMemberForm.style.display === 'none') {
                 familyMemberForm.style.display = 'block';
             } else {
                 familyMemberForm.style.display = 'none';
             }
         });
-    
-        searchDoctorsBtn.addEventListener('click', async () => {
-            console.log('Button clicked');
-            const searchQuery = {
-                name: doctorNameInput.value.trim(),
-                speciality: doctorSpecialityInput.value.trim()
-            };
-    
-            try {
-                const response = await fetch('/searchDoctors', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(searchQuery),
-                });
-    
-                if (response.ok) {
-                    const doctors = await response.json();
-                    displayDoctors(doctors); // Call a function to display the doctors
-                } else {
-                    console.error('Error searching doctors:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error searching doctors:', error);
-            }
+
+        // Add an event listener to the form submission to save the username in Local Storage
+        familyMemberForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent form submission
+
+            // Continue with the form submission (you may want to send the data to the server here)
+            familyMemberForm.submit();
         });
-    
-        // Function to display the retrieved doctors on the screen
-        function displayDoctors(doctors) {
-            const resultContainer = document.getElementById('searchResults');
-
-    // Clear any previous search results
-            resultContainer.innerHTML = '';
-
-        if (doctors.length === 0) {
-            resultContainer.innerHTML = '<p>No doctors found.</p>';
-        } else {
-            // Create a table element
-            const table = document.createElement('table');
-
-            // Create table header
-            const tableHeader = document.createElement('thead');
-            tableHeader.innerHTML = `
-                <tr>
-                    <th>Name</th>
-                    <th>Speciality</th>
-                </tr>
-            `;
-            table.appendChild(tableHeader);
-
-            // Create table body
-            const tableBody = document.createElement('tbody');
-
-            doctors.forEach((doctor) => {
-                // Create a table row for each doctor
-                const row = document.createElement('tr');
-
-                // Create table data cells for Name and Speciality
-                const nameCell = document.createElement('td');
-                nameCell.textContent = doctor.Name;
-
-                const specialityCell = document.createElement('td');
-                specialityCell.textContent = doctor.Speciality;
-
-                // Append cells to the row
-                row.appendChild(nameCell);
-                row.appendChild(specialityCell);
-
-                // Append the row to the table body
-                tableBody.appendChild(row);
-        });
-
-        // Append the table body to the table
-        table.appendChild(tableBody);
-
-        // Append the table to the result container
-        resultContainer.appendChild(table);
-    }
-}
     </script>
-    
 </body>
 </html>

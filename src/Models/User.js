@@ -66,15 +66,6 @@ const userSchema = new Schema({
         default: 'Unknown' // Default value for Relation
       },
     })
-  ], BookedAppointments: [
-    new Schema({
-      DoctorUsername: String,
-      DoctorName:String,
-      Date:Date,
-      Status: {
-        type: String,
-        enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
-      }    })
   ]
 }, { timestamps: true });
 

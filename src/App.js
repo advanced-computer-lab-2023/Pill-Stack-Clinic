@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,addFamilyMem,getUsers,searchDoctors, updateUser, deleteUser} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers, updateUser, deleteUser} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin} = require("./Routes/adminController");
 
@@ -26,7 +26,6 @@ const port = process.env.PORT || "8000";
 const user = require('./Models/User');
 const doctor = require("./Routers/doctorRoute");
 const admin = require("./Routers/adminRoute");
-const patient = require("./Routers/patientRoute");
 
 // #Importing the userController
 // configurations
@@ -45,19 +44,10 @@ mongoose.connect(MongoURI)
 
 /////////////////////////////////////
 
-// root route
-app.get("/", (req, res) => {
-  res.status(200).render('home')
-  });
-
-
 // /doctor routes
 app.use("/doctor", doctor);
 //Admin routes
 app.use("/admin",admin)
-// patient routes
-app.use("/patient", patient);
-
 app.get("/admin_home", (req, res) => {
   res.render('admin_home')
   });
@@ -67,8 +57,6 @@ app.get("/admin_home", (req, res) => {
 app.get("/register", (req, res) => {
   res.render('register')
   });
-
-
 
 app.route('/doc_register')
   .get((req, res) => { res.render('doc_register')})
@@ -80,7 +68,6 @@ console.log("hello world");
 app.use(express.json())
 app.post("/addUser",patientRegister);
 app.post("/addFamMem/:registeredUsername",addFamilyMem);
-app.post("/searchDoctors",searchDoctors)
 
 app.get("/users", getUsers);
 app.put("/updateUser", updateUser);

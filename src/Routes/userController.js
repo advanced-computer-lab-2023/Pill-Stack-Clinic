@@ -1,7 +1,6 @@
 // #Task route solution
 const userModel = require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
-const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 
 
 
@@ -19,6 +18,12 @@ const patientRegister = async (req, res) => {
          EmergencyContact_MobileNumber: req.body.emergency_phone
       });
       registeredUsername = req.body.username;
+
+       //check for duplicate username
+       const userExists = await userModel.findOne({Username: req.body.username});
+       if (userExists) return res.status(400).send("Username already exists");
+
+
       await user.save();
       console.log('User INSERTED!');
       res.render('patient_home.ejs',{registeredUsername});
@@ -62,30 +67,7 @@ const addFamilyMem = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
    }
 }
-const searchDoctors = async (req, res) => {
-   try {
-       const { name, speciality } = req.body;
-       let query = {};
 
-       console.log(name);
-
-       if (name) {
-           query["Name"] = { $regex: new RegExp(name, 'i') };
-       }
-
-       if (speciality) {
-           query["Speciality"] = { $regex: new RegExp(speciality, 'i') };
-       }
-
-       // Use Mongoose to query your database based on the search criteria
-       const doctors = await doctorModel.find(query);
-
-       res.status(200).json(doctors);
-   } catch (error) {
-       console.error('Error searching doctors:', error);
-       res.status(500).json({ message: 'Internal server error' });
-   }
-};
 
 
 const getUsers = async (req, res) => {
@@ -104,4 +86,4 @@ const deleteUser = async (req, res) => {
   }
 
 
-module.exports = {patientRegister,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser};
+module.exports = {patientRegister,addFamilyMem, getUsers, updateUser, deleteUser};
