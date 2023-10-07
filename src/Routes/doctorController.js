@@ -27,6 +27,8 @@ const createDocReq = async (req, res) => {
       const docExists = await docModel.findOne({Username: req.body.username});
       if (docExists) return res.status(400).send("Username already exists");
        
+  
+       
     doc.save(function(err){
        if (err) {
           throw err;
