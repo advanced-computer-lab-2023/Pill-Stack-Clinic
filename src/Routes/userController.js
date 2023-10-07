@@ -19,6 +19,13 @@ const patientRegister = async (req, res) => {
          EmergencyContact_MobileNumber: req.body.emergency_phone
       });
       registeredUsername = req.body.username;
+
+      //check for duplicate username
+      const userExists = await userModel.findOne({Username: req.body.username});
+      if (userExists) return res.status(400).send("Username already exists");
+
+
+
       await user.save();
       console.log('User INSERTED!');
       res.render('patient_home.ejs',{registeredUsername});
