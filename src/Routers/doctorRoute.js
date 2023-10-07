@@ -4,13 +4,16 @@ const {viewProfile,
     editView,
     editProfile,
     viewMyPatients, 
-    selectPatient
+    selectPatient,
+    searchAppointments
         } = require('../Routes/doctorController.js');
 
 router.get('/', async(req,res) => {res.render('doc_home')})
 router.get('/profile', viewProfile)
 router.get('/profile/edit/:id',editView)
 router.post('/profile/edit/:id',editProfile)
+router.post('/search',searchAppointments)
+
 
 router.route('/myPatients')
     .get( viewMyPatients)

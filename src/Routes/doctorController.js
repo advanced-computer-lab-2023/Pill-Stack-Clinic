@@ -1,7 +1,7 @@
 // const Doctor = require('../models/doctor');
 const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
-const userModel = require('../Models/User.js');// Database of doctors on the platform:accepted by admin 
+const userModel = require('../Models/User.js');// Database of users on the platform
 
 const { default: mongoose } = require('mongoose');
 
@@ -105,11 +105,61 @@ const createDocReq = async (req, res) => {
     const profile = await userModel.findOne({Username: username});
     res.render('viewPatient.ejs', { profile });
    }
+   const searchAppointments =async(req,res)=>{
+    const appStatus=req.body.status;
+    console.log(req.body.date)
+    let BookedAppointments;
+   const user = await doctorModel.findOne({ Username: 'Nadatest4' });
+   if(appStatus==='null' && req.body.date!=='' ){
+    const appDate=new Date(req.body.date);
+ 
+     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+       const appointmentDate = new Date(appointment.Date);
+       return (
+         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
+         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
+         appointmentDate.getUTCDate() === appDate.getUTCDate()
+       );
+ }
+  );   
+ }
+ else{
+    if(req.body.date==='' && appStatus!=='null'){
+     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+       return (
+         appointment.Status===appStatus
+       );
+ }
+    );
+ }else{
+     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+       // console.log(appointment.Date);
+       // console.log(appDate);
+       const appDate=new Date(req.body.date);
+ 
+       const appointmentDate = new Date(appointment.Date);
+       return (
+         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
+         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
+         appointmentDate.getUTCDate() === appDate.getUTCDate() &&
+         appointment.Status===appStatus
+ 
+       );
+    }
+    );
+ }
+ 
+ }
+ console.log(BookedAppointments)
+ res.status(200).json(BookedAppointments);
+ 
+ }
  
 
 
 module.exports = {
     createDocReq,viewProfile,editView,editProfile,
     viewMyPatients,
-    selectPatient
+    selectPatient,
+    searchAppointments
 };

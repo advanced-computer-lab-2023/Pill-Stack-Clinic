@@ -10,8 +10,123 @@
 <body>
     <a href="/doctor/profile">View Profile</a> <br><br>
     <a href="/doctor/myPatients">View My Patients</a> <br><br>
+    <form >
+        <label for="dropdown">Search for an appointment by appointment status:</label>
 
+        <select name="status" id="status">  
+            <option value="null">null</option> 
+            <option value="upcoming">upcoming</option> 
+            <option value="completed">completed</option> 
+            <option value="cancelled">cancelled</option>
+            <option value="resecheduled">resecheduled</option> 
 
+ 
+
+        </select>
+        <label for="date">Search for an appointment by date:</label>
+        <input type="date" id="date" name="date">
+        <button type="button" id="appSearch">Search for an appointment </button>
+    </form>
+
+    <div id="searchResults">
+    </div>
     
 </body>
+<script>
+     const appDate = document.getElementById('date');
+        const appStatus = document.getElementById('status');
+        const searchAppBtn = document.getElementById('appSearch'); 
+        function displayAppointments(appointments) {
+            const resultContainer = document.getElementById('searchResults');
+
+    // Clear any previous search results
+            resultContainer.innerHTML = '';
+
+        if (appointments.length === 0) {
+            resultContainer.innerHTML = '<p>No appointments found.</p>';
+        } else {
+            // Create a table element
+            const table = document.createElement('table');
+
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            tableHeader.innerHTML = `
+                <tr>
+                    <th>Patient's Username</th>
+                    <th>Patient's Name</th>
+                    <th>Appointment Date</th>
+                    <th>Appointment Staus</th>
+                </tr>
+            `;
+            table.appendChild(tableHeader);
+
+            // Create table body
+            const tableBody = document.createElement('tbody');
+
+            appointments.forEach((app) => {
+                // Create a table row for each doctor
+                const row = document.createElement('tr');
+
+                // Create table data cells for Name and Speciality
+                const usernameCell = document.createElement('td');
+                usernameCell.textContent = app.PatientUsername;
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = app.PatientName;
+
+                const dateCell = document.createElement('td');
+                dateCell.textContent = app.Date;
+                const statusCell = document.createElement('td');
+                statusCell.textContent = app.Status;
+
+                // Append cells to the row
+                row.appendChild(usernameCell);
+                row.appendChild(nameCell);
+                row.appendChild(dateCell);
+                row.appendChild(statusCell);
+
+                // Append the row to the table body
+                tableBody.appendChild(row);
+        });
+
+        // Append the table body to the table
+        table.appendChild(tableBody);
+
+        // Append the table to the result container
+        resultContainer.appendChild(table);
+    }
+}
+searchAppBtn.addEventListener('click', async () => {
+            console.log('Button clicked');
+            const searchQuery = {
+                date: appDate.value.trim(),
+                status:appStatus.value.trim(),
+            };
+    
+            try {
+                const response = await fetch('doctor/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(searchQuery),
+                });
+                console.log('heree1')
+
+    
+                if (response.ok) {
+                    console.log('heree')
+
+                    const BookedAppointments = await response.json();
+                    displayAppointments(BookedAppointments)
+                    // Call a function to display the doctors
+                } else {
+                    console.error('Error searching appointments:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error searching appointments:', error);
+            }
+        });
+       
+</script>
 </html>

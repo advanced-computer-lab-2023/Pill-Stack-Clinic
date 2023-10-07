@@ -87,6 +87,7 @@ const searchDoctors = async (req, res) => {
        // Use Mongoose to query your database based on the search criteria
        const doctors = await doctorModel.find(query);
 
+
        res.status(200).json(doctors);
    } catch (error) {
        console.error('Error searching doctors:', error);
@@ -109,6 +110,70 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
    //delete a user from the database
   }
+  const searchAppointments =async(req,res)=>{
+   const username = req.params.registeredUsername;
+   const appStatus=req.body.status;
+   let BookedAppointments;
+  const user = await userModel.findOne({ Username: 'Nadatest3' });
+  if(appStatus==='null' && req.body.date!=='' ){
+   const appDate=new Date(req.body.date);
+
+    BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+      const appointmentDate = new Date(appointment.Date);
+      return (
+        appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
+        appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
+        appointmentDate.getUTCDate() === appDate.getUTCDate()
+      );
+}
+ );
 
 
-module.exports = {patientRegister,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser};
+  
+}
+else{
+   if(req.body.date==='' && appStatus!=='null'){
+   
+    BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+    
+
+      return (
+        appointment.Status===appStatus
+      );
+}
+   );
+
+}else{
+    BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+      // console.log(appointment.Date);
+      // console.log(appDate);
+      const appDate=new Date(req.body.date);
+
+      const appointmentDate = new Date(appointment.Date);
+      return (
+        appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
+        appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
+        appointmentDate.getUTCDate() === appDate.getUTCDate() &&
+        appointment.Status===appStatus
+
+      );
+   }
+   );
+
+
+}
+
+}
+res.status(200).json(BookedAppointments);
+
+}
+
+
+
+
+    
+
+ 
+
+
+module.exports = {patientRegister,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments};

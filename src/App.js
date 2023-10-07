@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,addFamilyMem,getUsers,searchDoctors, updateUser, deleteUser} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers,searchDoctors, updateUser, deleteUser,searchAppointments} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin} = require("./Routes/adminController");
 
@@ -22,6 +22,8 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static("src/view/"));
+app.use(express.json())
+
 const port = process.env.PORT || "8000";
 const user = require('./Models/User');
 const doctor = require("./Routers/doctorRoute");
@@ -58,9 +60,7 @@ app.use("/admin",admin)
 // patient routes
 app.use("/patient", patient);
 
-app.get("/admin_home", (req, res) => {
-  res.render('admin_home')
-  });
+
 
 
 
@@ -77,14 +77,16 @@ app.route('/doc_register')
 
 // #Routing to userController here
 console.log("hello world");
-app.use(express.json())
 app.post("/addUser",patientRegister);
 app.post("/addFamMem/:registeredUsername",addFamilyMem);
+app.post("/search/:registeredUsername",searchAppointments);
+
 app.post("/searchDoctors",searchDoctors)
 
 app.get("/users", getUsers);
 app.put("/updateUser", updateUser);
 app.delete("/deleteUser", deleteUser);
+
 
 
 /*
