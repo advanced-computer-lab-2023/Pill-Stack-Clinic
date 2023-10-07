@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Patients</title>
+</head>
+<body>
+    <h1>My Patients</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Patient Username</th>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>View More</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% appointments.forEach(appointment => { %>
+                <tr>
+                    <td><%= appointment.PatientUsername %></td>
+                    <td><%= appointment.PatientName %></td>
+                    <td><%= appointment.Date.toISOString().slice(0, 10) %></td>
+                    <td><%= appointment.Status %></td>
+                    <td>
+                        <a href="/doctor/myPatients/viewPatient?username=<%= appointment.PatientUsername %>">View More</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <a href="/doctor">Back to home</a>
+</body>
+</html>

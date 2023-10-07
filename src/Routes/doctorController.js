@@ -1,6 +1,7 @@
 // const Doctor = require('../models/doctor');
 const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
+const userModel = require('../Models/User.js');// Database of doctors on the platform:accepted by admin 
 
 const { default: mongoose } = require('mongoose');
 
@@ -88,9 +89,27 @@ const createDocReq = async (req, res) => {
        }
  
   }
+
+  const viewMyPatients= async(req,res)=>{
+    // const applicationId = req.params.id;
+    const profile = await doctorModel.findOne({ Username: "Dr.DS" });
+    const appointments = profile.BookedAppointments
+    console.log('the doc:' , appointments);
+    res.render('myPatients.ejs', { appointments });
+  
+   }
+
+   const selectPatient= async(req,res)=>{
+    // http://localhost:8000/doctor/viewPatient?username=pep
+    const { username } = req.query;
+    const profile = await userModel.findOne({Username: username});
+    res.render('viewPatient.ejs', { profile });
+   }
  
 
 
 module.exports = {
-    createDocReq,viewProfile,editView,editProfile
+    createDocReq,viewProfile,editView,editProfile,
+    viewMyPatients,
+    selectPatient
 };
