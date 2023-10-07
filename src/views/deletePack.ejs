@@ -1,0 +1,42 @@
+<!-- view_application.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <script>
+    
+    function hello(){
+      const session_dis=document.getElementById("session_dis").value;
+      const pharmacy_dis=document.getElementById("pharmacy_dis").value;
+      const family_dis=document.getElementById("family_dis").value;
+          if(session_dis>100 || session_dis<0){
+              alert("Discount should not exceed 100 and can not be negetive");
+          }
+          if(pharmacy_dis>100 || pharmacy_dis<0){
+              alert("Discount should not exceed 100 and can not be negetive");
+          }
+          if(family_dis>100 || family_dis<0){
+              alert("Discount should not exceed 100 and can not be negetive");
+          }
+      }
+    
+  </script>
+  
+<head>
+  <title>Application Details</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Delete Pack</h1>
+  <p>Name: <%= pack.Package_Name %></p>
+  <p>Price: <%= pack.Price %></p>
+  <p>Session_Discount: <%= pack.Session_Discount %>
+  <p>Pharmacy_Discount: <%= pack.Pharmacy_Discount %></p>
+
+  <p>Family_Discount: <%= pack.Pharmacy_Discount %>
+  <!-- Add other application details here -->
+  <form method="POST" action="/admin/deletePack/<%= pack._id %>">
+    <button onclick="hello()" type="submit">Delete</button><br><br>
+  <a href="/admin/packages">Back to Packages</a>
+  </form>
+</body>
+</html>
