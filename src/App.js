@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,addFamilyMem,getUsers, updateUser, deleteUser} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers,searchDoctors, updateUser, deleteUser} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin} = require("./Routes/adminController");
 
@@ -80,6 +80,7 @@ console.log("hello world");
 app.use(express.json())
 app.post("/addUser",patientRegister);
 app.post("/addFamMem/:registeredUsername",addFamilyMem);
+app.post("/searchDoctors",searchDoctors)
 
 app.get("/users", getUsers);
 app.put("/updateUser", updateUser);
