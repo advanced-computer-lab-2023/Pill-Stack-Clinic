@@ -62,8 +62,9 @@ const addFamilyMem = async (req, res) => {
       user.familyMembers.push(member);
       
       await user.save();
+      res.status(200).send("Family Member added successfully")
 
-      res.status(201).json({ message: 'Family Member added successfully' });
+
    } catch (error) {
       console.error('Error adding family member:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -112,9 +113,19 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
    //delete a user from the database
   }
+  const viewALLAppointments =async(req,res)=>{
+  // const username = req.params.registeredUsername;
+
+   const profile = await userModel.findOne({ Username: "Nadatest3" });
+   const BookedAppointments = profile.BookedAppointments;
+   res.status(200).json(BookedAppointments);
+ 
+ 
+  }
   const searchAppointments =async(req,res)=>{
    const username = req.params.registeredUsername;
    const appStatus=req.body.status;
+   console.log(req.body.date);
    let BookedAppointments;
   const user = await userModel.findOne({ Username: 'Nadatest3' });
   if(appStatus==='null' && req.body.date!=='' ){
@@ -146,6 +157,8 @@ else{
    );
 
 }else{
+   if(req.body.date!=='' && appStatus!=='null')
+   {
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
       // console.log(appointment.Date);
       // console.log(appDate);
@@ -161,6 +174,10 @@ else{
       );
    }
    );
+}else{
+    BookedAppointments = user.BookedAppointments;
+   
+}
 
 
 }
@@ -199,4 +216,4 @@ const selectedDoctorDetails = async (req, res) => {
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments};

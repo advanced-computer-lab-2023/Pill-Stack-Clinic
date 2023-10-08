@@ -132,27 +132,40 @@ const createDocReq = async (req, res) => {
  }
     );
  }else{
-     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-       // console.log(appointment.Date);
-       // console.log(appDate);
-       const appDate=new Date(req.body.date);
- 
-       const appointmentDate = new Date(appointment.Date);
-       return (
-         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
-         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
-         appointmentDate.getUTCDate() === appDate.getUTCDate() &&
-         appointment.Status===appStatus
- 
-       );
-    }
-    );
+  if(req.body.date!=='' && appStatus!=='null')
+  {
+   BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
+     // console.log(appointment.Date);
+     // console.log(appDate);
+     const appDate=new Date(req.body.date);
+
+     const appointmentDate = new Date(appointment.Date);
+     return (
+       appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
+       appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
+       appointmentDate.getUTCDate() === appDate.getUTCDate() &&
+       appointment.Status===appStatus
+
+     );
+  }
+  );
+}else{
+   BookedAppointments = user.BookedAppointments;
+  
+}
  }
  
  }
  console.log(BookedAppointments)
  res.status(200).json(BookedAppointments);
  
+ }
+ const viewALLAppointments =async(req,res)=>{
+  const profile = await doctorModel.findOne({ Username: "Nadatest4" });
+  const BookedAppointments = profile.BookedAppointments;
+  res.status(200).json(BookedAppointments);
+
+
  }
  
 
@@ -161,5 +174,5 @@ module.exports = {
     createDocReq,viewProfile,editView,editProfile,
     viewMyPatients,
     selectPatient,
-    searchAppointments
+    searchAppointments,viewALLAppointments
 };

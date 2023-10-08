@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments, viewALLAppointments} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin} = require("./Routes/adminController");
 
@@ -83,6 +83,8 @@ console.log("hello world");
 app.post("/addUser",patientRegister);
 app.post("/addFamMem/:registeredUsername",addFamilyMem);
 app.post("/search/:registeredUsername",searchAppointments);
+app.post("/allApp/:registeredUsername",viewALLAppointments);
+
 
 // app.post('/selectedDoctor/:username', selectedDoctorDetails);
 app.get('/selectedDoctorDetails',selectedDoctorDetails);

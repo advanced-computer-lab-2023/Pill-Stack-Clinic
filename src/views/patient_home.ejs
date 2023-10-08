@@ -142,7 +142,10 @@
             <input type="text" id="doctorSpeciality" >
             <button type="button" id="searchDoctorsBtn">Search Doctors</button>
         </form>
-        <form >
+       <br><br> 
+    <button type="button" id="allApp">View All Appointments </button>
+
+    <form id="filterForm" style="display: none;">
             <label for="dropdown">Search for an appointment by appointment status:</label>
 
             <select name="status" id="status">  
@@ -174,6 +177,8 @@
         const appDate = document.getElementById('date');
         const appStatus = document.getElementById('status');
         const searchAppBtn = document.getElementById('appSearch'); 
+        const allAppBtn = document.getElementById('allApp'); 
+
 
         
         
@@ -208,6 +213,8 @@
                 if (response.ok) {
                     const doctors = await response.json();
                     displayDoctors(doctors); // Call a function to display the doctors
+                    filterForm.style.display = 'none';
+
                 } else {
                     console.error('Error searching doctors:', response.statusText);
                 }
@@ -351,6 +358,34 @@ searchAppBtn.addEventListener('click', async () => {
 
                     const BookedAppointments = await response.json();
                     displayAppointments(BookedAppointments)
+                    // Call a function to display the doctors
+                } else {
+                    console.error('Error searching appointments:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error searching appointments:', error);
+            }
+        });
+        allAppBtn.addEventListener('click', async () => {
+          
+    
+            try {
+                const response = await fetch('/allApp/:registeredUsername', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log('heree1')
+
+    
+                if (response.ok) {
+                    console.log('heree')
+
+                    const BookedAppointments = await response.json();
+                    displayAppointments(BookedAppointments);
+                    filterForm.style.display = 'block';
+
                     // Call a function to display the doctors
                 } else {
                     console.error('Error searching appointments:', response.statusText);

@@ -5,13 +5,16 @@ const {viewProfile,
     editProfile,
     viewMyPatients, 
     selectPatient,
-    searchAppointments
+    searchAppointments,viewALLAppointments
         } = require('../Routes/doctorController.js');
 
 router.get('/', async(req,res) => {res.render('doc_home')})
 router.get('/profile', viewProfile)
 router.get('/profile/edit/:id',editView)
 router.post('/profile/edit/:id',editProfile)
+router.post('/allApp',viewALLAppointments)
+
+
 router.post('/search',searchAppointments)
 
 

@@ -6,11 +6,22 @@
     <title>Document</title>
     <script src="../App.js"></script>
     <script src="../Routes/doctorController.js"></script>
+    <style>table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+      }
+      
+      td {
+        padding: 10px 0;
+      }</style>
 </head>
 <body>
     <a href="/doctor/profile">View Profile</a> <br><br>
     <a href="/doctor/myPatients">View My Patients</a> <br><br>
-    <form >
+   
+    <button type="button" id="allApp">View All Appointments </button>
+
+    <form id="filterForm" style="display: none;">
         <label for="dropdown">Search for an appointment by appointment status:</label>
 
         <select name="status" id="status">  
@@ -27,7 +38,7 @@
         <input type="date" id="date" name="date">
         <button type="button" id="appSearch">Search for an appointment </button>
     </form>
-
+    <br><br>
     <div id="searchResults">
     </div>
     
@@ -36,6 +47,8 @@
      const appDate = document.getElementById('date');
         const appStatus = document.getElementById('status');
         const searchAppBtn = document.getElementById('appSearch'); 
+        const allAppBtn = document.getElementById('allApp'); 
+
         function displayAppointments(appointments) {
             const resultContainer = document.getElementById('searchResults');
 
@@ -52,10 +65,10 @@
             const tableHeader = document.createElement('thead');
             tableHeader.innerHTML = `
                 <tr>
-                    <th>Patient's Username</th>
+                    <th>Patient's Username</th> 
                     <th>Patient's Name</th>
                     <th>Appointment Date</th>
-                    <th>Appointment Staus</th>
+                    <th>Appointment Status</th>
                 </tr>
             `;
             table.appendChild(tableHeader);
@@ -119,6 +132,35 @@ searchAppBtn.addEventListener('click', async () => {
 
                     const BookedAppointments = await response.json();
                     displayAppointments(BookedAppointments)
+
+                    // Call a function to display the doctors
+                } else {
+                    console.error('Error searching appointments:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error searching appointments:', error);
+            }
+        });
+        allAppBtn.addEventListener('click', async () => {
+           
+    
+            try {
+                const response = await fetch('doctor/allApp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log('heree1')
+
+    
+                if (response.ok) {
+                    console.log('heree')
+
+                    const BookedAppointments = await response.json();
+                    displayAppointments(BookedAppointments)
+                    filterForm.style.display = 'block';
+
                     // Call a function to display the doctors
                 } else {
                     console.error('Error searching appointments:', response.statusText);
