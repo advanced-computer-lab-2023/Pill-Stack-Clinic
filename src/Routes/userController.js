@@ -96,6 +96,8 @@ const searchDoctors = async (req, res) => {
 };
 
 
+
+
 const getUsers = async (req, res) => {
    const users = await userModel.find({});
    res.send(users);  
@@ -164,10 +166,31 @@ else{
 }
 
 }
+
+
 res.status(200).json(BookedAppointments);
 
 }
 
+
+const selectedDoctorDetails = async (req, res) => {
+   try {
+      // const username = req.params.username; 
+      const username = "Nada"
+
+      const doctor = await doctorModel.findOne({ Username: username });
+
+      if (!doctor) {
+         return res.status(404).json({ message: 'Doctor not found' });
+      }
+
+      res.render('selectedDoctorDetails.ejs', { doctor });
+
+   } catch (error) {
+      console.error('Error retrieving selected doctor:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+};
 
 
 
@@ -176,4 +199,4 @@ res.status(200).json(BookedAppointments);
  
 
 
-module.exports = {patientRegister,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments};
