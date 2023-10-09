@@ -212,10 +212,22 @@ const selectedDoctorDetails = async (req, res) => {
 };
 
 
+const viewDoctors = async (req, res) => {
+   try {
+      const doctors = await doctorModel.find(); 
+      console.log(doctors);// Fetch all doctors from the database
+      res.status(200).json({doctors}); // Render a view with the list of doctors
+   } catch (error) {
+      console.error(error);
+      res.status(500).send('Error fetching doctors');
+   }
+}
+
+
 
     
 
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors};
