@@ -20,7 +20,7 @@
                 <tr>
                     <td><%= appointment.PatientUsername %></td>
                     <td><%= appointment.PatientName %></td>
-                    <td><%= appointment.Date.toISOString().slice(0, 10) %></td>
+                    <td><%= appointment.StartDate.toISOString().slice(0, 10) %></td>
                     <td><%= appointment.Status %></td>
                     <td>
                         <a href="/doctor/myPatients/viewPatient?username=<%= appointment.PatientUsername %>">View More</a>

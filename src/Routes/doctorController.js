@@ -168,6 +168,19 @@ const createDocReq = async (req, res) => {
 
 
  }
+ const SearchByName= async(req,res)=>{
+  const found=await userModel.find({Name:req.body.search});
+  res.render('SearchName.ejs',{found:found})
+ }
+ const PostByName= async(req,res)=>{
+   console.log(req.body.search);
+   const found=await userModel.find({Name:req.body.search});
+   if(found.length==0){
+     res.render('Patient_Not_Found')
+   }
+   else{
+   res.render('SearchName.ejs',{found:found})}
+  }
  
 
 
@@ -175,5 +188,7 @@ module.exports = {
     createDocReq,viewProfile,editView,editProfile,
     viewMyPatients,
     selectPatient,
-    searchAppointments,viewALLAppointments
+    searchAppointments,viewALLAppointments,
+    SearchByName,
+    PostByName
 };

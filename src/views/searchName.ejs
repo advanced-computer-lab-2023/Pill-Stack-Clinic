@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<body>
+    <a href="/doctor">back</a>
+    <br><br>
+    <form action="/doctor/searchName" method="post" >
+        <label>Search For Patient</label>
+        <input for="search" type="text" id="search" name="search">
+        
+        <button >Search</button>
+        
+        
+        
+        <% found.forEach(User =>{ 
+            %>
+            <p>Patient Name: <%=User.Name %></p>
+            <p>Patient Email: <%=User.Email %></p>
+            <p>Patient Date of Birth: <%=User.DateOfBirth %></p>
+            <p>Patient Gender: <%=User.Gender %></p>
+            <p>Patient Mobile Number: <%=User.MobileNumber %></p>
+            
+            <%})%>
+            
+       
+    </form>
+</body>
+</html>
