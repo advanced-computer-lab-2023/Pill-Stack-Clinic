@@ -125,27 +125,27 @@ const deleteUser = async (req, res) => {
   const searchAppointments =async(req,res)=>{
    const username = req.params.registeredUsername;
    const appStatus=req.body.status;
-   console.log(req.body.date);
    let BookedAppointments;
   const user = await userModel.findOne({ Username: 'Nadatest3' });
-  if(appStatus==='null' && req.body.date!=='' ){
-   const appDate=new Date(req.body.date);
-
+  if(appStatus==='null' && req.body.sDate!=='' ){
+   const appDate=new Date(req.body.sDate);
+   const appEDate=new Date(req.body.eDate);
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-      const appointmentDate = new Date(appointment.StartDate);
-      return (
-        appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
-        appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
-        appointmentDate.getUTCDate() === appDate.getUTCDate()
-      );
+     const appointmentStartDate = new Date(appointment.StartDate);
+    return (
+   
+     appointmentStartDate>=appDate && appointmentStartDate<=appEDate
+     
+
+    );
 }
- );
+ );   
 
 
   
 }
 else{
-   if(req.body.date==='' && appStatus!=='null'){
+   if(req.body.sDate==='' && appStatus!=='null'){
    
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
     
@@ -157,23 +157,25 @@ else{
    );
 
 }else{
-   if(req.body.date!=='' && appStatus!=='null')
+   if(req.body.sDate!=='' && appStatus!=='null')
    {
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
       // console.log(appointment.Date);
       // console.log(appDate);
       const appDate=new Date(req.body.date);
+     const appEDate=new Date(req.body.eDate);
 
-      const appointmentDate = new Date(appointment.StartDate);
-      return (
-        appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
-        appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
-        appointmentDate.getUTCDate() === appDate.getUTCDate() &&
-        appointment.Status===appStatus
 
-      );
-   }
-   );
+     const appointmentStartDate = new Date(appointment.StartDate);
+
+     return (
+      appointmentStartDate>=appDate && appointmentStartDate<=appEDate &&
+
+       appointment.Status===appStatus
+
+     );
+  }
+  );
 }else{
     BookedAppointments = user.BookedAppointments;
    

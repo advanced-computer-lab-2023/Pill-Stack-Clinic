@@ -35,7 +35,9 @@
 
         </select>
         <label for="date">Search for an appointment by date:</label>
-        <input type="date" id="date" name="date">
+        <input type="date" id="Sdate" name="Start date">
+        <input type="date" id="Edate" name="End date">
+
         <button type="button" id="appSearch">Search for an appointment </button>
     </form>
     <br><br>
@@ -44,7 +46,9 @@
     
 </body>
 <script>
-     const appDate = document.getElementById('date');
+     const appDate = document.getElementById('Sdate');
+     const appEDate = document.getElementById('Edate');
+
         const appStatus = document.getElementById('status');
         const searchAppBtn = document.getElementById('appSearch'); 
         const allAppBtn = document.getElementById('allApp'); 
@@ -67,7 +71,9 @@
                 <tr>
                     <th>Patient's Username</th> 
                     <th>Patient's Name</th>
-                    <th>Appointment Date</th>
+                    <th>Appointment Start Time</th>
+                    <th>Appointment End Time</th>
+
                     <th>Appointment Status</th>
                 </tr>
             `;
@@ -87,15 +93,20 @@
                 const nameCell = document.createElement('td');
                 nameCell.textContent = app.PatientName;
 
-                const dateCell = document.createElement('td');
-                dateCell.textContent = app.Date;
+                
+                const StartdateCell = document.createElement('td');
+                StartdateCell.textContent = app.StartDate;
+                const EnddateCell = document.createElement('td');
+                EnddateCell.textContent = app.EndDate;
                 const statusCell = document.createElement('td');
                 statusCell.textContent = app.Status;
 
                 // Append cells to the row
                 row.appendChild(usernameCell);
                 row.appendChild(nameCell);
-                row.appendChild(dateCell);
+                row.appendChild(StartdateCell);
+                row.appendChild(EnddateCell);
+
                 row.appendChild(statusCell);
 
                 // Append the row to the table body
@@ -112,7 +123,8 @@
 searchAppBtn.addEventListener('click', async () => {
             console.log('Button clicked');
             const searchQuery = {
-                date: appDate.value.trim(),
+                sDate: appDate.value.trim(),
+                eDate:appEDate.value.trim(),
                 status:appStatus.value.trim(),
             };
     

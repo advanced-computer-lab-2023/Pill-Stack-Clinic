@@ -107,24 +107,24 @@ const createDocReq = async (req, res) => {
    }
    const searchAppointments =async(req,res)=>{
     const appStatus=req.body.status;
-    console.log(req.body.date)
     let BookedAppointments;
    const user = await doctorModel.findOne({ Username: 'Nadatest4' });
-   if(appStatus==='null' && req.body.date!=='' ){
-    const appDate=new Date(req.body.date);
- 
+   if(appStatus==='null' && req.body.sDate!=='' ){
+    const appDate=new Date(req.body.sDate);
+    const appEDate=new Date(req.body.eDate);
      BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-       const appointmentDate = new Date(appointment.StartDate);
-       return (
-         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
-         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
-         appointmentDate.getUTCDate() === appDate.getUTCDate()
-       );
+      const appointmentStartDate = new Date(appointment.StartDate);
+     return (
+    
+      appointmentStartDate>=appDate && appointmentStartDate<=appEDate
+      
+
+     );
  }
   );   
  }
  else{
-    if(req.body.date==='' && appStatus!=='null'){
+    if(req.body.sDate==='' && appStatus!=='null'){
      BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
        return (
          appointment.Status===appStatus
@@ -132,18 +132,19 @@ const createDocReq = async (req, res) => {
  }
     );
  }else{
-  if(req.body.date!=='' && appStatus!=='null')
+  if(req.body.sDate!=='' && appStatus!=='null')
   {
    BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-     // console.log(appointment.Date);
-     // console.log(appDate);
+  
      const appDate=new Date(req.body.date);
+     const appEDate=new Date(req.body.eDate);
 
-     const appointmentDate = new Date(appointment.StartDate);
+
+     const appointmentStartDate = new Date(appointment.StartDate);
+
      return (
-       appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
-       appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
-       appointmentDate.getUTCDate() === appDate.getUTCDate() &&
+      appointmentStartDate>=appDate && appointmentStartDate<=appEDate &&
+
        appointment.Status===appStatus
 
      );
