@@ -6,8 +6,8 @@
     <title>Search</title>
 </head>
 <body>
-    <a href="/doctor">back</a>
-    <br><br>
+    
+    
     <form action="/doctor/searchName" method="post" >
         <label>Search For Patient</label>
         <input for="search" type="text" id="search" name="search">
@@ -24,9 +24,10 @@
             <p>Patient Gender: <%=User.Gender %></p>
             <p>Patient Mobile Number: <%=User.MobileNumber %></p>
             
-            <%})%>
+            <%})%>  
+            <br><br>
             
-       
+            <a href="/doctor/myPatients">back</a>
     </form>
 </body>
 </html>

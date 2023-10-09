@@ -175,7 +175,9 @@ const createDocReq = async (req, res) => {
  const PostByName= async(req,res)=>{
    console.log(req.body.search);
    const found=await userModel.find({Name:req.body.search});
-   if(found.length==0){
+   const profile = await doctorModel.findOne({ Username: "Dr.DS" ,"BookedAppointments.PatientName":req.body.search});
+   console.log(profile);
+   if(profile==null){
      res.render('Patient_Not_Found')
    }
    else{
