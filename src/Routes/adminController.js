@@ -1,6 +1,7 @@
 const adminModel = require('../Models/Admin.js');
 const docModel = require('../Models/Doc_Request.js');
-const packageModel=require('../Models/Packages.js')
+const packageModel=require('../Models/Packages.js');
+const patientModel=require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
 
 const viewDocApp= async (req, res) => {
@@ -119,10 +120,46 @@ const viewPack=async(req,res)=>{
       res.status(500).send('Internal Server Error');
     }
 }
+const removeUser= async (req, res) => {
+   const toBeDeleted={username:req.body.username};
+   //var e = document.getElementById("userType");
+   var userType =req.body.usertype ;
+   console.log({username:req.body.username});
+   console.log(userType);
+    // Determine which model to use based on the userType
+ switch (userType) {
+   case 'patient':
+     UserModel =patientModel;
+     break;
+   case 'doctor':
+     UserModel = docModel;
+     break;
+   case 'admin':
+     UserModel = adminModel;
+     break;
+   default:
+     return res.status(400).send('Invalid user type');
+ }
+   try {
+     // Find and delete the user by username
+     const deletedUser = await UserModel.findOneAndDelete({username:req.body.username });
+
+     if (deletedUser) {
+       res.send(`User '${toBeDeleted}' deleted successfully.`);
+     } else {
+       res.send(`User '${toBeDeleted}' not found.`);
+     }
+   } catch (err) {
+     console.error(err);
+     res.status(500).send('Internal server error');
+   }
+
+}
 
 
 module.exports = {
-    viewAllApp,viewDocApp,addAdmin,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack
+    viewAllApp,viewDocApp,addAdmin,createPackage,viewAllPacks,viewPack,updatePack,
+    viewPack2,deletePack,removeUser
 };
 
 

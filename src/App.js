@@ -6,7 +6,7 @@ mongoose.set('strictQuery', false);
 require("dotenv").config();
 const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments, viewALLAppointments} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
-const {addAdmin} = require("./Routes/adminController");
+const {addAdmin,removeUser} = require("./Routes/adminController");
 
 const MongoURI = process.env.MONGO_URI ;
 
@@ -76,6 +76,10 @@ app.get("/register", (req, res) => {
 app.route('/doc_register')
   .get((req, res) => { res.render('doc_register')})
   .post(createDocReq);
+  
+app.route('/removeUser')
+ .get((req,res) => {res.render('removeUser')})
+ .post(removeUser);
 
 
 // #Routing to userController here
@@ -90,6 +94,7 @@ app.post("/allApp/:registeredUsername",viewALLAppointments);
 app.get('/selectedDoctorDetails',selectedDoctorDetails);
 
 app.post("/searchDoctors",searchDoctors)
+
 
 app.get("/users", getUsers);
 app.put("/updateUser", updateUser);
