@@ -49,7 +49,8 @@ const doctorSchema = new Schema({
     Availability:
       [
         new Schema({
-          Date: Date,
+          StartDate: Date,
+          EndDate:Date,
         })
       ]
     ,
@@ -57,7 +58,8 @@ const doctorSchema = new Schema({
       new Schema({
         PatientUsername: String,
         PatientName:String,
-        Date:Date,
+        StartDate:Date,
+        EndDate:Date,
         Status: {
           type: String,
           enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],

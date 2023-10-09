@@ -132,7 +132,7 @@ const deleteUser = async (req, res) => {
    const appDate=new Date(req.body.date);
 
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-      const appointmentDate = new Date(appointment.Date);
+      const appointmentDate = new Date(appointment.StartDate);
       return (
         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
@@ -164,7 +164,7 @@ else{
       // console.log(appDate);
       const appDate=new Date(req.body.date);
 
-      const appointmentDate = new Date(appointment.Date);
+      const appointmentDate = new Date(appointment.StartDate);
       return (
         appointmentDate.getUTCFullYear() === appDate.getUTCFullYear() &&
         appointmentDate.getUTCMonth() === appDate.getUTCMonth() &&
