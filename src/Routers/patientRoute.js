@@ -9,7 +9,7 @@ router.get('/', async(req,res) => {res.render('patient_home.ejs',{registeredUser
 // router.post("/search/:registeredUsername",searchAppointments);
 // router.post("/allApp/:registeredUsername",viewALLAppointments);
 router.route('/viewDoctors')
-   .get((req,res) => { res.render('viewDoctors')})
+   .get((req,res) => { res.render('doctorResults.ejs')})
    .post(viewDoctors);
 
 
