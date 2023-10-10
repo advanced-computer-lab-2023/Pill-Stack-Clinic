@@ -96,7 +96,7 @@ app.post("/allApp/:registeredUsername",viewALLAppointments);
 
 
 // app.post('/selectedDoctor/:username', selectedDoctorDetails);
-app.get('/selectedDoctorDetails',selectedDoctorDetails);
+app.get('/selectedDoctorDetails/:username',selectedDoctorDetails);
 
 app.post("/searchDoctors",searchDoctors)
 

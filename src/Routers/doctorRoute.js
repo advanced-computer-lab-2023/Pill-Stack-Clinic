@@ -22,6 +22,7 @@ router.post('/searchName',PostByName)
 router.post('/search',searchAppointments)
 
 
+
 router.route('/myPatients')
     .get( viewMyPatients)
 

@@ -194,8 +194,10 @@ res.status(200).json(BookedAppointments);
 
 const selectedDoctorDetails = async (req, res) => {
    try {
-      // const username = req.params.username; 
-      const username = "Nada"
+    
+      const username = req.params.username; 
+      console.log(username);
+    //  const username = "Nada"
 
       const doctor = await doctorModel.findOne({ Username: username });
 

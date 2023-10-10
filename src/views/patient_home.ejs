@@ -259,7 +259,17 @@
 
                 // Create table data cells for Name and Speciality
                 const nameCell = document.createElement('td');
-                nameCell.textContent = doctor.Name;
+                //nameCell.textContent = doctor.Name;
+                const doctorLink = document.createElement('a');
+            doctorLink.textContent = doctor.Name;
+            
+            // Set the href attribute to the doctor_info.html page with a query parameter
+           // doctorLink.href = `selectedDoctorDetails.ejs?username=${doctor.Username}`; // Replace 'doctorId' with the actual identifier for the doctor
+            doctorLink.href = `/selectedDoctorDetails/${doctor.Username}`; // Use _id property
+
+            // Append the link to the name cell
+            nameCell.appendChild(doctorLink);
+
 
                 const specialityCell = document.createElement('td');
                 specialityCell.textContent = doctor.Speciality;
