@@ -214,18 +214,34 @@ const selectedDoctorDetails = async (req, res) => {
 };
 
 
+
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find(); 
       console.log(doctors);// Fetch all doctors from the database
-      res.status(200).json({doctors}); // Render a view with the list of doctors
+      // Map the doctors to send only the name and updated price
+      const user =await userModel.find({Username:"omarr"});
+      const updatedDoctors = doctors.map((doctor) => {
+         if(user.healthPackage){
+         return {
+           name: doctor.Username,
+           price: doctor.HourlyRate * 1.1 * (user.healthPackage/100) , // You can update the price here as needed
+           
+         };
+      }else {
+         return {
+            name: doctor.Username,
+            price: doctor.HourlyRate * 1.1 , // You can update the price here as needed
+            
+          };
+      }
+       });
+      res.status(200).json({ doctors: updatedDoctors }); // Render a view with the list of doctors
    } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching doctors');
    }
 }
-
-
 
     
 
