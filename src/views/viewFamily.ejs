@@ -5,7 +5,47 @@
 </head>
 <body>
     <h1>view family member</h1>
-    <%= familyMembers %>
+    <div class="table-data">
+        <table border="1" >
+            <tr>
+                <th>Member Name</th>
+                <th>NationalID</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Relation</th>
+                
+            </tr>
+            
+            <%
+            if(familyMembers.length!=0){
+            var i=1;
+            if(familyMembers.length==1){
+    
+            }
+              
+            familyMembers.forEach(function(data){
+            %>
+            <tr>
+                <td><%=data.MemberName %></td>
+                <td><%=data.NationalID %></td>
+                <td><%=data.Age %></td>
+                <td><%=data.Gender %></td>
+                <td><%=data.Relation %></td>
+                
+                
+    
+              
+               
+            </tr>
+            <%  i++; }) %>
+            <% } else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            <% } %>
+        </table>
+        <a href="/patient">Back to Patient Home</a>
+        </div>
     <form action="/patient/viewFamily" method="get">
         
     </form>
