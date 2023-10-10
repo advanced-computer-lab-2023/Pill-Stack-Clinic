@@ -91,7 +91,18 @@ const userSchema = new Schema({
         type: String,
         enum: ['Filled', 'Unfilled']
       }    })
-  ]
+  ],
+  MedicalHistory: [
+    new Schema({
+      Disease: String,
+      Description: String,
+      StartDate: Date,
+      Status: {
+        type: String,
+        enum: ['active', 'inactive'],
+      }
+    })
+  ],
 }, { timestamps: true });
 
 const User = mongoose.model('Users', userSchema);
