@@ -240,9 +240,46 @@ const viewDoctors = async (req, res) => {
       res.status(500).send('Error fetching doctors');
    }
 };
-
+const viewFamilyMembers = async (req, res) => {
+   try {
+      const username = req.body.username;
+      //console.log(req.body.username);
+      const user = await userModel.findOne({ Username: 'Tedo' });
+      
+      if (!user) {
+         return res.status(404).send('User not found' );
+      }else{
+      const familyMembers = user.familyMembers;
+      console.log(familyMembers)
+      res.render('viewFamily.ejs',{familyMembers:familyMembers})
+    //  res.status(200).json({ familyMembers });
+      }
+   } catch (error) {
+      console.error('Error retrieving family members:', error);
+      res.status(500).send('Internal server error');
+   }
+};
+const viewPrescribtion= async (req, res) => {
+   try {
+      //const username = req.body.username;
+      //console.log(req.body.username);
+      const user = await userModel.findOne({ Username: 'Nadatest3' });
+      //console.log(user);
+      if (!user) {
+         return res.status(404).send('User not found' );
+      }else{
+      const Prescriptions = user.Prescriptions;
+      console.log(Prescriptions)
+      res.render('viewprescriptions.ejs',{Prescriptions:Prescriptions})
+    //  res.status(200).json({ familyMembers });
+      }
+   } catch (error) {
+      console.error('Error retrieving family members:', error);
+      res.status(500).send('Internal server error');
+   }
+}; 
 
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion};

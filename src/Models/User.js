@@ -76,6 +76,21 @@ const userSchema = new Schema({
         type: String,
         enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
       }    })
+  ], Prescriptions:[
+    new Schema({
+      Medicine: [
+        new Schema({
+          MedicineID: String,
+          Quantity: Number,
+          Instructions: String
+        })
+      ],
+      DocUsername: String,
+      PrecriptionDate:Date,
+      Status: {
+        type: String,
+        enum: ['Filled', 'Unfilled']
+      }    })
   ]
 }, { timestamps: true });
 
