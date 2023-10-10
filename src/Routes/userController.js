@@ -133,41 +133,29 @@ const deleteUser = async (req, res) => {
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
      const appointmentStartDate = new Date(appointment.StartDate);
     return (
-   
      appointmentStartDate>=appDate && appointmentStartDate<=appEDate
-     
-
     );
 }
- );   
-
-
-  
+ );     
 }
-else{
+
    if(req.body.sDate==='' && appStatus!=='null'){
    
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
     
-
       return (
         appointment.Status===appStatus
       );
 }
    );
 
-}else{
+}
    if(req.body.sDate!=='' && appStatus!=='null')
    {
     BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
-      // console.log(appointment.Date);
-      // console.log(appDate);
-      const appDate=new Date(req.body.date);
+      const appDate=new Date(req.body.sDate);
      const appEDate=new Date(req.body.eDate);
-
-
      const appointmentStartDate = new Date(appointment.StartDate);
-
      return (
       appointmentStartDate>=appDate && appointmentStartDate<=appEDate &&
 
@@ -176,15 +164,12 @@ else{
      );
   }
   );
-}else{
-    BookedAppointments = user.BookedAppointments;
-   
 }
 
 
-}
 
-}
+
+
 
 
 res.status(200).json(BookedAppointments);
@@ -261,25 +246,119 @@ const viewFamilyMembers = async (req, res) => {
 };
 const viewPrescribtion= async (req, res) => {
    try {
-      //const username = req.body.username;
-      //console.log(req.body.username);
-      const user = await userModel.findOne({ Username: 'Nadatest3' });
+   //const username=req.params.registeredUsername;
+    const index=req.params.index;
+      const user = await userModel.findOne({ Username: 'Nadatest3'});
       //console.log(user);
       if (!user) {
          return res.status(404).send('User not found' );
       }else{
-      const Prescriptions = user.Prescriptions;
-      console.log(Prescriptions)
-      res.render('viewprescriptions.ejs',{Prescriptions:Prescriptions})
-    //  res.status(200).json({ familyMembers });
+      const Prescription = user.Prescriptions[index];
+      res.render('viewprescriptions.ejs',{prescription:Prescription})
       }
    } catch (error) {
-      console.error('Error retrieving family members:', error);
+      console.error('Error retrieving prescription:', error);
       res.status(500).send('Internal server error');
    }
 }; 
+const viewPrescriptions=async(req,res)=>{
+      //const username=req.params.registeredUsername;
+
+   const profile = await userModel.findOne({ Username: "Nadatest3" });
+   const prescriptions = profile.Prescriptions;
+   res.status(200).json(prescriptions);
+
+}
+ const filterPrescriptions=async(req, res)=>{
+   //const username=req.params.registeredUsername;
+   console.log('In filtered');
+const status =req.body.prepStatus;
+const date=req.body.prepDate;
+const doctor=req.body.prepDr;
+    const user = await userModel.findOne({ Username: 'Nadatest3' });
+    let filteredPrescriptions = user.Prescriptions;
+    let prescriptions;
+
+    // Filter by doctor's username
+    if (doctor !== '' && date==='' && status==='null' ) {
+      prescriptions = filteredPrescriptions.filter((prescription) =>
+      {
+         return ( prescription.DocUsername === doctor );
+      }
+      
+      );
+    }
+    if (date !== '' && doctor==='' && status=='null') {
+      const prepDate=new Date(date);
+
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         console.log( prescription.PrecriptionDate)     ; 
+
+         return (
+          prescription.PrecriptionDate.getUTCDate() === prepDate.getUTCDate() &&
+          prescription.PrecriptionDate.getUTCMonth() === prepDate.getUTCMonth() &&
+          prescription.PrecriptionDate.getUTCFullYear() === prepDate.getUTCFullYear());
+      }
+      );
+    }
+    if (status !== 'null' && date==='' && doctor==='') {
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         return (        prescription.Status === status
+            );
+      }
+      );
+
+    }
+    if(doctor!=='' && date!=='' && status!=='null'){
+      const prepDate=new Date(date);
+
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         return (
+            prescription.DocUsername === doctor &&
+            prescription.Status === status &&
+            prescription.PrecriptionDate.getUTCDate() === prepDate.getUTCDate() &&
+            prescription.PrecriptionDate.getUTCMonth() === prepDate.getUTCMonth() &&
+            prescription.PrecriptionDate.getUTCFullYear() === prepDate.getUTCFullYear());
+      }
+      );
+    }
+    if(doctor!=='' && date!=='' && status==='null'){
+      const prepDate=new Date(date);
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         return (
+            prescription.DocUsername === doctor &&
+            prescription.PrecriptionDate.getUTCDate() === prepDate.getUTCDate() &&
+            prescription.PrecriptionDate.getUTCMonth() === prepDate.getUTCMonth() &&
+            prescription.PrecriptionDate.getUTCFullYear() === prepDate.getUTCFullYear());
+      }
+      );
+
+    }
+    if(doctor!=='' && date==='' && status!=='null'){
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         return (
+            prescription.DocUsername === doctor &&
+            prescription.Status === status ) 
+      }
+      );
+    }
+    if(doctor==='' && date!=='' && status!=='null'){
+      const prepDate=new Date(date);
+      prescriptions = filteredPrescriptions.filter((prescription) =>{
+         return (
+            prescription.Status === status &&
+            prescription.PrecriptionDate.getUTCDate() === prepDate.getUTCDate() &&
+            prescription.PrecriptionDate.getUTCMonth() === prepDate.getUTCMonth() &&
+            prescription.PrecriptionDate.getUTCFullYear() === prepDate.getUTCFullYear());
+      }
+      );
+    }
+    res.json(prescriptions);
+
+
+}
 
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};

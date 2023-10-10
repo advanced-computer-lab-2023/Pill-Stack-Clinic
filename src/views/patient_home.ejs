@@ -132,14 +132,12 @@
             <label for="nationalID">National ID:</label>
             <input type="text" id="nationalID" name="nationalID" required><br><br>
             
-            <button type="submit" id="submitButton">Submit</button>
         </form>
         <br>
         <br>
         <button onclick="window.location.href='/patient/viewFamily'">view Family members</button>
         <br>
         <br>
-        <button onclick="window.location.href='/patient/viewprescriptions'">view prescriptions</button>
 
         <form >
             <label for="doctorName">Doctor Name:</label>
@@ -150,6 +148,7 @@
         </form>
        <br><br> 
     <button type="button" id="allApp">View All Appointments </button>
+    <button type="button" id="prescriptions">View My Prescriptions </button>
 
     <form id="filterForm" style="display: none;">
             <label for="dropdown">Search for an appointment by appointment status:</label>
@@ -171,6 +170,24 @@
             <br>
             <button type="button" id="appSearch">Search for an appointment </button>
         </form>
+        <form id="filterForm2" style="display: none;">
+            <label for="dropdown">Search for an appointment by appointment status:</label>
+
+            <select name="status" id="prepstatus">  
+                <option value="null">null</option> 
+                <option value="Filled">Filled</option> 
+                <option value="Unfilled">Unfilled</option> 
+            </select>
+            <label for="name">Doctor's Name:</label>
+            <input type="text" id="DRname" name="name" required>
+
+            <label for="date">Search for precription by date:</label>
+            <input type="date" id="prepdate" name="Date">
+           
+
+            <br>
+            <button type="button" id="prepSearch">Search for a prescription </button>
+        </form>
 
         <div id="searchResults">
         </div>
@@ -184,10 +201,18 @@
         const searchDoctorsBtn = document.getElementById('searchDoctorsBtn'); 
         const appDate = document.getElementById('date');
         const appEDate = document.getElementById('Edate');
-
         const appStatus = document.getElementById('status');
         const searchAppBtn = document.getElementById('appSearch'); 
         const allAppBtn = document.getElementById('allApp'); 
+        const prescriptions = document.getElementById('prescriptions'); 
+        const prepStatus = document.getElementById('prepstatus');
+        const prepDate = document.getElementById('prepdate');
+        const prepDr = document.getElementById('DRname');
+        const prepSearch = document.getElementById('prepSearch');
+
+
+
+
 
 
         
@@ -224,6 +249,8 @@
                     const doctors = await response.json();
                     displayDoctors(doctors); // Call a function to display the doctors
                     filterForm.style.display = 'none';
+                    filterForm2.style.display = 'none';
+
 
                 } else {
                     console.error('Error searching doctors:', response.statusText);
@@ -269,9 +296,7 @@
                 const doctorLink = document.createElement('a');
             doctorLink.textContent = doctor.Name;
             
-            // Set the href attribute to the doctor_info.html page with a query parameter
-           // doctorLink.href = `selectedDoctorDetails.ejs?username=${doctor.Username}`; // Replace 'doctorId' with the actual identifier for the doctor
-            doctorLink.href = `/selectedDoctorDetails/${doctor.Username}`; // Use _id property
+            doctorLink.href = `/selectedDoctorDetails/${doctor.Username}`; 
 
             // Append the link to the name cell
             nameCell.appendChild(doctorLink);
@@ -359,6 +384,83 @@ function displayAppointments(appointments) {
         resultContainer.appendChild(table);
     }
 }
+function displayPrecriptions(prescriptions) {
+            const resultContainer = document.getElementById('searchResults');
+
+    // Clear any previous search results
+            resultContainer.innerHTML = '';
+
+        if (prescriptions.length === 0) {
+            resultContainer.innerHTML = '<p>No prescriptions found.</p>';
+        } else {
+            // Create a table element
+            const table = document.createElement('table');
+
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            tableHeader.innerHTML = `
+                <tr>
+                    <th>Prescription Number</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Doctor's Name</th>
+                    <th>View</th>
+
+
+                </tr>
+            `;
+            table.appendChild(tableHeader);
+
+            // Create table body
+            const tableBody = document.createElement('tbody');
+            let i=0;
+            prescriptions.forEach((prescription) => {
+         
+            const row = document.createElement('tr');
+            const prescriptionNo = document.createElement('td');
+                prescriptionNo.textContent = i;
+            
+            const prepDateCell = document.createElement('td');
+                prepDateCell.textContent = prescription.PrecriptionDate;
+
+                const statusCell = document.createElement('td');
+                statusCell.textContent = prescription.Status;
+
+                const docNameCell = document.createElement('td');
+                docNameCell.textContent = prescription.DocUsername;
+                  const viewCell=document.createElement('td');
+                  const preLink = document.createElement('a');
+                 preLink.textContent = "View";
+                 preLink.href = `/selectprescription/${'Nadatest3'}/${i}`; 
+
+
+                viewCell.appendChild(preLink);
+
+            
+                 
+                row.appendChild(prescriptionNo);
+                row.appendChild(prepDateCell);
+                row.appendChild(statusCell);
+                row.appendChild(docNameCell);
+                row.appendChild(viewCell);
+
+                i++;
+                tableBody.appendChild(row);
+
+        });
+        // Append the table body to the table
+        table.appendChild(tableBody);
+
+        // Append the table to the result container
+        resultContainer.appendChild(table);
+    }
+}
+
+
+
+
+
+
 searchAppBtn.addEventListener('click', async () => {
             console.log('Button clicked');
             const searchQuery = {
@@ -383,6 +485,8 @@ searchAppBtn.addEventListener('click', async () => {
 
                     const BookedAppointments = await response.json();
                     displayAppointments(BookedAppointments)
+                    filterForm2.style.display = 'none';
+
                     // Call a function to display the doctors
                 } else {
                     console.error('Error searching appointments:', response.statusText);
@@ -410,6 +514,8 @@ searchAppBtn.addEventListener('click', async () => {
                     const BookedAppointments = await response.json();
                     displayAppointments(BookedAppointments);
                     filterForm.style.display = 'block';
+                    filterForm2.style.display = 'none';
+
 
                     // Call a function to display the doctors
                 } else {
@@ -419,6 +525,74 @@ searchAppBtn.addEventListener('click', async () => {
                 console.error('Error searching appointments:', error);
             }
         });
+        prescriptions.addEventListener('click', async () => {
+           
+            
+    
+          try {
+              const response = await fetch('/prescriptions/:registeredUsername', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+
+              });
+
+  
+              if (response.ok) {
+
+                  const prescriptions = await response.json();
+                
+                  displayPrecriptions(prescriptions)
+                  filterForm2.style.display = 'block';
+                  filterForm.style.display = 'none';
+
+
+
+                  // Call a function to display the doctors
+              } else {
+                  console.error('Error searching appointments:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Error searching appointments:', error);
+          }
+      });
+      prepSearch.addEventListener('click', async () => {
+        const searchQuery = {
+                prepDate: prepDate.value.trim(),
+                prepStatus:prepStatus.value.trim(),
+                prepDr:prepDr.value.trim(),
+            };
+    
+          try {
+              const response = await fetch('/searchprescriptions/:registeredUsername', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(searchQuery),
+
+              });
+
+  
+              if (response.ok) {
+
+                  const prescriptions = await response.json();
+                
+                  displayPrecriptions(prescriptions)
+                  //filterForm2.style.display = 'block';
+                  filterForm.style.display = 'none';
+
+
+
+                  // Call a function to display the doctors
+              } else {
+                  console.error('Error searching appointments:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Error searching appointments:', error);
+          }
+      });
        
 
     </script>

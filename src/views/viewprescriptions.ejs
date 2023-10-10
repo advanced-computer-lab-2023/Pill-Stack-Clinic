@@ -1,55 +1,42 @@
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>view prescription</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Details</title>
 </head>
 <body>
-    <h1>view prescription</h1>
-    
-    <div class="table-data">
-        <table border="1" >
+    <h1>Prescription Details</h1>
+
+    <table>
+        <thead>
             <tr>
-                <th>MedicineID</th>
+                <th>Medicine Name</th>
                 <th>Quantity</th>
-                <th>Instruction</th>
-                <th>DOC_username</th>
-                <th>Prescription Date</th>
-                <th>Status</th>
-                
+                <th>Instructions</th>
             </tr>
-            
-            <%
-            if(Prescriptions.length!=0){
-            var i=1;
-            if(Prescriptions.length==1){
-    
-            }
-              
-            Prescriptions.forEach(function(data){
-            %>
-            <tr>
-                <td><%=data.Medicine[0].MedicineID %></td>
-                <td><%=data.Medicine[0].Quantity %></td>
-                <td><%=data.Medicine[0].Instructions %></td>
-                <td><%=data.DocUsername %></td>
-                <td><%=data.PrecriptionDate %></td>
-                <td><%=data.Status %></td>
-                
-    
-              
-               
-            </tr>
-            <%  i++; }) %>
-            <% } else{ %>
+        </thead>
+        <tbody>
+            <% prescription.Medicine.forEach(function(medicine) { %>
                 <tr>
-                    <td colspan="7">No Data Found</td>
+                    <td><%= medicine.MedicineID %></td>
+                    <td><%= medicine.Quantity %></td>
+                    <td><%= medicine.Instructions %></td>
                 </tr>
-            <% } %>
-        </table>
-        <a href="/patient">Back to Patient Home</a>
-        </div>
-    <form action="/patient/viewprescriptions" method="get">
-        
-    </form>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <p>Doctor's Name: <%= prescription.DocUsername %></p>
+    <p>Prescription Date: <%= prescription.PrecriptionDate %></p>
+    <p>Status: <%= prescription.Status %></p>
+    <a href="/patient">Back to Patient Home</a>
+</div>
+<form action="/patient/viewprescriptions" method="get">
+
+</form>
 </body>
 </html>

@@ -41,7 +41,7 @@ const createDocReq = async (req, res) => {
  }
  const viewProfile= async(req,res)=>{
    // const applicationId = req.params.id;
-     const profile = await doctorModel.findOne({});
+     const profile = await doctorModel.findOne({Username:'Nadatest4'});
      res.render('doc_profile_view.ejs', { profile });
  
   }
@@ -123,7 +123,7 @@ const createDocReq = async (req, res) => {
  }
   );   
  }
- else{
+ 
     if(req.body.sDate==='' && appStatus!=='null'){
      BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
        return (
@@ -131,12 +131,12 @@ const createDocReq = async (req, res) => {
        );
  }
     );
- }else{
+ }
   if(req.body.sDate!=='' && appStatus!=='null')
   {
    BookedAppointments =  user.BookedAppointments.filter((appointment) =>{
   
-     const appDate=new Date(req.body.date);
+     const appDate=new Date(req.body.sDate);
      const appEDate=new Date(req.body.eDate);
 
 
@@ -150,13 +150,10 @@ const createDocReq = async (req, res) => {
      );
   }
   );
-}else{
-   BookedAppointments = user.BookedAppointments;
-  
 }
- }
  
- }
+ 
+ 
  console.log(BookedAppointments)
  res.status(200).json(BookedAppointments);
  
