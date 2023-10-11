@@ -173,19 +173,71 @@ const createDocReq = async (req, res) => {
 
   res.render('SearchName.ejs',{found:found})
  }
- const PostByName= async(req,res)=>{
-   console.log(req.body.search);
-   const found=await userModel.find({Name:req.body.search});
-   const profile = await doctorModel.findOne({ Username: "Dr.DS" ,"BookedAppointments.PatientName":req.body.search});
-   console.log(profile);
-   if(profile==null){
-     res.render('Patient_Not_Found')
-   }
-   else{
-   res.render('SearchName.ejs',{found:found})}
-  }
- 
 
+
+ const PostByName= async(req,res)=>{
+  //  console.log(req.body.search);
+  //  const found=await userModel.find({Name: {"$regex": req.body.search, "$options": "i"}});
+  //  const profile = await doctorModel.find({ Username: "Dr.DS" ,"BookedAppointments.PatientName": {"$regex": req.body.search, "$options": "i"} } );
+   
+  const profile = await doctorModel.aggregate([
+    {
+      $match: {
+        Username: "Dr.DS"
+      }
+    },
+    {
+      $unwind: "$BookedAppointments"
+    },
+    {
+      $match: {
+        "BookedAppointments.PatientName": {
+          $regex: req.body.search, "$options": "i",
+          $options: "i"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0, // Exclude the _id field from the result
+        PatientUsername: "$BookedAppointments.PatientUsername",
+      }
+    }
+  ]);
+// working 
+  // let found = []
+  // found=await userModel.find({Username:profile[0].PatientUsername});
+// </working>
+
+// let found = [];
+
+// Create an array of promises
+const promises = profile.map(async (item) => {
+  const user = await userModel.find({ Username: item.PatientUsername });
+  return user;
+});
+
+// Use Promise.all to await all the promises
+const found = await Promise.all(promises);
+
+// Now, `found` will contain the results of the userModel.find calls
+
+
+  // profile.forEach( async item => {
+  //   found.push(await userModel.find({Username:item.PatientUsername}));
+  // })
+  
+
+  // profile will contain an array of objects with "PatientName" field  
+  //  if(profile==null){
+  //    res.render('Patient_Not_Found')
+  //  }
+  //  else{
+   res.render('SearchName.ejs',{found:found[0]})
+  // }
+  // }
+ 
+ }
 
 module.exports = {
     createDocReq,viewProfile,editView,editProfile,
