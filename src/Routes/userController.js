@@ -72,10 +72,9 @@ const addFamilyMem = async (req, res) => {
 }
 const searchDoctors = async (req, res) => {
    try {
-       const { name, speciality } = req.body;
+       const { name, speciality, date, time  } = req.body;
        let query = {};
 
-       console.log(name);
 
        if (name) {
            query["Name"] = { $regex: new RegExp(name, 'i') };
@@ -85,10 +84,11 @@ const searchDoctors = async (req, res) => {
            query["Speciality"] = { $regex: new RegExp(speciality, 'i') };
        }
 
-       // Use Mongoose to query your database based on the search criteria
+      if (date) {
+         const dateFormatted = new Date(`${date}T${time}:00.000Z`);
+         query["Availability.StartDate"] =  dateFormatted ;
+      }
        const doctors = await doctorModel.find(query);
-
-
        res.status(200).json(doctors);
    } catch (error) {
        console.error('Error searching doctors:', error);

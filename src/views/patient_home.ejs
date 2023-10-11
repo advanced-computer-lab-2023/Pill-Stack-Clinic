@@ -144,6 +144,14 @@
             <input type="text" id="doctorName" >
             <label for="doctorSpeciality">Doctor Speciality:</label>
             <input type="text" id="doctorSpeciality" >
+            <label for="availableDate">Available Date:</label>
+            <input type="date" id="availableDate" >
+            <label for="availableTime">Available Time:</label>
+            <input type="time" id="availableTime" >
+
+
+
+
             <button type="button" id="searchDoctorsBtn">Search Doctors</button>
         </form>
        <br><br> 
@@ -198,6 +206,8 @@
         const familyMemberForm = document.getElementById('familyMemberForm');
         const doctorNameInput = document.getElementById('doctorName');
         const doctorSpecialityInput = document.getElementById('doctorSpeciality');
+        const doctorAvailableDate = document.getElementById('availableDate');
+        const doctorAvailableTime = document.getElementById('availableTime');
         const searchDoctorsBtn = document.getElementById('searchDoctorsBtn'); 
         const appDate = document.getElementById('date');
         const appEDate = document.getElementById('Edate');
@@ -233,7 +243,9 @@
             console.log('Button clicked');
             const searchQuery = {
                 name: doctorNameInput.value.trim(),
-                speciality: doctorSpecialityInput.value.trim()
+                speciality: doctorSpecialityInput.value.trim(),
+                date: doctorAvailableDate.value.trim(),
+                time: doctorAvailableTime.value.trim()
             };
     
             try {

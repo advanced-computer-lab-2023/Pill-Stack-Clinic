@@ -166,7 +166,11 @@ const createDocReq = async (req, res) => {
 
  }
  const SearchByName= async(req,res)=>{
-  const found=await userModel.find({Name:req.body.search});
+  // find req.body.search by substring or exact name
+
+
+  const found=await userModel.find({Name:req.body.search}); 
+
   res.render('SearchName.ejs',{found:found})
  }
  const PostByName= async(req,res)=>{

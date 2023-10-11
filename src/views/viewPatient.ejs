@@ -43,20 +43,8 @@
             <td><%= profile.EmergencyContact_MobileNumber %></td>
         </tr>
         <tr>
-            <td>Created At</td>
-            <td><%= profile.createdAt.toISOString().slice(0, 10) %></td>
-        </tr>
-        <tr>
-            <td>Updated At</td>
-            <td><%= profile.updatedAt.toISOString().slice(0, 10) %></td>
-        </tr>
-        <tr>
             <td>Family Members</td>
             <td><%= profile.familyMembers.join(', ') %></td>
-        </tr>
-        <tr>
-            <td>Booked Appointments</td>
-            <td><%= profile.BookedAppointments.join(', ') %></td>
         </tr>
         <tr>
             <td>Medical History</td>
