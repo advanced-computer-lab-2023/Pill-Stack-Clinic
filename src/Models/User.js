@@ -103,6 +103,10 @@ const userSchema = new Schema({
       }
     })
   ],
+  healthPackage:{
+    type: Number,
+    required:false
+  }
 }, { timestamps: true });
 
 const User = mongoose.model('Users', userSchema);

@@ -200,7 +200,7 @@ const viewDoctors = async (req, res) => {
          if (user.healthPackage) {
             return {
                name: doctor.Username,
-               price: doctor.HourlyRate * 1.1 * (user.healthPackage / 100),
+               price: (doctor.HourlyRate * 1.1) - user.healthPackage ,
                Speciality:doctor.Speciality
             };
          } else {
