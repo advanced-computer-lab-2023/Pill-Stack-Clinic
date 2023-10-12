@@ -63,7 +63,7 @@ const addFamilyMem = async (req, res) => {
       user.familyMembers.push(member);
       
       await user.save();
-      res.status(200).send("Family Member added successfully")
+      res.json('{ success: true }')
 
 
    } catch (error) {
@@ -100,20 +100,10 @@ const searchDoctors = async (req, res) => {
 
 
 
-const getUsers = async (req, res) => {
-   const users = await userModel.find({});
-   res.send(users);  
-}
 
 
 
-const updateUser = async (req, res) => {
-   //update a user in the database
-  }
 
-const deleteUser = async (req, res) => {
-   //delete a user from the database
-  }
   const viewALLAppointments =async(req,res)=>{
   // const username = req.params.registeredUsername;
 
@@ -232,16 +222,16 @@ const viewDoctors = async (req, res) => {
 
 const viewFamilyMembers = async (req, res) => {
    try {
-      const username = req.body.username;
+      const username = req.params.registeredUsername;
       //console.log(req.body.username);
-      const user = await userModel.findOne({ Username: 'Tedo' });
+      const user = await userModel.findOne({ Username:username });
       
       if (!user) {
          return res.status(404).send('User not found' );
       }else{
       const familyMembers = user.familyMembers;
       console.log(familyMembers)
-      res.render('viewFamily.ejs',{familyMembers:familyMembers})
+      res.render('viewFamily.ejs',{familyMembers:familyMembers,registeredUsername:username})
     //  res.status(200).json({ familyMembers });
       }
    } catch (error) {
@@ -366,4 +356,4 @@ const doctor=req.body.prepDr;
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};
+module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};

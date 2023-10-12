@@ -116,7 +116,7 @@
     <div class="container">
         <h2>Add Family Member</h2>
         <button id="addFamilyMemberBtn">Add Family Member</button>
-        <form id="familyMemberForm" style="display: none;" action="/addFamMem/<%=registeredUsername%>" method="POST">
+        <form id="familyMemberForm" style="display: none;" action="patient/addFamMem/<%=registeredUsername%>" method="POST">
             <label for="name">Name:</label>
             <input type="text" id="name" name="username" required><br><br>
         
@@ -142,7 +142,7 @@
         </form>
         <br>
         <br>
-        <button onclick="window.location.href='/patient/viewFamily'">view Family members</button>
+        <button onclick="window.location.href='/patient/viewFamily/<%=registeredUsername%>'">view Family members</button>
         <br>
         <br>
         <form action="/patient/viewDoctors" method="POST">
@@ -263,7 +263,7 @@
             };
     
             try {
-                const response = await fetch('/searchDoctors', {
+                const response = await fetch('patient/searchDoctors', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -322,7 +322,7 @@
                 const doctorLink = document.createElement('a');
             doctorLink.textContent = doctor.Name;
             
-            doctorLink.href = `/selectedDoctorDetails/${doctor.Username}`; 
+            doctorLink.href = `patient/selectedDoctorDetails/${doctor.Username}`; 
 
             // Append the link to the name cell
             nameCell.appendChild(doctorLink);
@@ -457,7 +457,7 @@ function displayPrecriptions(prescriptions) {
                   const viewCell=document.createElement('td');
                   const preLink = document.createElement('a');
                  preLink.textContent = "View";
-                 preLink.href = `/selectprescription/${'Nadatest3'}/${i}`; 
+                 preLink.href = `patient/selectprescription/${'Nadatest3'}/${i}`; 
 
 
                 viewCell.appendChild(preLink);
@@ -496,7 +496,7 @@ searchAppBtn.addEventListener('click', async () => {
             };
     
             try {
-                const response = await fetch('/search/:registeredUsername', {
+                const response = await fetch('patient/search/:registeredUsername', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -525,7 +525,7 @@ searchAppBtn.addEventListener('click', async () => {
           
     
             try {
-                const response = await fetch('/allApp/:registeredUsername', {
+                const response = await fetch('patient/allApp/:registeredUsername', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -556,7 +556,7 @@ searchAppBtn.addEventListener('click', async () => {
             
     
           try {
-              const response = await fetch('/prescriptions/:registeredUsername', {
+              const response = await fetch('patient/prescriptions/:registeredUsername', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
@@ -591,7 +591,7 @@ searchAppBtn.addEventListener('click', async () => {
             };
     
           try {
-              const response = await fetch('/searchprescriptions/:registeredUsername', {
+              const response = await fetch('patient/searchprescriptions/:registeredUsername', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',

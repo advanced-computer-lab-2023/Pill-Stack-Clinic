@@ -68,9 +68,7 @@ app.get("/register", (req, res) => {
   res.render('register')
   });
 
-  app.get("/selected", (req, res) => {
-    res.render('register')
-    });
+ 
 
  
 app.route('/doc_register')
@@ -84,24 +82,10 @@ app.route('/doc_register')
 // #Routing to userController here
 console.log("hello world");
 app.post("/addUser",patientRegister);
-app.post("/addFamMem/:registeredUsername",addFamilyMem);
-app.post("/search/:registeredUsername",searchAppointments);
-app.post("/allApp/:registeredUsername",viewALLAppointments);
-app.post("/prescriptions/:registeredUsername",viewPrescriptions);
-app.post("/searchprescriptions/:registeredUsername",filterPrescriptions);
-app.get("/selectprescription/:registeredUsername/:index",viewPrescribtion);
 
 
 
-// app.post('/selectedDoctor/:username', selectedDoctorDetails);
-app.get('/selectedDoctorDetails/:username',selectedDoctorDetails);
 
-app.post("/searchDoctors",searchDoctors)
-
-
-app.get("/users", getUsers);
-app.put("/updateUser", updateUser);
-app.delete("/deleteUser", deleteUser);
 
 
 
