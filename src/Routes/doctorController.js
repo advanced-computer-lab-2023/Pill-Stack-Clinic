@@ -204,38 +204,17 @@ const createDocReq = async (req, res) => {
       }
     }
   ]);
-// working 
-  // let found = []
-  // found=await userModel.find({Username:profile[0].PatientUsername});
-// </working>
 
-// let found = [];
-
-// Create an array of promises
 const promises = profile.map(async (item) => {
   const user = await userModel.find({ Username: item.PatientUsername });
   return user;
 });
 
-// Use Promise.all to await all the promises
-const found = await Promise.all(promises);
 
-// Now, `found` will contain the results of the userModel.find calls
-
-
-  // profile.forEach( async item => {
-  //   found.push(await userModel.find({Username:item.PatientUsername}));
-  // })
+const found1 = await Promise.all(promises);
+const found=found1.flat();
+res.render('SearchName.ejs',{ found})
   
-
-  // profile will contain an array of objects with "PatientName" field  
-  //  if(profile==null){
-  //    res.render('Patient_Not_Found')
-  //  }
-  //  else{
-   res.render('SearchName.ejs',{found:found[0]})
-  // }
-  // }
  
  }
 
