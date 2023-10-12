@@ -58,6 +58,7 @@ const addFamilyMem = async (req, res) => {
       if (!user.familyMembers) {
          user.familyMembers = [];
       }
+      console.log(member)
 
       user.familyMembers.push(member);
       

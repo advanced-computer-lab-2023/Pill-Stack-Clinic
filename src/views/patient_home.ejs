@@ -127,10 +127,17 @@
             <input type="text" id="gender" name="gender" required><br><br>
             
             <label for="relation">Relation:</label>
-            <input type="text" id="relation" name="relation" required><br><br>
+            <select id="relation" name="relation" required>
+                <option value="wife">Wife</option>
+                <option value="husband">Husband</option>
+                <option value="children">Children</option>
+            </select>
             
             <label for="nationalID">National ID:</label>
             <input type="text" id="nationalID" name="nationalID" required><br><br>
+
+            <button type="submit" id="submitButton">Submit</button>
+
             
         </form>
         <br>

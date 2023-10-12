@@ -63,8 +63,8 @@ const userSchema = new Schema({
       Relation: {
         type: String,
         required: true,
-        default: 'Unknown' // Default value for Relation
-      },
+        enum: ['wife', 'husband', 'children']
+    }
     })
   ], BookedAppointments: [
     new Schema({
