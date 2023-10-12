@@ -201,7 +201,7 @@ const viewDoctors = async (req, res) => {
             return {
                name: doctor.Username,
                price: (doctor.HourlyRate * 1.1) - user.healthPackage ,
-               Speciality:doctor.Speciality
+               Speciality: doctor.Speciality
             };
          } else {
             return {
