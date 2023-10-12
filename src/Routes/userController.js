@@ -203,21 +203,23 @@ const selectedDoctorDetails = async (req, res) => {
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
-      const user = await userModel.findOne({ Username: "omarr" });
+      const user = await userModel.findOne({Username: "omarr" });
       const updatedDoctors = doctors.map((doctor) => {
+         
          if (user.healthPackage) {
             return {
                name: doctor.Username,
                price: doctor.HourlyRate * 1.1 * (user.healthPackage / 100),
+               Speciality:doctor.Speciality
             };
          } else {
             return {
                name: doctor.Username,
                price: doctor.HourlyRate * 1.1,
+               Speciality:doctor.Speciality
             };
          }
       });
-
       // Render the EJS template with the JSON data
       res.render('doctorResults.ejs', { doctors: updatedDoctors });
    } catch (error) {
@@ -225,6 +227,8 @@ const viewDoctors = async (req, res) => {
       res.status(500).send('Error fetching doctors');
    }
 };
+
+
 const viewFamilyMembers = async (req, res) => {
    try {
       const username = req.body.username;

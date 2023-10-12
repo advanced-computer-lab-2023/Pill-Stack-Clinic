@@ -28,6 +28,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Speciality</th>
                 <th>Updated Price</th>
             </tr>
         </thead>
@@ -35,6 +36,7 @@
             <% doctors.forEach(function(doctor) { %>
                 <tr>
                     <td><%= doctor.name %></td>
+                    <td><%= doctor.Speciality %></td>
                     <td><%= doctor.price.toFixed(2) %></td>
                 </tr>
             <% }); %>
@@ -42,3 +44,6 @@
     </table>
 </body>
 </html>
+
+
+
