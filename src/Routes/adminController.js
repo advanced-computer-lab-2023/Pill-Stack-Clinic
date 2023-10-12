@@ -1,5 +1,6 @@
 const adminModel = require('../Models/Admin.js');
 const docModel = require('../Models/Doc_Request.js');
+const doctorModel = require('../Models/Doctor.js');
 const packageModel=require('../Models/Packages.js');
 const patientModel=require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
@@ -19,8 +20,8 @@ res.render('docApplications.ejs',{userData:applications});
 const addAdmin = async(req,res) => {
     // username, password
     const admin = new adminModel({
-       username: req.body.username, 
-       password:req.body.password,
+       Username: req.body.username, 
+       Password:req.body.password,
        });
  
        console.log(req.body.username);
@@ -135,7 +136,7 @@ const removeUser = async (req, res) => {
       UserModel = patientModel;
       break;
     case 'doctor':
-      UserModel = docModel;
+      UserModel=doctorModel;
       break;
     case 'admin':
       UserModel = adminModel;
@@ -146,7 +147,7 @@ const removeUser = async (req, res) => {
 
   try {
     // Find and delete the user by username
-    const deletedUser = await UserModel.findOneAndDelete({ username: req.body.username });
+    const deletedUser = await UserModel.findOneAndDelete({ Username: req.body.username });
 
     if (deletedUser) {
       res.send(`User '${toBeDeleted.username}' of type '${userType}' deleted successfully.`);
