@@ -19,7 +19,6 @@
   "homepage": "https://github.com/Advanced-Computer-Lab-2022",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "expres": "^0.0.5",
     "express": "^4.18.2",
@@ -27,6 +26,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "nodemon": "^3.0.1"
   }
 }
