@@ -77,14 +77,8 @@ app.route('/doc_register')
   .get((req, res) => { res.render('doc_register')})
   .post(createDocReq);
   
-app.route('/removeUser')
- .get((req,res) => {res.render('removeUser')})
- .post(removeUser);
 
- app
- .route('/viewDoctors')
-   .get((req,res) => { res.render('viewDoctors')})
-   .post(viewDoctors);
+
 
 
 // #Routing to userController here

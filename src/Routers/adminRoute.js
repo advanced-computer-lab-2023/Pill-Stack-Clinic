@@ -19,6 +19,11 @@ router.get('/deletePack/:id',viewPack2)
 router.post('/deletePack/:id',deletePack)
 
 router.route('/removeUser')
+ .get((req,res) => {res.render('removeUser')})
+ .post(removeUser);
+
+
+router.route('/removeUser')
 .get((req,res) => {res.render('removeUser')})
 .post(removeUser);
 

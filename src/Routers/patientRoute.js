@@ -8,12 +8,13 @@ router.get('/', async(req,res) => {res.render('patient_home.ejs',{registeredUser
 //until login functionality is implemented shifted to app.js
 // router.post("/search/:registeredUsername",searchAppointments);
 // router.post("/allApp/:registeredUsername",viewALLAppointments);
-router.route('/viewDoctors')
-   .get((req,res) => { res.render('doctorResults.ejs')})
-   .post(viewDoctors);
    router.get('/viewFamily',viewFamilyMembers)
    router.get('/viewPrescriptions',viewPrescribtion)
-
+   
+   router
+   .route('/viewDoctors')
+     .get((req,res) => { res.render('viewDoctors')})
+     .post(viewDoctors);
 
 
 module.exports = router;
