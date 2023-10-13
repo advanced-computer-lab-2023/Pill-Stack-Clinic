@@ -2,6 +2,8 @@
 const userModel = require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
+const packageModel = require('../Models/Packages.js'); 
+
 
 
 
@@ -63,7 +65,8 @@ const addFamilyMem = async (req, res) => {
       user.familyMembers.push(member);
       
       await user.save();
-      res.json('{ success: true }')
+      res.status(200).send("Family member has been succesfully added")
+
 
 
    } catch (error) {
@@ -195,12 +198,15 @@ const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
       const user = await userModel.findOne({Username: "omarr" });
+      const package =await packageModel.findOne({Package_Name:user.healthPackage});
+      const discount=package.Session_Discount/100;
+      console.log(discount);
       const updatedDoctors = doctors.map((doctor) => {
          
          if (user.healthPackage) {
             return {
                name: doctor.Username,
-               price: (doctor.HourlyRate * 1.1) - user.healthPackage ,
+               price: (doctor.HourlyRate * 1.1)*(1-discount),
                Speciality: doctor.Speciality
             };
          } else {

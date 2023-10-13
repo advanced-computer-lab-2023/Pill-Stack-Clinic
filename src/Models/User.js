@@ -104,7 +104,7 @@ const userSchema = new Schema({
     })
   ],
   healthPackage:{
-    type: Number,
+    type: String,
     required:false
   }
 }, { timestamps: true });
