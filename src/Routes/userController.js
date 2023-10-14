@@ -76,7 +76,8 @@ const addFamilyMem = async (req, res) => {
 }
 const searchDoctors = async (req, res) => {
    try {
-       const { name, speciality, date, time  } = req.body;
+       const { name, speciality, date, time ,filterspec } = req.body;
+       console.log(filterspec);
        let query = {};
 
 
@@ -91,6 +92,10 @@ const searchDoctors = async (req, res) => {
       if (date) {
          const dateFormatted = new Date(`${date}T${time}:00.000Z`);
          query["Availability.StartDate"] =  dateFormatted ;
+      }
+      if(filterspec!='null'){
+         query["Speciality"] = { $regex: new RegExp(filterspec, 'i') };
+
       }
        const doctors = await doctorModel.find(query);
        res.status(200).json(doctors);
@@ -281,7 +286,7 @@ const doctor=req.body.prepDr;
     let prescriptions;
 
     // Filter by doctor's username
-    if (doctor !== '' && date==='' && status==='null' ) {
+    if (doctor !== 'null' && date==='' && status==='null' ) {
       prescriptions = filteredPrescriptions.filter((prescription) =>
       {
          return ( prescription.DocUsername === doctor );
@@ -289,7 +294,7 @@ const doctor=req.body.prepDr;
       
       );
     }
-    if (date !== '' && doctor==='' && status=='null') {
+    if (date !== '' && doctor==='null' && status=='null') {
       const prepDate=new Date(date);
 
       prescriptions = filteredPrescriptions.filter((prescription) =>{
@@ -302,7 +307,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if (status !== 'null' && date==='' && doctor==='') {
+    if (status !== 'null' && date==='' && doctor==='null') {
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (        prescription.Status === status
             );
@@ -310,7 +315,7 @@ const doctor=req.body.prepDr;
       );
 
     }
-    if(doctor!=='' && date!=='' && status!=='null'){
+    if(doctor!=='null' && date!=='' && status!=='null'){
       const prepDate=new Date(date);
 
       prescriptions = filteredPrescriptions.filter((prescription) =>{
@@ -323,7 +328,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if(doctor!=='' && date!=='' && status==='null'){
+    if(doctor!=='null' && date!=='' && status==='null'){
       const prepDate=new Date(date);
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (
@@ -335,7 +340,7 @@ const doctor=req.body.prepDr;
       );
 
     }
-    if(doctor!=='' && date==='' && status!=='null'){
+    if(doctor!=='null' && date==='' && status!=='null'){
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (
             prescription.DocUsername === doctor &&
@@ -343,7 +348,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if(doctor==='' && date!=='' && status!=='null'){
+    if(doctor==='null' && date!=='' && status!=='null'){
       const prepDate=new Date(date);
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (

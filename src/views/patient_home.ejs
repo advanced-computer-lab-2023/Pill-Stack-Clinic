@@ -155,12 +155,25 @@
         <form >
             <label for="doctorName">Doctor Name:</label>
             <input type="text" id="doctorName" >
+            
             <label for="doctorSpeciality">Doctor Speciality:</label>
             <input type="text" id="doctorSpeciality" >
+
             <label for="availableDate">Available Date:</label>
             <input type="date" id="availableDate" >
             <label for="availableTime">Available Time:</label>
             <input type="time" id="availableTime" >
+            <label for="search-field">Filter by Speciality:</label>
+            <select id="speciality-field" name="search-field">
+                <option value="null">'null'</option>
+                <option value="ENT">ENT</option>
+                <option value="Plastic Surgery">Plastic Surgery</option>
+                <option value="Nervous System">Nervous System</option>
+                <option value="Death">Death</option>
+
+                <!-- Add more options as needed -->
+            </select>
+            
 
            
 
@@ -192,15 +205,22 @@
             <button type="button" id="appSearch">Search for an appointment </button>
         </form>
         <form id="filterForm2" style="display: none;">
-            <label for="dropdown">Search for an appointment by appointment status:</label>
+            <label for="dropdown">Search for a prescription by appointment status:</label>
 
             <select name="status" id="prepstatus">  
                 <option value="null">null</option> 
                 <option value="Filled">Filled</option> 
                 <option value="Unfilled">Unfilled</option> 
             </select>
-            <label for="name">Doctor's Name:</label>
-            <input type="text" id="DRname" name="name" required>
+            <br>
+            <label for="dropdown">Search for a prescription by Doctor's name:</label>
+
+            <select name="name" id="DRname">  
+                <option value="null">null</option> 
+                <option value="Dr.DS">Dr.DS</option> 
+                <option value="Nada">Nada</option> 
+            </select>
+           
 
             <label for="date">Search for precription by date:</label>
             <input type="date" id="prepdate" name="Date">
@@ -233,6 +253,8 @@
         const prepDate = document.getElementById('prepdate');
         const prepDr = document.getElementById('DRname');
         const prepSearch = document.getElementById('prepSearch');
+        const specialityField = document.getElementById('speciality-field');
+
 
 
 
@@ -259,7 +281,9 @@
                 name: doctorNameInput.value.trim(),
                 speciality: doctorSpecialityInput.value.trim(),
                 date: doctorAvailableDate.value.trim(),
-                time: doctorAvailableTime.value.trim()
+                time: doctorAvailableTime.value.trim(),
+                filterspec:specialityField.value.trim(),
+
             };
     
             try {
@@ -276,6 +300,7 @@
                     displayDoctors(doctors); // Call a function to display the doctors
                     filterForm.style.display = 'none';
                     filterForm2.style.display = 'none';
+
 
 
                 } else {
@@ -513,6 +538,7 @@ searchAppBtn.addEventListener('click', async () => {
                     displayAppointments(BookedAppointments)
                     filterForm2.style.display = 'none';
 
+
                     // Call a function to display the doctors
                 } else {
                     console.error('Error searching appointments:', response.statusText);
@@ -541,6 +567,7 @@ searchAppBtn.addEventListener('click', async () => {
                     displayAppointments(BookedAppointments);
                     filterForm.style.display = 'block';
                     filterForm2.style.display = 'none';
+
 
 
                     // Call a function to display the doctors
@@ -572,6 +599,7 @@ searchAppBtn.addEventListener('click', async () => {
                   displayPrecriptions(prescriptions)
                   filterForm2.style.display = 'block';
                   filterForm.style.display = 'none';
+
 
 
 
