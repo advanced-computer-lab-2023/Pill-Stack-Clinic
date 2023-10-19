@@ -1,0 +1,12 @@
+<form method="POST" action="/doctor/profile/edit/<%= profile._id %>">
+    <label for="email">Email:</label>
+    <input type="text" name="email" value="<%= profile.Email %>"><br>
+  
+    <label for="hourlyRate">Hourly Rate:</label>
+    <input type="text" name="hourlyRate" value="<%= profile.HourlyRate %>"><br>
+  
+    <label for="affiliation">Affiliation:</label>
+    <input type="text" name="affiliation" value="<%= profile.Affiliation %>"><br>
+  
+    <button type="submit">Save Changes</button>
+  </form>

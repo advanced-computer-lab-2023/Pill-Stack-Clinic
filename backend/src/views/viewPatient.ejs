@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Patient</title>
+</head>
+<body>
+    <h1>Patient Profile</h1>
+    <table border="1">
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><%= profile.Username %></td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td><%= profile.Name %></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><%= profile.Email %></td>
+        </tr>
+        <tr>
+            <td>Date of Birth</td>
+            <td><%= profile.DateOfBirth.toISOString().slice(0, 10) %></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td><%= profile.Gender %></td>
+        </tr>
+        <tr>
+            <td>Mobile Number</td>
+            <td><%= profile.MobileNumber %></td>
+        </tr>
+        <tr>
+            <td>Emergency Contact Name</td>
+            <td><%= profile.EmergencyContact_Name %></td>
+        </tr>
+        <tr>
+            <td>Emergency Contact Mobile Number</td>
+            <td><%= profile.EmergencyContact_MobileNumber %></td>
+        </tr>
+        <tr>
+            <td>Family Members</td>
+            <td><%= profile.familyMembers.join(', ') %></td>
+        </tr>
+        <tr>
+            <td>Medical History</td>
+            <td>
+                <table border="1">
+                    <tr>
+                        <th>Disease</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>Status</th>
+                    </tr>
+                     <% console.log(profile.MedicalHistory) %>
+
+                    <% profile.MedicalHistory.forEach(medicalHistory => { %>
+                        <tr>
+                            <td><%= medicalHistory.Disease %></td>
+                            <td><%= medicalHistory.Description %></td>
+                            <td><%= medicalHistory.StartDate.toISOString().slice(0, 10) %></td>
+                            <td><%= medicalHistory.Status %></td>
+                        </tr>
+                    <% }); %>
+                </table>
+        </tr>
+    </table>
+    <a href="/doctor/myPatients">Back to my patients</a>
+</body>
+</html>
