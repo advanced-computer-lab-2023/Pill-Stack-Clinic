@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bcrypt = require("bcryptjs");
 
 const docReqSchema = new Schema({
     // Username: req.body.username, 
@@ -44,6 +45,27 @@ const docReqSchema = new Schema({
     }
 
 }, { timestamps: true });
+docReqSchema.pre('save', function(next) {
+  const user = this;
+  if (!user.isModified('password')) {
+    return next();
+  }
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      return next(err);
+    }
+    bcrypt.hash(user.Password, salt, null, (error, hash) => {
+      if (error) {
+        return next(error);
+      }
+      console.log('HASH: ', hash);
+      user.password = hash;
+      console.log('USER.PASSWORD: ', user.Password);
+      next();
+    });
+  });
+});
+
 
 const doc_req = mongoose.model('Doc_Request', docReqSchema);
 module.exports = doc_req;

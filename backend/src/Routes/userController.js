@@ -5,40 +5,11 @@ const doctorModel = require('../Models/Doctor.js');// Database of doctors on the
 
 
 
-const patientRegister = async (req, res) => {
-   try {
-      const user = new userModel({
-         Username: req.body.username, 
-         Name: req.body.name, 
-         Email: req.body.email, 
-         Password: req.body.password,
-         DateOfBirth: req.body.dob,
-         Gender: req.body.gender,
-         MobileNumber: req.body.mobile,
-         EmergencyContact_Name: req.body.emergency_name,
-         EmergencyContact_MobileNumber: req.body.emergency_phone
-      });
-      registeredUsername = req.body.username;
 
-      //check for duplicate username
-      const userExists = await userModel.findOne({Username: req.body.username});
-      if (userExists) return res.status(400).send("Username already exists");
-
-
-
-      await user.save();
-      console.log('User INSERTED!');
-      res.render('patient_home.ejs',{registeredUsername});
-
-   } catch (error) {
-      console.error('Error inserting user:', error);
-      res.status(500).json({ message: 'Internal server error' });
-   }
-}
 
 const addFamilyMem = async (req, res) => {
    try {
-      const username = req.params.registeredUsername;
+      const username = req.user.Username;
 
       const user = await userModel.findOne({ Username: username });
 
@@ -105,28 +76,20 @@ const getUsers = async (req, res) => {
 }
 
 
-
-const updateUser = async (req, res) => {
-   //update a user in the database
-  }
-
-const deleteUser = async (req, res) => {
-   //delete a user from the database
-  }
   const viewALLAppointments =async(req,res)=>{
-  // const username = req.params.registeredUsername;
+   const username = req.user.Username;
 
-   const profile = await userModel.findOne({ Username: "Nadatest3" });
+   const profile = await userModel.findOne({ Username: username });
    const BookedAppointments = profile.BookedAppointments;
    res.status(200).json(BookedAppointments);
  
  
   }
   const searchAppointments =async(req,res)=>{
-   const username = req.params.registeredUsername;
+   const username = req.user.Username;
    const appStatus=req.body.status;
    let BookedAppointments;
-  const user = await userModel.findOne({ Username: 'Nadatest3' });
+  const user = await userModel.findOne({ Username: username });
   if(appStatus==='null' && req.body.sDate!=='' ){
    const appDate=new Date(req.body.sDate);
    const appEDate=new Date(req.body.eDate);
@@ -176,7 +139,6 @@ res.status(200).json(BookedAppointments);
 
 }
 
-
 const selectedDoctorDetails = async (req, res) => {
    try {
     
@@ -190,7 +152,7 @@ const selectedDoctorDetails = async (req, res) => {
          return res.status(404).json({ message: 'Doctor not found' });
       }
 
-      res.render('selectedDoctorDetails.ejs', { doctor });
+      res.send(doctor);
 
    } catch (error) {
       console.error('Error retrieving selected doctor:', error);
@@ -219,7 +181,7 @@ const viewDoctors = async (req, res) => {
       });
 
       // Render the EJS template with the JSON data
-      res.render('doctorResults.ejs', { doctors: updatedDoctors });
+      res.send( updatedDoctors);
    } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching doctors');
@@ -227,17 +189,15 @@ const viewDoctors = async (req, res) => {
 };
 const viewFamilyMembers = async (req, res) => {
    try {
-      const username = req.body.username;
-      //console.log(req.body.username);
-      const user = await userModel.findOne({ Username: 'Tedo' });
+      const username = req.user.Username;
+      const user = await userModel.findOne({ Username:username });
       
       if (!user) {
          return res.status(404).send('User not found' );
       }else{
       const familyMembers = user.familyMembers;
       console.log(familyMembers)
-      res.render('viewFamily.ejs',{familyMembers:familyMembers})
-    //  res.status(200).json({ familyMembers });
+    res.send(familyMembers);
       }
    } catch (error) {
       console.error('Error retrieving family members:', error);
@@ -246,15 +206,15 @@ const viewFamilyMembers = async (req, res) => {
 };
 const viewPrescribtion= async (req, res) => {
    try {
-   //const username=req.params.registeredUsername;
-    const index=req.params.index;
-      const user = await userModel.findOne({ Username: 'Nadatest3'});
+      const username = req.user.Username;
+      const index=req.params.index;
+      const user = await userModel.findOne({ Username: username});
       //console.log(user);
       if (!user) {
          return res.status(404).send('User not found' );
       }else{
       const Prescription = user.Prescriptions[index];
-      res.render('viewprescriptions.ejs',{prescription:Prescription})
+      res.send(Prescription)
       }
    } catch (error) {
       console.error('Error retrieving prescription:', error);
@@ -262,25 +222,25 @@ const viewPrescribtion= async (req, res) => {
    }
 }; 
 const viewPrescriptions=async(req,res)=>{
-      //const username=req.params.registeredUsername;
+   const username = req.user.Username;
 
-   const profile = await userModel.findOne({ Username: "Nadatest3" });
+   const profile = await userModel.findOne({ Username: username });
    const prescriptions = profile.Prescriptions;
-   res.status(200).json(prescriptions);
+   res.ssend(prescriptions);
 
 }
- const filterPrescriptions=async(req, res)=>{
-   //const username=req.params.registeredUsername;
+const filterPrescriptions=async(req, res)=>{
+   const username = req.user.Username;
    console.log('In filtered');
 const status =req.body.prepStatus;
 const date=req.body.prepDate;
 const doctor=req.body.prepDr;
-    const user = await userModel.findOne({ Username: 'Nadatest3' });
+    const user = await userModel.findOne({ Username: username});
     let filteredPrescriptions = user.Prescriptions;
     let prescriptions;
 
     // Filter by doctor's username
-    if (doctor !== '' && date==='' && status==='null' ) {
+    if (doctor !== 'null' && date==='' && status==='null' ) {
       prescriptions = filteredPrescriptions.filter((prescription) =>
       {
          return ( prescription.DocUsername === doctor );
@@ -288,7 +248,7 @@ const doctor=req.body.prepDr;
       
       );
     }
-    if (date !== '' && doctor==='' && status=='null') {
+    if (date !== '' && doctor==='null' && status=='null') {
       const prepDate=new Date(date);
 
       prescriptions = filteredPrescriptions.filter((prescription) =>{
@@ -301,7 +261,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if (status !== 'null' && date==='' && doctor==='') {
+    if (status !== 'null' && date==='' && doctor==='null') {
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (        prescription.Status === status
             );
@@ -309,7 +269,7 @@ const doctor=req.body.prepDr;
       );
 
     }
-    if(doctor!=='' && date!=='' && status!=='null'){
+    if(doctor!=='null' && date!=='' && status!=='null'){
       const prepDate=new Date(date);
 
       prescriptions = filteredPrescriptions.filter((prescription) =>{
@@ -322,7 +282,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if(doctor!=='' && date!=='' && status==='null'){
+    if(doctor!=='null' && date!=='' && status==='null'){
       const prepDate=new Date(date);
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (
@@ -334,7 +294,7 @@ const doctor=req.body.prepDr;
       );
 
     }
-    if(doctor!=='' && date==='' && status!=='null'){
+    if(doctor!=='null' && date==='' && status!=='null'){
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (
             prescription.DocUsername === doctor &&
@@ -342,7 +302,7 @@ const doctor=req.body.prepDr;
       }
       );
     }
-    if(doctor==='' && date!=='' && status!=='null'){
+    if(doctor==='null' && date!=='' && status!=='null'){
       const prepDate=new Date(date);
       prescriptions = filteredPrescriptions.filter((prescription) =>{
          return (
@@ -357,8 +317,7 @@ const doctor=req.body.prepDr;
 
 
 }
-
  
 
 
-module.exports = {patientRegister,selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers, updateUser, deleteUser,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};
+module.exports = {selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};

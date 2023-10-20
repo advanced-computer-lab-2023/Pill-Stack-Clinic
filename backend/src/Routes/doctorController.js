@@ -6,43 +6,11 @@ const userModel = require('../Models/User.js');// Database of users on the platf
 const { default: mongoose } = require('mongoose');
 
 
-// CREATE a new doctor
-const createDocReq = async (req, res) => {
-    console.log(req.body.name);
-    // register as a doctor using username, name, email, password, date of birth,
-    //  hourly rate, affiliation (hospital), educational background. 
 
-    const doc = new docModel({
-       Username: req.body.username, 
-       Name: req.body.name, 
-       Email:req.body.email, 
-       Password:req.body.password,
-       DateOfBirth: req.body.dob,
-       HourlyRate: req.body.hourly_rate,
-       Affiliation: req.body.affiliation,
-       EducationalBackground: req.body.educational_background       
-       });
-
-       //check for duplicate username
-      const docExists = await docModel.findOne({Username: req.body.username});
-      if (docExists) return res.status(400).send("Username already exists");
-       
-  
-       
-    doc.save(function(err){
-       if (err) {
-          throw err;
-       }
-       console.log('INSERTED!');
- 
-   });
-   // res.render('patient_home');
-    res.status(200).send("Your Request has been sent to the admin.")
- }
  const viewProfile= async(req,res)=>{
-   // const applicationId = req.params.id;
-     const profile = await doctorModel.findOne({Username:'Nadatest4'});
-     res.render('doc_profile_view.ejs', { profile });
+  const username = req.user.Username;
+  const profile = await doctorModel.findOne({Username:username});
+     res.send(profile);
  
   }
  
@@ -57,7 +25,7 @@ const createDocReq = async (req, res) => {
      }
  
      // Render the edit email form with the profile data
-     res.render('doc_profile_edit.ejs', { profile });
+     res.send(profile);
    } catch (error) {
      console.error(error);
      res.status(500).send('Internal Server Error');
@@ -82,7 +50,7 @@ const createDocReq = async (req, res) => {
          await profile.save();
      
          // Redirect back to the profile view or show a success message
-         res.render('doc_profile_view.ejs', { profile });
+         res.send(profile);
        } catch (error) {
          console.error(error);
          res.status(500).send('Internal Server Error');
@@ -91,24 +59,25 @@ const createDocReq = async (req, res) => {
   }
 
   const viewMyPatients= async(req,res)=>{
-    // const applicationId = req.params.id;
-    const profile = await doctorModel.findOne({ Username: "Dr.DS" });
+    const username = req.user.Username;
+    const profile = await doctorModel.findOne({ Username: username });
     const appointments = profile.BookedAppointments
     console.log('the doc:' , appointments);
-    res.render('myPatients.ejs', { appointments });
-  
+res.send(appointments);  
    }
 
    const selectPatient= async(req,res)=>{
     // http://localhost:8000/doctor/viewPatient?username=pep
     const { username } = req.query;
     const profile = await userModel.findOne({Username: username});
-    res.render('viewPatient.ejs', { profile });
+    res.send(profile);
    }
    const searchAppointments =async(req,res)=>{
+    const username = req.user.Username;
+
     const appStatus=req.body.status;
     let BookedAppointments;
-   const user = await doctorModel.findOne({ Username: 'Nadatest4' });
+   const user = await doctorModel.findOne({ Username: username });
    if(appStatus==='null' && req.body.sDate!=='' ){
     const appDate=new Date(req.body.sDate);
     const appEDate=new Date(req.body.eDate);
@@ -155,35 +124,27 @@ const createDocReq = async (req, res) => {
  
  
  console.log(BookedAppointments)
- res.status(200).json(BookedAppointments);
+ res.send(BookedAppointments);
  
  }
  const viewALLAppointments =async(req,res)=>{
-  const profile = await doctorModel.findOne({ Username: "Nadatest4" });
+  const username = req.user.Username;
+  const profile = await doctorModel.findOne({ Username: username });
   const BookedAppointments = profile.BookedAppointments;
-  res.status(200).json(BookedAppointments);
+  res.send(BookedAppointments);
 
 
- }
- const SearchByName= async(req,res)=>{
-  // find req.body.search by substring or exact name
-
-
-  const found=await userModel.find({Name:req.body.search}); 
-
-  res.render('SearchName.ejs',{found:found})
  }
 
 
  const PostByName= async(req,res)=>{
-  //  console.log(req.body.search);
-  //  const found=await userModel.find({Name: {"$regex": req.body.search, "$options": "i"}});
-  //  const profile = await doctorModel.find({ Username: "Dr.DS" ,"BookedAppointments.PatientName": {"$regex": req.body.search, "$options": "i"} } );
+  const username = req.user.Username;
+
    
   const profile = await doctorModel.aggregate([
     {
       $match: {
-        Username: "Dr.DS"
+        Username: username
       }
     },
     {
@@ -218,32 +179,18 @@ const promises = profile.map(async (item) => {
 });
 
 // Use Promise.all to await all the promises
-const found = await Promise.all(promises);
+const found1 = await Promise.all(promises);
 
-// Now, `found` will contain the results of the userModel.find calls
-
-
-  // profile.forEach( async item => {
-  //   found.push(await userModel.find({Username:item.PatientUsername}));
-  // })
+  const found=found1.flat();
+   res.send(found);
   
-
-  // profile will contain an array of objects with "PatientName" field  
-  //  if(profile==null){
-  //    res.render('Patient_Not_Found')
-  //  }
-  //  else{
-   res.render('SearchName.ejs',{found:found[0]})
-  // }
-  // }
  
  }
 
 module.exports = {
-    createDocReq,viewProfile,editView,editProfile,
+    viewProfile,editView,editProfile,
     viewMyPatients,
     selectPatient,
     searchAppointments,viewALLAppointments,
-    SearchByName,
     PostByName
 };

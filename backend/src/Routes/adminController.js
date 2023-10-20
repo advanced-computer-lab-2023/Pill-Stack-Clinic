@@ -1,5 +1,6 @@
 const adminModel = require('../Models/Admin.js');
 const docModel = require('../Models/Doc_Request.js');
+const doctorModel = require('../Models/Doctor.js');
 const packageModel=require('../Models/Packages.js');
 const patientModel=require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
@@ -7,7 +8,7 @@ const { default: mongoose } = require('mongoose');
 const viewDocApp= async (req, res) => {
     const applicationId = req.params.id;
     const application = await docModel.findById(applicationId);
-    res.render('singleApplication.ejs', { application });
+    res.send(application);
 }
 
 const viewAllApp= async (req, res) => {
@@ -17,25 +18,10 @@ const viewAllApp= async (req, res) => {
 }
 
 
-const addAdmin = async(req,res) => {
-    // username, password
-    const admin = new adminModel({
-       username: req.body.username, 
-       password:req.body.password,
-       });
- 
-       console.log(req.body.username);
-    admin.save(function(err){
-       if (err) {
-          throw err;
-       }
-       console.log('Added!');
-   });
-   res.status(200).send("Admin added successfuly.")
- }
+
  const viewAllPacks= async (req, res) => {
     const Pack = await packageModel.find({}).sort({createdAt:-1});
-res.render('packages.ejs',{PackData:Pack});
+res.send(Pack);
 }
 const createPackage = async (req, res) => {
     const dupPack = await packageModel.findOne({Package_Name:req.body.packagename});
@@ -61,19 +47,19 @@ const createPackage = async (req, res) => {
  
    });
    const Pack = await packageModel.find({});
-   res.render('package_added',{PackData:Pack});
+   res.send(Pack);
 }
 const viewPack=async(req,res)=>{
     const {id}=req.params
     console.log(id)
     const pack = await packageModel.findById(id);
-    res.render('editPack.ejs', { pack });
+    res.send(pack);
  }
  const viewPack2=async(req,res)=>{
     const {id}=req.params
     console.log(id)
     const pack = await packageModel.findById(id);
-    res.render('deletePack.ejs', { pack });
+    res.send(pack );
  }
  const updatePack=async(req,res)=>{
     const { id } = req.params;
@@ -97,7 +83,7 @@ const viewPack=async(req,res)=>{
          await pack.save();
      
          // Redirect back to the profile view or show a success message
-         res.render('package_updated');
+         res.send('Pacakge Updated');
        } catch (error) {
          console.error(error);
          res.status(500).send('Internal Server Error');
@@ -115,7 +101,7 @@ const viewPack=async(req,res)=>{
       await pack.delete();
   
       // Redirect back to the profile view or show a success message
-      res.render('package_deleted');
+      res.send('Pacakge Deleted');
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
@@ -133,7 +119,7 @@ const removeUser= async (req, res) => {
      UserModel =patientModel;
      break;
    case 'doctor':
-     UserModel = docModel;
+     UserModel = doctorModel;
      break;
    case 'admin':
      UserModel = adminModel;
@@ -143,7 +129,7 @@ const removeUser= async (req, res) => {
  }
    try {
      // Find and delete the user by username
-     const deletedUser = await UserModel.findOneAndDelete({username:req.body.username });
+     const deletedUser = await UserModel.findOneAndDelete({Username:req.body.username });
 
      if (deletedUser) {
        res.send(`User '${toBeDeleted}' deleted successfully.`);
@@ -159,7 +145,7 @@ const removeUser= async (req, res) => {
 
 
 module.exports = {
-    viewAllApp,viewDocApp,addAdmin,createPackage,viewAllPacks,viewPack,updatePack,
+    viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,
     viewPack2,deletePack,removeUser
 };
 
