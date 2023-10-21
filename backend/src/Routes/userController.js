@@ -196,7 +196,7 @@ const viewFamilyMembers = async (req, res) => {
          return res.status(404).send('User not found' );
       }else{
       const familyMembers = user.familyMembers;
-      console.log(familyMembers)
+     console.log(familyMembers)
     res.send(familyMembers);
       }
    } catch (error) {
