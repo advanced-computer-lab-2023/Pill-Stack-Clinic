@@ -24,6 +24,8 @@ const viewAllApp= async (req, res) => {
 res.send(Pack);
 }
 const createPackage = async (req, res) => {
+  console.log("Received request body:", req.body);
+
     const dupPack = await packageModel.findOne({Package_Name:req.body.packagename});
     const package = new packageModel({
        Package_Name: req.body.packagename, 

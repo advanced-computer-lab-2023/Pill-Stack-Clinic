@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { Box,
+import { Box, Flex,
+  Input,
+  Button,
+  Text,
+
  } from "@chakra-ui/react";
+ import '../../index.css'
 
 
 export const Login = () => {
@@ -13,13 +18,7 @@ export const Login = () => {
       password: "",
     });
     const { username, password } = inputValue;
-    const handleOnChange = (e) => {
-      const { name, value } = e.target;
-      setInputValue({
-        ...inputValue,
-        [name]: value,
-      });
-    };
+
   
     const handleError = (err) =>
       toast.error(err, {
@@ -32,11 +31,14 @@ export const Login = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
       try {
         const { data } = await axios.post(
           "http://localhost:8000/login",
           {
-            ...inputValue,
+            username: user,
+            password: pass,
           },
           { withCredentials: true }
         );
@@ -67,41 +69,69 @@ export const Login = () => {
     };
   
     return (
-      <div className="form_container">
-        <h2>Login Account</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username">Username</label>
-            <input
-              type="username"
-              name="username"
-              value={username}
-              placeholder="Enter your username"
-              onChange={handleOnChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              placeholder="Enter your password"
-              onChange={handleOnChange}
-            />
-          </div>
-          <button type="submit">Submit</button>
-          <span>
-            Already have an account? <Link to={"/signup"}>Signup</Link>
-          </span>
-        </form>
-        <ToastContainer />
-      </div>
-      // <>
-      //   <Box display='flex' justifyContent={'center'} alignItems={'center'}>
+      // <div className="form_container">
+      //   <h2>Login Account</h2>
+      //   <form onSubmit={handleSubmit}>
+      //     <div>
+      //       <label htmlFor="username">Username</label>
+      //       <input
+      //         type="username"
+      //         name="username"
+      //         value={username}
+      //         placeholder="Enter your username"
+      //         onChange={handleOnChange}
+      //       />
+      //     </div>
+      //     <div>
+      //       <label htmlFor="password">Password</label>
+      //       <input
+      //         type="password"
+      //         name="password"
+      //         value={password}
+      //         placeholder="Enter your password"
+      //         onChange={handleOnChange}
+      //       />
+      //     </div>
+      //     <button type="submit">Submit</button>
+      //     <span>
+      //       Already have an account? <Link to={"/signup"}>Signup</Link>
+      //     </span>
+      //   </form>
+      //   <ToastContainer />
+      // </div>
+      <>
+        <Box display='flex' justifyContent={'center'} alignItems={'center'}  flexDirection={'column'}
+          w={'100%'} h={'100%'}   height='100vh'  
+          className="gradBG">
+          
+          <Box bg={'#4bbbf3'} p={50} rounded={10} display='flex' justifyContent={'center'} alignItems={'center'}  flexDirection={'column'} 
+            boxShadow={'2xl'}>
+            <Text fontSize={'5xl'} color={'black'} textAlign={'center'}>Login</Text>
+          <Flex p={5} >
+            <Box display="flex" alignItems="center">
+              <Text fontSize={'2xl'} mr={2}>Username</Text>
+              <Input placeholder="Username" id={'username'} />
+            </Box>
+          </Flex>
+          <Flex p={5}>
+            <Box display="flex" alignItems="center">
+              <Text fontSize={'2xl'} mr={2}>Password</Text>
+              <Input placeholder="Password" id={'password'}  type="password" />
+            </Box>
+          </Flex>
 
-      //   </Box>
-      // </>
+          <Button  size="lg" bg={'grey'} m={5}
+          onClick={handleSubmit}>
+              Login
+          </Button>
+          </Box>
+
+          
+
+        </Box>
+        <ToastContainer />
+
+      </>
     );
 };
 
