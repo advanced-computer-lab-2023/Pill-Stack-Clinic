@@ -1,4 +1,4 @@
-*,
+/* *,
 ::before,
 ::after {
   box-sizing: border-box;
@@ -17,7 +17,7 @@ body {
   width: 100%;
 }
 
-body {
+ body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,7 @@ body {
     rgba(0, 212, 255, 1) 100%
   );
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+} 
 
 .form_container {
   background-color: #fff;
@@ -127,4 +127,4 @@ span a {
     padding: 0.6rem 1rem;
     font-size: 1.5rem;
   }
-}
+} */

@@ -5,6 +5,8 @@ import MyForm from './Components/UI/MyForm.js';
 import { Box , Flex,  Button, ButtonGroup } from "@chakra-ui/react"
 import { Route, Routes } from "react-router-dom";
 import { Login, Home} from "./Components/Pages";
+import  AdminHome from "./Components/Pages/AdminHome";
+import  AdminPacks from "./Components/Pages/AdminPacks";
 
 
 function App() {
@@ -12,10 +14,13 @@ function App() {
   const loginIns = ["Username", "Password"];
 
   return (
-    <div className="App">
+    <div >
       <Routes>
       <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+         <Route path="/admin-home" element={<AdminHome />} />
+         <Route path="/admin-packs" element={<AdminPacks />} />
+         
       </Routes>
     </div>
   );
