@@ -13,6 +13,7 @@ var cookies = require("cookie-parser");
 
 
 
+
 const MongoURI = process.env.MONGO_URI ;
 
 
@@ -44,6 +45,9 @@ const doctor = require("./Routers/doctorRoute");
 const admin = require("./Routers/adminRoute");
 const patient = require("./Routers/patientRoute");
 const auth = require("./Routers/authRoute");
+const stripe = require("./Routers/stripeRoute");
+const { default: Stripe } = require("stripe");
+
 
 
 // #Importing the userController
@@ -71,6 +75,8 @@ app.use("/doctor", doctor);
 app.use("/admin",admin)
 // patient routes
 app.use("/patient", patient);
+app.use("/stripe", Stripe);
+
 
 
 

@@ -145,16 +145,15 @@ module.exports.Login = async (req, res, next) => {
       if (!auth) {
         return res.json({message:'Incorrect password or email' }) 
       }
+      console.log(loggedIn);
        const token = createSecretToken(loggedIn._id,role);
        res.cookie("token", token, {
          withCredentials: true,
          httpOnly: false,
        });
-       console.log('login is being called');
-       console.log('hehe',req.cookies.token);
-
+       
        res.status(201).json({ message: "User logged in successfully", success: true });
-       next()
+     //  next()
     } catch (error) {
       console.error(error);
     }
@@ -162,27 +161,41 @@ module.exports.Login = async (req, res, next) => {
   module.exports.currentUser=(req, res,next) => {
 
     const token = req.cookies.token
-    console.log('howw',token);
     if (!token) {
       return res.json({ status: false })
     }
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
+
        return res.json({ status: false })
       } else {
-        const user = await userModel.findById(data.id);
+        var user;
+        if(data.role==='patient'){
+         user = await userModel.findById(data.id);
+        }
+        if(data.role==='doctor'){
+           user = await doctorModel.findById(data.id);
+          }
+          if(data.role==='admin'){
+             user = await adminModel.findById(data.id);
+            }
+        
+
         if (user) {
           res.json({ status: true, user: user.Username })
-       // req.user = user;
-       // next(); 
+      
       }
-        else return res.json({ status: false })
+
+        else {
+
+          
+          return res.json({ status: false })}
       }
     })
   }
   module.exports.Logout = (req, res) => {
     const username = req.user.Username;
-
+   console.log(username);
     // Clear the token cookie by setting it to an empty string and expiring it
     res.cookie('token', '', { expires: new Date(0), httpOnly: false });
 console.log('logout is being called');

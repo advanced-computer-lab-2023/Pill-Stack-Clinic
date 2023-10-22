@@ -12,8 +12,18 @@ module.exports.userVerification = (req, res,next) => {
     if (err) {
      return res.json({ status: false })
     } else {
-      const user = await User.findById(data.id);
-      console.log(data.role);
+      var user;
+        if(data.role==='patient'){
+         user = await userModel.findById(data.id);
+        }
+        if(data.role==='doctor'){
+           user = await doctorModel.findById(data.id);
+          }
+          if(data.role==='admin'){
+             user = await adminModel.findById(data.id);
+            }
+        
+
       if (user) {
       req.user = user;
       next(); 
