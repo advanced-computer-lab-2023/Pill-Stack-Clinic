@@ -38,11 +38,17 @@ export const Login = () => {
           { withCredentials: true }
         );
         console.log(data);
-        const { success, message } = data;
+        const { success, message ,role} = data;
         if (success) {
           handleSuccess(message);
           setTimeout(() => {
-            navigate("/");
+            if (role === 'patient') {
+              navigate('/');
+            } else if (role === 'doctor') {
+              navigate('/doctor-home');
+            } else if (role === 'admin') {
+              navigate('/admin-home');
+            }
           }, 1000);
         } else {
           handleError(message);
