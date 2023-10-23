@@ -2,7 +2,7 @@
 const userModel = require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
-
+const packageModel=require('../Models/Packages.js');
 
 
 
@@ -166,18 +166,23 @@ const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
       const user = await userModel.findOne({ Username: "omarr" });
+      //const package=await packageModel.findOne({Package_Name:user.healthPackage});
+      //const discount=package.Session_Discount/100;
       const updatedDoctors = doctors.map((doctor) => {
-         if (user.healthPackage) {
-            return {
-               name: doctor.Username,
-               price: doctor.HourlyRate * 1.1 * (user.healthPackage / 100),
-            };
-         } else {
+     
+         // if (user.healthPackage) {
+         //    return {
+         //       name: doctor.Username,
+         //       price: (doctor.HourlyRate * 1.1) *(1-discount),
+         //       speciality:doctor.Speciality
+         //    };
+         // } else {
             return {
                name: doctor.Username,
                price: doctor.HourlyRate * 1.1,
+               speciality:doctor.Speciality
             };
-         }
+      //}
       });
 
       // Render the EJS template with the JSON data
