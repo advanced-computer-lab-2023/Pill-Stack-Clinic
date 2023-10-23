@@ -110,10 +110,11 @@ const viewPack=async(req,res)=>{
     }
 }
 const removeUser= async (req, res) => {
-   const toBeDeleted={username:req.body.username};
+  console.log( " req bod ", req.body);
+   const toBeDeleted=req.body.id;
    //var e = document.getElementById("userType");
-   var userType =req.body.usertype ;
-   console.log({username:req.body.username});
+   var userType =req.body.role ;
+  //  console.log({username:req.body.username});
    console.log(userType);
     // Determine which model to use based on the userType
  switch (userType) {
@@ -126,12 +127,13 @@ const removeUser= async (req, res) => {
    case 'admin':
      UserModel = adminModel;
      break;
-   default:
-     return res.status(400).send('Invalid user type');
+   default:     
+   console.error('Invalid user type:', userType);
+   return res.status(400).send(`Invalid user type: ${userType}`);
  }
    try {
      // Find and delete the user by username
-     const deletedUser = await UserModel.findOneAndDelete({Username:req.body.username });
+     const deletedUser = await UserModel.findOneAndDelete({_id:toBeDeleted });
 
      if (deletedUser) {
        res.send(`User '${toBeDeleted}' deleted successfully.`);
@@ -145,10 +147,31 @@ const removeUser= async (req, res) => {
 
 }
 
+const getAllUsers = async (req, res) => {
+  try {
+    const patients = await patientModel.find({});
+    const doctors = await doctorModel.find({});
+    const admins = await adminModel.find();
+
+    // Add the 'role' property to each user object
+    const patientsWithRole = patients.map(patient => ({ ...patient._doc, role: 'patient' }));
+    const doctorsWithRole = doctors.map(doctor => ({ ...doctor._doc, role: 'doctor' }));
+    const adminsWithRole = admins.map(admin => ({ ...admin._doc, role: 'admin' }));
+
+    // Combine all user types into a single array
+    const allUsers = [...adminsWithRole, ...doctorsWithRole, ...patientsWithRole];
+    // console.log(allUsers);
+    res.send(allUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 module.exports = {
     viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,
-    viewPack2,deletePack,removeUser
+    viewPack2,deletePack,removeUser, getAllUsers
 };
 
 
