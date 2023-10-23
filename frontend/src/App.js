@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import { Login, Home} from "./Components/Pages";
 import  AdminHome from "./Components/Pages/AdminHome";
 import  AdminPacks from "./Components/Pages/AdminPacks";
+import UserManagement from './Components/Pages/UserManagement';
 
 
 function App() {
@@ -16,11 +17,11 @@ function App() {
   return (
     <div >
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-         <Route path="/admin-home" element={<AdminHome />} />
-         <Route path="/admin-packs" element={<AdminPacks />} />
-         
+        <Route path="/admin-home" element={<AdminHome />} />
+        <Route path="/admin-packs" element={<AdminPacks />} />
+        <Route path="/admin-users" element={<UserManagement/>} />
       </Routes>
     </div>
   );

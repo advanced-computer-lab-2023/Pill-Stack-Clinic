@@ -35,6 +35,10 @@ export const AdminHome = () => {
     const handlePacks = () => {
         navigate("/admin-packs");
     };
+
+  const handleUsers = () => {
+      navigate("/admin-users");
+  };
   return (
     <>
       <div className="home_page">
@@ -43,7 +47,7 @@ export const AdminHome = () => {
           Welcome Adminnnnn <span>{username}</span>
         </h4>
         <button onClick={handlePacks}>Manage Packages</button>
-
+        <button onClick={handleUsers}>Manage Users</button>
 
 
 

@@ -73,14 +73,14 @@ const viewPack=async(req,res)=>{
          }
      
          // Update the specific fields based on form submission
-         pack.Price=req.body.Price;
-         pack.Session_Discount = req.body.Session_Discount;
-         pack.Pharmacy_Discount = req.body.Pharmacy_Discount;
-         pack.Family_Discount = req.body.Family_Discount;
-         if( pack.Session_Discount <0 || pack.Session_Discount>100 ||pack.Pharmacy_Discount<0 || pack.Pharmacy_Discount>100||
-            pack.Family_Discount<0 || pack.Family_Discount>100){
-                return 
-            }
+         if (req.body.Price) 
+            pack.Price=req.body.Price;
+          if (req.body.Session_Discount)
+            pack.Session_Discount = req.body.Session_Discount;
+          if (req.body.Pharmacy_Discount)
+            pack.Pharmacy_Discount = req.body.Pharmacy_Discount;
+          if (req.body.Family_Discount)
+            pack.Family_Discount = req.body.Family_Discount;
      
          await pack.save();
      
