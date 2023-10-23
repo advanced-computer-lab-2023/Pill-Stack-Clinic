@@ -69,6 +69,8 @@ const userSchema = new Schema({
     })
   ], BookedAppointments: [
     new Schema({
+      _id: mongoose.Schema.Types.ObjectId,
+
       DoctorUsername: String,
       DoctorName:String,
       StartDate:Date,
@@ -79,6 +81,8 @@ const userSchema = new Schema({
       }    })
   ], Prescriptions:[
     new Schema({
+      _id: mongoose.Schema.Types.ObjectId,
+
       Medicine: [
         new Schema({
           MedicineID: String,

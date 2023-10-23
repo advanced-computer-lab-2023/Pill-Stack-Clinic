@@ -48,6 +48,7 @@ const secPass = await bcrypt.hash(req.body.password, salt)
     console.error(error);
   }
 };
+//CREATED AS AN APPLICATION NOT AN ACCOUNT 
 module.exports.DoctorRegister = async (req, res, next) => {
   try {
     const existingUserinPatient = await userModel.findOne({ Username:req.body.username });

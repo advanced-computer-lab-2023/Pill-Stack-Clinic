@@ -159,6 +159,36 @@ const selectedDoctorDetails = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
    }
 };
+// const viewDoctors = async (req, res) => {
+//    try {
+//       const doctors = await doctorModel.find();
+//       const user = await userModel.findOne({Username: "omarr" });
+//       const package =await packageModel.findOne({Package_Name:user.healthPackage});
+//       const discount=package.Session_Discount/100;
+//       console.log(discount);
+//       const updatedDoctors = doctors.map((doctor) => {
+         
+//          if (user.healthPackage) {
+//             return {
+//                name: doctor.Username,
+//                price: (doctor.HourlyRate * 1.1)*(1-discount),
+//                Speciality: doctor.Speciality
+//             };
+//          } else {
+//             return {
+//                name: doctor.Username,
+//                price: doctor.HourlyRate * 1.1,
+//                Speciality:doctor.Speciality
+//             };
+//          }
+//       });
+//       // Render the EJS template with the JSON data
+//       res.send({doctors: updatedDoctors });
+//    } catch (error) {
+//       console.error(error);
+//       res.status(500).send('Error fetching doctors');
+//    }
+// };
 
 
 

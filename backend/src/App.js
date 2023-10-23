@@ -45,8 +45,7 @@ const doctor = require("./Routers/doctorRoute");
 const admin = require("./Routers/adminRoute");
 const patient = require("./Routers/patientRoute");
 const auth = require("./Routers/authRoute");
-const stripe = require("./Routers/stripeRoute");
-const { default: Stripe } = require("stripe");
+const stripeRoute = require("./Routers/stripeRoute");
 
 
 
@@ -75,7 +74,7 @@ app.use("/doctor", doctor);
 app.use("/admin",admin)
 // patient routes
 app.use("/patient", patient);
-app.use("/stripe", Stripe);
+app.use("/stripe", stripeRoute);
 
 
 

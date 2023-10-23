@@ -51,6 +51,8 @@ const doctorSchema = new Schema({
     Availability:
       [
         new Schema({
+          _id: mongoose.Schema.Types.ObjectId,
+
           StartDate: Date,
           EndDate:Date,
         })
@@ -58,6 +60,8 @@ const doctorSchema = new Schema({
     ,
     BookedAppointments: [
       new Schema({
+        _id: mongoose.Schema.Types.ObjectId,
+
         PatientUsername: String,
         PatientName:String,
         StartDate:Date,

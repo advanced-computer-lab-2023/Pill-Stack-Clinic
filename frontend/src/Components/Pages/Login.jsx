@@ -48,7 +48,7 @@ export const Login = () => {
           handleSuccess(message);
           setTimeout(() => {
             if (role === 'patient') {
-              navigate('/');
+              navigate('/home');
             } else if (role === 'doctor') {
               navigate('/doctor-home');
             } else if (role === 'admin') {
