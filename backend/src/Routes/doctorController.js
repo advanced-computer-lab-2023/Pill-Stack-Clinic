@@ -136,6 +136,21 @@ res.send(appointments);
 
  }
 
+ const viewDoctorWallet = async (req, res) => {
+  try {
+    const doctorId = req.user.id; // Assuming you have user ID available in req.user
+
+    const doctor = await doctorModel.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    res.json({ WalletBalance: doctor.WalletBalance });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
  const PostByName= async(req,res)=>{
   const username = req.user.Username;
@@ -192,5 +207,5 @@ module.exports = {
     viewMyPatients,
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName
+    PostByName, viewDoctorWallet
 };

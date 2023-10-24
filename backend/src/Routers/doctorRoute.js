@@ -8,7 +8,7 @@ const {viewProfile,
     viewMyPatients, 
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName
+    PostByName, viewDoctorWallet
         } = require('../Routes/doctorController.js');
 
 router.get('/', async(req,res) => {res.render('doc_home')})
@@ -20,6 +20,7 @@ router.post('/searchName',userVerification,PostByName)
 router.post('/search',userVerification,searchAppointments)
 router.get('/myPatients',userVerification, viewMyPatients)
 router.get('/myPatients/viewPatient', selectPatient)
+router.get('/viewDoctorWallet',userVerification, viewDoctorWallet)
 
 
     

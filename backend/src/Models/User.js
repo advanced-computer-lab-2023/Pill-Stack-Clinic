@@ -39,6 +39,10 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+  WalletBalance:{
+    type: Number,
+    default: 0,
+  },
   familyMembers: [
     new Schema({
       MemberName: {

@@ -42,7 +42,15 @@ const docReqSchema = new Schema({
     EducationalBackground: {
         type: String,
         required: true,
-    }
+    },
+    RegisterationStatus: {
+      type: String,
+      default: 'Pending',
+    },
+    PlatformStatus: {
+      type: String,
+      default: 'Pending',
+    },
 
 }, { timestamps: true });
 docReqSchema.pre('save', function(next) {

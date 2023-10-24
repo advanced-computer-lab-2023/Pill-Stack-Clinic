@@ -47,7 +47,10 @@ const doctorSchema = new Schema({
     Speciality:{
         type: String
     },
-
+    WalletBalance:{
+      type: Number,
+      default: 0,
+    },
     Availability:
       [
         new Schema({

@@ -159,6 +159,22 @@ const selectedDoctorDetails = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
    }
 };
+
+const viewPatientWallet = async (req, res) => {
+   try {
+     const userId = req.user.id; // Assuming you have user ID available in req.user
+ 
+     const user = await userModel.findById(userId);
+ 
+     if (!user) {
+       return res.status(404).json({ error: 'User not found' });
+     }
+ 
+     res.json({ WalletBalance: user.WalletBalance });
+   } catch (error) {
+     res.status(500).json({ error: 'Internal server error' });
+   }
+ };
 // const viewDoctors = async (req, res) => {
 //    try {
 //       const doctors = await doctorModel.find();
@@ -381,4 +397,4 @@ const viewAvailDoctorAppointments = async (req, res) => {
  
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};
+module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion, viewPatientWallet};

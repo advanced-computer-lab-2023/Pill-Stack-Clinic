@@ -17,6 +17,77 @@ const viewAllApp= async (req, res) => {
 // res.render('docApplications.ejs',{userData:applications});
 }
 
+const acceptRegRequest = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await docModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.RegisterationStatus = 'Accepted';
+    await request.save();
+
+    res.json({ message: 'Request accepted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const rejectRegRequest = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await docModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.RegisterationStatus = 'Rejected';
+    await request.save();
+
+    res.json({ message: 'Request rejected' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const acceptPlatformRequest = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await docModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.PlatformStatus = 'Accepted';
+    await request.save();
+
+    res.json({ message: 'Request accepted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const rejectPlatformRequest = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await docModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.PlatformStatus = 'Rejected';
+    await request.save();
+
+    res.json({ message: 'Request rejected' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
  const viewAllPacks= async (req, res) => {
@@ -171,7 +242,7 @@ const getAllUsers = async (req, res) => {
 
 module.exports = {
     viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,
-    viewPack2,deletePack,removeUser, getAllUsers
+    viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest
 };
 
 
