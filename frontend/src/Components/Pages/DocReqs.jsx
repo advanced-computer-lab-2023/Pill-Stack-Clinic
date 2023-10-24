@@ -71,11 +71,10 @@ function DocReqs() {
             <Table size='lg'> 
               <Thead>
                 <Tr bg={'#2d2d2e'}>
-                  <Th color={'white'}>Userame</Th>
-                  <Th color={'white'}>Name</Th>
-                  <Th color={'white'}><Center>Request Date </Center></Th>
-                  <Th color={'white'}> </Th>
-
+                    <Th color={'white'}>Name</Th>
+                    <Th color={'white'}>Userame</Th>
+                    <Th color={'white'}><Center>Request Date </Center></Th>
+                    <Th color={'white'}> </Th>
                 </Tr>
               </Thead>
                 <Tbody>
@@ -88,12 +87,10 @@ function DocReqs() {
                               : new Date(req.createdAt).toLocaleDateString();
                             return (
                               <Tr key={req._id}>
-                                <Td w={'20%'} >
-                                <Flex align="center"> 
-                                    <Text fontSize={'lg'} ml={5}>{req.Username}</Text> 
-                                </Flex>
-                                </Td>
                                 <Td w={'20%'}> {req.Name} </Td>
+                                <Td w={'20%'} >
+                                    <Text fontSize={'lg'} ml={5}>{req.Username}</Text> 
+                                </Td>
                                 <Td w={'20%'}> <Center>{createdAtDate}  </Center></Td>
                                 <Td w={'20%'}>
                                     <Center>
