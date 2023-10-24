@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments, viewALLAppointments,viewDoctors,viewPrescriptions,filterPrescriptions,viewPrescribtion} = require("./Routes/userController");
+const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments, viewALLAppointments,viewDoctors,viewPrescriptions,viewDoctorAppointments,filterPrescriptions,viewPrescribtion} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin,removeUser} = require("./Routes/adminController");
 const cors = require('cors');

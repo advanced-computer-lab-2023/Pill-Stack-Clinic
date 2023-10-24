@@ -353,8 +353,32 @@ const doctor=req.body.prepDr;
 
 }
 
+const viewAvailDoctorAppointments = async (req, res) => {
+   try {
+     const selectedDoctorUsername = req.params.username; 
+     console.log(selectedDoctorUsername)
+ 
+     const selectedDoctor = await doctorModel.findOne({ Username: selectedDoctorUsername });
+     console.log(selectedDoctor)
+
+     
+ 
+     if (!selectedDoctor) {
+       return res.status(404).json({ message: 'Doctor not found' });
+     }
+ 
+     const doctorAppointments = selectedDoctor.Availability;
+     console.log(doctorAppointments)
+ 
+ 
+     res.status(200).json(doctorAppointments);
+   } catch (error) {
+     console.error('Error viewing doctor appointments:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
 
  
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};
+module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion};
