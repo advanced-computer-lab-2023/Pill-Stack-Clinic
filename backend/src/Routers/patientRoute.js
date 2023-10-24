@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const {viewALLAppointments,searchDoctors,selectedDoctorDetails,viewAvailDoctorAppointments,searchAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,addFamilyMem,viewPrescriptions,filterPrescriptions} = require('../Routes/userController.js');
+const {viewALLAppointments,searchDoctors,selectedDoctorDetails,viewAvailDoctorAppointments,searchAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,addFamilyMem,viewPrescriptions,filterPrescriptions, viewPatientWallet} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 // any username for now until login functionality is implemented 
@@ -18,7 +18,7 @@ router.get("/selectprescription/:index",userVerification,viewPrescribtion);
 router.post("/searchprescriptions",userVerification,filterPrescriptions);
 router.get('/viewPrescriptions',viewPrescribtion)
 router.get('/viewDoctorAppointments/:username', viewAvailDoctorAppointments);
-
+router.get('/viewPatientWallet',userVerification, viewPatientWallet);
 
 
 
