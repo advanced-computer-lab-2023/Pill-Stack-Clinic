@@ -85,6 +85,7 @@ const secPass = await bcrypt.hash(req.body.password, salt)
 };
 module.exports.addAdmin = async (req, res, next) => {
   try {
+    console.log(req.body);
     const existingUserinPatient = await userModel.findOne({ Username:req.body.username });
     const existingUserinDoctor = await doctorModel.findOne({ Username:req.body.username });
     const existingUserinAdmin = await adminModel.findOne({ Username:req.body.username });

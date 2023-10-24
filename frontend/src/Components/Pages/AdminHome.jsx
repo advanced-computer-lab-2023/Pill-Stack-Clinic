@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import {Stack} from "@chakra-ui/react";
 
 export const AdminHome = () => {
   const navigate = useNavigate();
@@ -39,6 +40,11 @@ export const AdminHome = () => {
   const handleUsers = () => {
       navigate("/admin-users");
   };
+
+  const handleReqs = () => {
+      navigate("/admin-requests");
+  };
+
   return (
     <>
       <div className="home_page">
@@ -46,10 +52,11 @@ export const AdminHome = () => {
           {" "}
           Welcome Adminnnnn <span>{username}</span>
         </h4>
-        <button onClick={handlePacks}>Manage Packages</button>
-        <button onClick={handleUsers}>Manage Users</button>
-
-
+        <Stack>
+          <button onClick={handlePacks}>Manage Packages</button>
+          <button onClick={handleUsers}>Manage Users</button>
+          <button onClick={handleReqs}> Manage Doctor Requests </button>
+        </Stack>
 
         <button onClick={Logout}>LOGOUT</button>
 
