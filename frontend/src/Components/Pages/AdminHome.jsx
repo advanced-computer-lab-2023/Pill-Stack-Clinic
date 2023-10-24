@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import {Stack} from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Heading, Stack, StackDivider, Box, Text } from "@chakra-ui/react"
+import { Flex, Image } from '@chakra-ui/react';
+import AdminInfoCard from '../UI/AdminInfoCard';
+import ShortcutsCard from "../UI/ShortcutsCard";
+
 
 export const AdminHome = () => {
   const navigate = useNavigate();
@@ -57,6 +62,18 @@ export const AdminHome = () => {
           <button onClick={handleUsers}>Manage Users</button>
           <button onClick={handleReqs}> Manage Doctor Requests </button>
         </Stack>
+
+
+        <AdminInfoCard
+        title="Saba7 El Fol"
+        username= {username}
+        name="{name}"
+        email="{email}"
+      />
+
+      <ShortcutsCard/>
+
+
 
         <button onClick={Logout}>LOGOUT</button>
 
