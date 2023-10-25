@@ -11,7 +11,9 @@ import UserManagement from './Components/Pages/UserManagement';
 import DocReqs from './Components/Pages/DocReqs';
 import  Appointments from "./Components/Pages/Appointments";
 import  Completion from "./Components/Pages/Completion";
-
+import DoctorTable from "./Components/UI/viewDoctors.jsx";
+import AppointmentSearchAndTable from "./Components/UI/patientAppointments.jsx";
+import PrescriptionSearchAndTable from "./Components/UI/patientPrescriptions.jsx";
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -27,6 +29,9 @@ function App() {
         <Route path="home/appointments" element={<Appointments/>} />
         <Route path="/completion" element={<Completion/>} />
         <Route path="/admin-requests" element={ <DocReqs/>} />
+        <Route path="home/viewDoctors" element={<DoctorTable/>} />
+        <Route path="home/appiontments" element={<AppointmentSearchAndTable/>} />
+        <Route path="home/prescriptions" element={<PrescriptionSearchAndTable/>} />
      
       </Routes>
     </div>

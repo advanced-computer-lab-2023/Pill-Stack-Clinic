@@ -153,8 +153,6 @@ res.send(appointments);
 
  const PostByName= async(req,res)=>{
   const username = req.user.Username;
-
-   
   const profile = await doctorModel.aggregate([
     {
       $match: {
@@ -183,9 +181,7 @@ res.send(appointments);
   // let found = []
   // found=await userModel.find({Username:profile[0].PatientUsername});
 // </working>
-
 // let found = [];
-
 // Create an array of promises
 const promises = profile.map(async (item) => {
   const user = await userModel.find({ Username: item.PatientUsername });

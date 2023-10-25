@@ -211,28 +211,26 @@ const viewPatientWallet = async (req, res) => {
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
-      const user = await userModel.findOne({ Username: "omarr" });
-      //const package=await packageModel.findOne({Package_Name:user.healthPackage});
-      //const discount=package.Session_Discount/100;
-      const updatedDoctors = doctors.map((doctor) => {
-     
-         // if (user.healthPackage) {
-         //    return {
-         //       name: doctor.Username,
-         //       price: (doctor.HourlyRate * 1.1) *(1-discount),
-         //       speciality:doctor.Speciality
-         //    };
-         // } else {
+     //const user = await userModel.findOne({ Username: "omarr" });
+     const username = req.user.Username;
+     const user = await userModel.findOne({Username:username});
+      if (user) {
+         const package = await packageModel.findOne({ Package_Name: user.healthPackage });
+         const discount = package ? package.Session_Discount / 100 : 0;
+
+         const updatedDoctors = doctors.map((doctor) => {
             return {
                name: doctor.Username,
-               price: doctor.HourlyRate * 1.1,
-               speciality:doctor.Speciality
+               price: (doctor.HourlyRate * 1.1) * (1 - discount),
+               speciality: doctor.Speciality,
             };
-      //}
-      });
-
-      // Render the EJS template with the JSON data
-      res.send( updatedDoctors);
+         });
+         // Render the EJS template with the JSON data
+         res.send(updatedDoctors);
+      } else {
+         // Handle the case when the user is not found
+         res.status(404).send('User not found');
+      }
    } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching doctors');
