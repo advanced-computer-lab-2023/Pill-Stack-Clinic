@@ -396,7 +396,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
 
  const viewUpcomPastAppointments = async (req, res) => {
    try {
-     const PatientUsername = req.params.username; // Assuming you have the username of the logged-in doctor in req.user.username
+     const PatientUsername = req.params.username; 
  
      const patient = await userModel.findOne({ Username: PatientUsername });
      console.log(patient)
@@ -405,7 +405,6 @@ const viewAvailDoctorAppointments = async (req, res) => {
        return res.status(404).json({ message: 'patient not found' });
      }
  
-     // Separate upcoming and past appointments
      const now = new Date();
      const upcomingAppointments = patient.BookedAppointments.filter(
        (appointment) => new Date(appointment.StartDate) > now
