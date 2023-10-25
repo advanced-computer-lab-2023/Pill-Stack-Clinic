@@ -394,7 +394,36 @@ const viewAvailDoctorAppointments = async (req, res) => {
    }
  };
 
+ const viewUpcomPastAppointments = async (req, res) => {
+   try {
+     const PatientUsername = req.params.username; // Assuming you have the username of the logged-in doctor in req.user.username
  
+     const patient = await userModel.findOne({ Username: PatientUsername });
+     console.log(patient)
+ 
+     if (!patient) {
+       return res.status(404).json({ message: 'patient not found' });
+     }
+ 
+     // Separate upcoming and past appointments
+     const now = new Date();
+     const upcomingAppointments = patient.BookedAppointments.filter(
+       (appointment) => new Date(appointment.StartDate) > now
+     );
+     console.log(upcomingAppointments)
+     const pastAppointments = patient.BookedAppointments.filter(
+       (appointment) => new Date(appointment.EndDate) < now
+     );
+     console.log(pastAppointments)
+ 
+     res.status(200).json({
+       upcomingAppointments,
+       pastAppointments,
+     });
+   } catch (err) {
+     res.status(500).json({ error: err.message });
+   }
+ };
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion, viewPatientWallet};
+module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion, viewPatientWallet,viewUpcomPastAppointments};

@@ -202,10 +202,42 @@ const found1 = await Promise.all(promises);
  
  }
 
+ const viewUpcomPastAppointments = async (req, res) => {
+  try {
+    const doctorUsername = req.params.username; // Assuming you have the username of the logged-in doctor in req.user.username
+
+    const doctor = await doctorModel.findOne({ Username: doctorUsername });
+    console.log(doctor)
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Separate upcoming and past appointments
+    const now = new Date();
+    const upcomingAppointments = doctor.BookedAppointments.filter(
+      (appointment) => new Date(appointment.StartDate) > now
+    );
+    console.log(upcomingAppointments)
+    const pastAppointments = doctor.BookedAppointments.filter(
+      (appointment) => new Date(appointment.EndDate) < now
+    );
+    console.log(pastAppointments)
+
+    res.status(200).json({
+      upcomingAppointments,
+      pastAppointments,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName, viewDoctorWallet
+    PostByName, viewDoctorWallet,
+    viewUpcomPastAppointments
 };
