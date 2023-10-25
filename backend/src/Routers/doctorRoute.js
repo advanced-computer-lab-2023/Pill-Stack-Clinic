@@ -8,7 +8,8 @@ const {viewProfile,
     viewMyPatients, 
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName, viewDoctorWallet,viewUpcomPastAppointments
+    PostByName, viewDoctorWallet,viewUpcomPastAppointments,
+    addAppointments
         } = require('../Routes/doctorController.js');
 
 router.get('/', async(req,res) => {res.render('doc_home')})
@@ -22,6 +23,7 @@ router.get('/myPatients',userVerification, viewMyPatients)
 router.get('/myPatients/viewPatient', selectPatient)
 router.get('/viewDoctorWallet',userVerification, viewDoctorWallet)
 router.get('/doctor-appointments/:username', viewUpcomPastAppointments);
+router.post('/addAppointment',userVerification,addAppointments );
 
 
     

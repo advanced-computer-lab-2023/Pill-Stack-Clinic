@@ -10,7 +10,7 @@ import  AdminPacks from "./Components/Pages/AdminPacks";
 import UserManagement from './Components/Pages/UserManagement';
 import DocReqs from './Components/Pages/DocReqs';
 import  Appointments from "./Components/Pages/Appointments";
-import  Completion from "./Components/Pages/Completion.js";
+import  Completion from "./Components/Pages/Completion";
 
 function App() {
   

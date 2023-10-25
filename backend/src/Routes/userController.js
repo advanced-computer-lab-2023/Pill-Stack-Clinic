@@ -423,6 +423,49 @@ const viewAvailDoctorAppointments = async (req, res) => {
      res.status(500).json({ error: err.message });
    }
  };
+ const payAppointmentCash=async(req,res)=>{
+   //add appointment to doctors booked app and patients booked app
+const appointmentId=req.body.appid; //from doctor's available appointment;
+const doctorUserName=req.body.doctorUsername;
+const username=req.user.Username;
+const user=await userModel.findOne({Username:username});
+const doctor=await doctorModel.findOne({Username:doctorUserName});
+const Appointment = doctor.Availability.find(
+   (av) => {
+
+      return ((av._id).toString()=== appointmentId)}
+ );
+ console.log(Appointment)
+const docApp=({
+   _id:Appointment._id,
+   PatientUsername:username,
+   PatientName:req.user.Name,
+   StartDate:Appointment.StartDate,
+   EndDate:Appointment.EndDate,
+   Status:'upcoming',
+});
+doctor.BookedAppointments.push(docApp);
+const userApp=({
+   _id:Appointment._id,
+   DoctorUsername:doctorUserName,
+   DoctorName:doctor.Name,
+   StartDate:Appointment.StartDate,
+   EndDate:Appointment.EndDate,
+   Status:'upcoming',
+});
+user.BookedAppointments.push(userApp);
+doctor.Availability.remove({_id:appointmentId});
+doctor.save();
+user.save();
+res.send("Appointment booked successfully");
+}
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion, viewPatientWallet,viewUpcomPastAppointments};
+
+
+module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,
+   searchAppointments,viewALLAppointments,
+   viewDoctors,viewFamilyMembers,viewPrescribtion,
+   filterPrescriptions,viewPrescriptions,
+   viewPrescribtion, viewPatientWallet,
+   viewUpcomPastAppointments,payAppointmentCash};

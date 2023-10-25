@@ -1,4 +1,3 @@
-// const Doctor = require('../models/doctor');
 const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 const userModel = require('../Models/User.js');// Database of users on the platform
@@ -232,6 +231,18 @@ const found1 = await Promise.all(promises);
     res.status(500).json({ error: err.message });
   }
 };
+const addAppointments=async(req,res)=>{
+  const{startDate,endDate}=req.body;
+const doctor=await doctorModel.findOne({Username:req.user.Username});
+const docApp=({
+ _id: mongoose.Types.ObjectId(),
+  StartDate:startDate,
+  EndDate:endDate,
+});
+doctor.Availability.push(docApp);
+doctor.save();
+res.send("Appointment added sucessfully");
+}
 
 module.exports = {
     viewProfile,editView,editProfile,
@@ -239,5 +250,7 @@ module.exports = {
     selectPatient,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
-    viewUpcomPastAppointments
+    viewUpcomPastAppointments,
+    addAppointments
+
 };
