@@ -70,6 +70,10 @@ const userSchema = new Schema({
         required: true,
         default: 'Unknown' // Default value for Relation
       },
+      Family_Discount:{
+        type:Number,
+        default:0
+      }
     })
   ], BookedAppointments: [
     new Schema({
@@ -112,10 +116,54 @@ const userSchema = new Schema({
       }
     })
   ],
-  healthPackage:{
-    type: String,
-    required:false
-  }
+  healthPackage:
+    [
+      new Schema({
+        _id: mongoose.Schema.Types.ObjectId,
+        Package_Name :{
+          type:   String,
+          required: false
+      },
+      Price :{
+          type: Number,
+          required: false
+      },
+      Session_Discount :{
+          type: Number,
+          required: false
+      },
+      Pharmacy_Discount :{
+          type: Number,
+          required: false
+      },
+      Family_Discount :{
+          type: Number,
+          required: false
+      },
+      Status :{
+        type: String,
+        enum: ['Subscribed', 'Unsubscribed','Cancelled'],
+        default:'Unsubscribed',
+      },
+      Renewl_Date :{
+        type:Date,
+        required: false
+      },
+      End_Date :{
+        type:Date,
+        required: false
+      }
+      })
+    ],
+    LinkedPatientFam: [
+      new Schema({
+         memberID: mongoose.Schema.Types.ObjectId, // ID of the linked user
+         username: String, // Username of the linked user
+         relation: String, // Relation (wife, husband, child, etc.)
+      })
+   ],
+  
+  
 }, { timestamps: true });
 userSchema.pre('save', function(next) {
   const user = this;

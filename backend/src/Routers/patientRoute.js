@@ -1,6 +1,10 @@
 const express = require('express');
 let router = express.Router();
-const {viewALLAppointments,searchDoctors,selectedDoctorDetails,viewAvailDoctorAppointments,searchAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,addFamilyMem,viewPrescriptions,filterPrescriptions, viewPatientWallet} = require('../Routes/userController.js');
+const {viewALLAppointments,searchDoctors,
+    selectedDoctorDetails,viewAvailDoctorAppointments,
+    searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
+    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
+    filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentCash,linkPatientAsFamilyMember} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 // any username for now until login functionality is implemented 
@@ -19,7 +23,12 @@ router.post("/searchprescriptions",userVerification,filterPrescriptions);
 router.get('/viewPrescriptions',viewPrescribtion)
 router.get('/viewDoctorAppointments/:username', viewAvailDoctorAppointments);
 router.get('/viewPatientWallet',userVerification, viewPatientWallet);
-
-
+router.get('/patient-appointments/:username', viewUpcomPastAppointments);
+router.post('/payCash',userVerification,payAppointmentCash);
+router.get("/packages",viewAllPacks);
+router.post('/subscribeWallet',subscribePackageCash);
+router.get('/viewMyPackage',viewPackageSubscribtion);
+router.post('/cancelSubs',cancelSubscription);
+router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
 
 module.exports = router;

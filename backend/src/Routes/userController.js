@@ -211,28 +211,26 @@ const viewPatientWallet = async (req, res) => {
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
-      const user = await userModel.findOne({ Username: "omarr" });
-      //const package=await packageModel.findOne({Package_Name:user.healthPackage});
-      //const discount=package.Session_Discount/100;
-      const updatedDoctors = doctors.map((doctor) => {
-     
-         // if (user.healthPackage) {
-         //    return {
-         //       name: doctor.Username,
-         //       price: (doctor.HourlyRate * 1.1) *(1-discount),
-         //       speciality:doctor.Speciality
-         //    };
-         // } else {
+     //const user = await userModel.findOne({ Username: "omarr" });
+     const username = req.user.Username;
+     const user = await userModel.findOne({Username:username});
+      if (user) {
+         const package = await packageModel.findOne({ Package_Name: user.healthPackage });
+         const discount = package ? package.Session_Discount / 100 : 0;
+
+         const updatedDoctors = doctors.map((doctor) => {
             return {
                name: doctor.Username,
-               price: doctor.HourlyRate * 1.1,
-               speciality:doctor.Speciality
+               price: (doctor.HourlyRate * 1.1) * (1 - discount),
+               speciality: doctor.Speciality,
             };
-      //}
-      });
-
-      // Render the EJS template with the JSON data
-      res.send( updatedDoctors);
+         });
+         // Render the EJS template with the JSON data
+         res.send(updatedDoctors);
+      } else {
+         // Handle the case when the user is not found
+         res.status(404).send('User not found');
+      }
    } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching doctors');
@@ -394,7 +392,257 @@ const viewAvailDoctorAppointments = async (req, res) => {
    }
  };
 
+ const viewUpcomPastAppointments = async (req, res) => {
+   try {
+     const PatientUsername = req.params.username; 
  
+     const patient = await userModel.findOne({ Username: PatientUsername });
+     console.log(patient)
+ 
+     if (!patient) {
+       return res.status(404).json({ message: 'patient not found' });
+     }
+ 
+     const now = new Date();
+     const upcomingAppointments = patient.BookedAppointments.filter(
+       (appointment) => new Date(appointment.StartDate) > now
+     );
+     console.log(upcomingAppointments)
+     const pastAppointments = patient.BookedAppointments.filter(
+       (appointment) => new Date(appointment.EndDate) < now
+     );
+     console.log(pastAppointments)
+ 
+     res.status(200).json({
+       upcomingAppointments,
+       pastAppointments,
+     });
+   } catch (err) {
+     res.status(500).json({ error: err.message });
+   }
+ };
+ const payAppointmentCash=async(req,res)=>{
+   //add appointment to doctors booked app and patients booked app
+const appointmentId=req.body.appid; //from doctor's available appointment;
+const doctorUserName=req.body.doctorUsername;
+const username=req.user.Username;
+const user=await userModel.findOne({Username:username});
+const doctor=await doctorModel.findOne({Username:doctorUserName});
+const Appointment = doctor.Availability.find(
+   (av) => {
+
+      return ((av._id).toString()=== appointmentId)}
+ );
+ console.log(Appointment)
+const docApp=({
+   _id:Appointment._id,
+   PatientUsername:username,
+   PatientName:req.user.Name,
+   StartDate:Appointment.StartDate,
+   EndDate:Appointment.EndDate,
+   Status:'upcoming',
+});
+doctor.BookedAppointments.push(docApp);
+const userApp=({
+   _id:Appointment._id,
+   DoctorUsername:doctorUserName,
+   DoctorName:doctor.Name,
+   StartDate:Appointment.StartDate,
+   EndDate:Appointment.EndDate,
+   Status:'upcoming',
+});
+user.BookedAppointments.push(userApp);
+doctor.Availability.remove({_id:appointmentId});
+doctor.save();
+user.save();
+res.send("Appointment booked successfully");
+}
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,searchAppointments,viewALLAppointments,viewDoctors,viewFamilyMembers,viewPrescribtion,filterPrescriptions,viewPrescriptions,viewPrescribtion, viewPatientWallet};
+
+const viewAllPacks=async(req,res)=>{
+   const package=await packageModel.find().sort({createdAt:-1});
+   if(package.length==0){
+      res.status(404).send("No available health Packages at a moment");
+   }
+   res.send(package);
+}
+
+
+
+const subscribePackageCash=async(req,res)=>{
+   const packageID=req.body.packageID;
+   const pack= await packageModel.findById(packageID);
+   if(!pack){
+      res.status(404).send("Package Not Found");
+   }
+   const userID=req.body.userId;
+   const user=await userModel.findById(userID);
+   if(!user){
+      res.status(404).send("User Not Found");
+   }
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage.Status=="Subscribed"){
+         res.send("User Already Subscribed to a Package");
+         break;
+      }
+   }
+   // if(user.healthPackage.length!=0){
+   //    res.send("User Already Subscribed to a Package");
+   // }
+   // if(user.WalletBalance<pack.Price){
+   //    res.send("No Enough Balance");
+   // }
+   //else{
+   const userPack=({
+      _id:packageID,
+      Package_Name:pack.Package_Name,
+      Price:pack.Price,
+      Session_Discount:pack.Session_Discount,
+      Family_Discount:pack.Family_Discount,
+      Pharmacy_Discount:pack.Pharmacy_Discount,
+      Status:'Subscribed',
+      Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+   });
+   user.healthPackage.push(userPack);
+   // user.WalletBalance=user.WalletBalance-pack.Price;
+   if(user.familyMembers.length==0){
+      console.log("No family members");
+   }
+   else{
+   for(let i=0;i<user.familyMembers.length;i++){
+      user.familyMembers[i].Family_Discount=pack.Family_Discount;
+   }
+   }
+   res.send("Subscribed succsefully");
+   await user.save();
+//}
+}
+
+
+const viewPackageSubscribtion=async(req,res)=>{
+   const userID=req.body.userId;
+   const user=await userModel.findById(userID);
+   if(!user){
+      res.send("User Not Found");
+   }
+   else{
+      if(user.healthPackage.length==0){
+         res.send("User Not Subscribed to any Health Package");
+      }
+      else{
+         if(user.healthPackage[0].Renewl_Date>new Date()){
+            res.send(user.healthPackage);
+         }
+         else{
+            user.healthPackage[0].Status='Unsubscribed';
+            if(user.familyMembers.length!=0){
+               for(let i=0;i<user.familyMembers.length;i++){
+                  user.familyMembers[i].Family_Discount=0;
+               }
+            }
+            await user.save();
+            res.send(user.healthPackage);
+         }
+      }
+   }
+}
+
+const cancelSubscription=async(req,res)=>{
+   const userID=req.body.userId;
+   const packageID=req.body.packageID;
+   const pack=await packageModel.findById(packageID);
+   const user=await userModel.findById(userID);
+   if(user.healthPackage.length==0){
+      res.send("User Not Subscribed");
+   }
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage[i]._id==packageID){
+         user.healthPackage.pop();
+         const userPack=({
+            _id:packageID,
+            Package_Name:pack.Package_Name,
+            Price:pack.Price,
+            Session_Discount:pack.Session_Discount,
+            Family_Discount:pack.Family_Discount,
+            Pharmacy_Discount:pack.Pharmacy_Discount,
+            Status:'Cancelled',
+            End_Date: new Date(),
+         });
+         user.healthPackage.push(userPack);
+      }
+   }
+   if(user.familyMembers.length!=0){
+      for(let i=0;i<user.familyMembers.length;i++){
+         user.familyMembers[i].Family_Discount=0;
+      }
+   }
+   await user.save();
+   res.send(user.healthPackage);
+
+   
+}
+const linkPatientAsFamilyMember = async (req, res) => {
+   try {
+      const linkingUserUsername = req.user.Username; // The username of the user initiating the link
+      const linkTargetEmailOrPhone = req.params.emailOrPhone; // Email or phone number of the user to link
+      const relation = req.params.relation; // Relation (wife, husband, child, etc.)
+      console.log('linkTargetEmailOrPhone:', linkTargetEmailOrPhone);
+
+
+      
+      let linkedUser;
+      if (linkTargetEmailOrPhone.includes('@')) {
+         
+         linkedUser = await userModel.findOne({ Email: linkTargetEmailOrPhone });
+      } else {
+         linkedUser = await userModel.findOne({ MobileNumber: linkTargetEmailOrPhone });
+      }
+
+      if (!linkedUser) {
+         return res.status(404).json({ message: 'User to link not found' });
+      }
+
+      const linkingUser = await userModel.findOne({ Username: linkingUserUsername });
+
+      if (!linkingUser) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+
+      if (!isValidRelation(relation)) {
+         return res.status(400).json({ message: 'Invalid relation' });
+      }
+
+      const linkedFamilyMember = {
+         memberID: linkedUser.id, 
+         username: linkedUser.Username, 
+         relation:relation,
+      };
+
+      if (!linkingUser.LinkedPatientFam) {
+         linkingUser.LinkedPatientFam = [];
+      }
+
+      linkingUser.LinkedPatientFam.push(linkedFamilyMember);
+
+      await linkingUser.save();
+      res.status(200).send("Family Member linked successfully");
+
+   } catch (error) {
+      console.error('Error linking family member:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+}
+function isValidRelation(relation) {
+   const allowedRelations = ['wife', 'husband', 'child', 'other'];
+   return allowedRelations.includes(relation);
+}
+
+
+
+module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,
+   searchAppointments,viewALLAppointments,
+   viewDoctors,viewFamilyMembers,viewPrescribtion,
+   filterPrescriptions,viewPrescriptions,
+   viewPrescribtion, viewPatientWallet,cancelSubscription,
+   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion,linkPatientAsFamilyMember};

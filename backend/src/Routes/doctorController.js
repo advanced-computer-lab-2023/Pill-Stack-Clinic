@@ -1,8 +1,7 @@
-// const Doctor = require('../models/doctor');
 const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 const userModel = require('../Models/User.js');// Database of users on the platform
-
+const Contract = require('../Models/contract.js');
 const { default: mongoose } = require('mongoose');
 
 
@@ -154,8 +153,6 @@ res.send(appointments);
 
  const PostByName= async(req,res)=>{
   const username = req.user.Username;
-
-   
   const profile = await doctorModel.aggregate([
     {
       $match: {
@@ -184,9 +181,7 @@ res.send(appointments);
   // let found = []
   // found=await userModel.find({Username:profile[0].PatientUsername});
 // </working>
-
 // let found = [];
-
 // Create an array of promises
 const promises = profile.map(async (item) => {
   const user = await userModel.find({ Username: item.PatientUsername });
@@ -202,10 +197,113 @@ const found1 = await Promise.all(promises);
  
  }
 
+ const viewUpcomPastAppointments = async (req, res) => {
+  try {
+    const doctorUsername = req.params.username; // Assuming you have the username of the logged-in doctor in req.user.username
+
+    const doctor = await doctorModel.findOne({ Username: doctorUsername });
+    console.log(doctor)
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Separate upcoming and past appointments
+    const now = new Date();
+    const upcomingAppointments = doctor.BookedAppointments.filter(
+      (appointment) => new Date(appointment.StartDate) > now
+    );
+    console.log(upcomingAppointments)
+    const pastAppointments = doctor.BookedAppointments.filter(
+      (appointment) => new Date(appointment.EndDate) < now
+    );
+    console.log(pastAppointments)
+
+    res.status(200).json({
+      upcomingAppointments,
+      pastAppointments,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+const addAppointments=async(req,res)=>{
+  const{startDate,endDate}=req.body;
+const doctor=await doctorModel.findOne({Username:req.user.Username});
+const docApp=({
+ _id: mongoose.Types.ObjectId(),
+  StartDate:startDate,
+  EndDate:endDate,
+});
+doctor.Availability.push(docApp);
+doctor.save();
+res.send("Appointment added sucessfully");
+}
+const scheduleAppointment = async (req, res) => {
+  try {
+    const doctor = await doctorModel.findById(req.params.doctorId);
+   // if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+    
+    const appointment = {
+      PatientUsername: req.body.PatientUsername,
+      PatientName: req.body.PatientName,
+      StartDate: req.body.StartDate,
+      EndDate: req.body.EndDate,
+      Status: 'upcoming' // default status for a new appointment
+    };
+
+    doctor.BookedAppointments.push(appointment);
+
+    await doctor.save();
+    res.status(201).json(appointment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+const viewContract = async (req, res) => {
+  try {
+    const doctor = await doctorModel.findOne({ Username: req.user.Username }).exec();
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const contract = await Contract.findOne({ DoctorId: doctor._id }).exec();
+
+    if (!contract) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+
+    res.status(200).json(contract);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteContract = async (req, res) => {
+  try {
+    const contractId = req.params.contractId;
+
+    // Check if the contract exists
+    const contract = await Contract.findById(contractId);
+    if (!contract) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }await Contract.findByIdAndDelete(contractId);
+    res.status(200).json({ message: 'Contract deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName, viewDoctorWallet
+    PostByName, viewDoctorWallet,
+    viewUpcomPastAppointments,
+    addAppointments,scheduleAppointment,viewContract,deleteContract
+
 };
