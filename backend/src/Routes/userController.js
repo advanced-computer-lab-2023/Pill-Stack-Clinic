@@ -582,6 +582,61 @@ const cancelSubscription=async(req,res)=>{
 
    
 }
+const linkPatientAsFamilyMember = async (req, res) => {
+   try {
+      const linkingUserUsername = req.params.Username; // The username of the user initiating the link
+      const linkTargetEmailOrPhone = req.params.emailOrPhone; // Email or phone number of the user to link
+      const relation = req.params.relation; // Relation (wife, husband, child, etc.)
+      console.log('linkTargetEmailOrPhone:', linkTargetEmailOrPhone);
+
+
+      
+      let linkedUser;
+      if (linkTargetEmailOrPhone.includes('@')) {
+         
+         linkedUser = await userModel.findOne({ Email: linkTargetEmailOrPhone });
+      } else {
+         linkedUser = await userModel.findOne({ MobileNumber: linkTargetEmailOrPhone });
+      }
+
+      if (!linkedUser) {
+         return res.status(404).json({ message: 'User to link not found' });
+      }
+
+      const linkingUser = await userModel.findOne({ Username: linkingUserUsername });
+
+      if (!linkingUser) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+
+      if (!isValidRelation(relation)) {
+         return res.status(400).json({ message: 'Invalid relation' });
+      }
+
+      const linkedFamilyMember = {
+         memberID: linkedUser.id, 
+         username: linkedUser.Username, 
+         relation:relation,
+      };
+
+      if (!linkingUser.LinkedPatientFam) {
+         linkingUser.LinkedPatientFam = [];
+      }
+
+      linkingUser.LinkedPatientFam.push(linkedFamilyMember);
+
+      await linkingUser.save();
+      res.status(200).send("Family Member linked successfully");
+
+   } catch (error) {
+      console.error('Error linking family member:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+}
+function isValidRelation(relation) {
+   const allowedRelations = ['wife', 'husband', 'child', 'other'];
+   return allowedRelations.includes(relation);
+}
 
 
 
@@ -590,4 +645,4 @@ module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,
    viewPrescribtion, viewPatientWallet,cancelSubscription,
-   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion};
+   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion,linkPatientAsFamilyMember};

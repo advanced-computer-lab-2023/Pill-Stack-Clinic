@@ -4,7 +4,7 @@ const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
     viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
-    filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentCash} = require('../Routes/userController.js');
+    filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentCash,linkPatientAsFamilyMember} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 // any username for now until login functionality is implemented 
@@ -29,4 +29,6 @@ router.get("/packages",viewAllPacks);
 router.post('/subscribeWallet',subscribePackageCash);
 router.get('/viewMyPackage',viewPackageSubscribtion);
 router.post('/cancelSubs',cancelSubscription);
+router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',linkPatientAsFamilyMember)
+
 module.exports = router;

@@ -154,7 +154,14 @@ const userSchema = new Schema({
         required: false
       }
       })
-    ]
+    ],
+    LinkedPatientFam: [
+      new Schema({
+         memberID: mongoose.Schema.Types.ObjectId, // ID of the linked user
+         username: String, // Username of the linked user
+         relation: String, // Relation (wife, husband, child, etc.)
+      })
+   ],
   
   
 }, { timestamps: true });
