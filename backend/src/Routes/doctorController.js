@@ -408,8 +408,73 @@ const deleteContract = async (req, res) => {
 
 
   //e
+  const activateAndDeleteContract = async (req, res) => {
+    try {
+      // Extract doctor ID from the request params
+      const { doctorId } = req.params;
+  
+      // Find the doctor by ID
+      const doctor = await doctorModel.findById(doctorId);
+  
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      // Find the contract associated with the doctor
+      const contract = await Contract.findOne({ DoctorId: doctor._id });
+  
+      if (!contract) {
+        return res.status(404).json({ message: 'Contract not found' });
+      }
+  
+      // Set the contract status to true
+      contract.Status = true;
+      await contract.save();
+  
+      // Delete the contract
+      await Contract.findByIdAndDelete(contract._id);
+  
+      res.status(200).json({ message: 'Contract activated and deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
 
 
+  const addAvailability = async (req, res) => {
+    try {
+      const { doctorId } = req.params; // Assuming you're passing doctor's ID as a URL parameter
+      const { startDate, endDate } = req.body; // Assuming start and end dates of availability are passed in the request body
+  
+      // Validate the dates
+      if (!startDate || !endDate || new Date(startDate) >= new Date(endDate)) {
+        return res.status(400).json({ message: 'Invalid date range' });
+      }
+  
+      // Find the doctor and update availability
+      const doctor = await doctorModel.findById(doctorId);
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      const newAvailability = {
+        _id: new mongoose.Types.ObjectId(),
+        StartDate: startDate,
+        EndDate: endDate
+      };
+  
+      doctor.Availability.push(newAvailability);
+      await doctor.save();
+  
+      res.status(200).json({ message: 'Availability added successfully', data: newAvailability });
+    } catch (error) {
+      console.error('Error adding availability:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
 
 
 
@@ -422,6 +487,6 @@ module.exports = {
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,
     addAppointments,scheduleAppointment,viewContract,deleteContract,registerDoctor,
-    addHealthRecord
+    addHealthRecord,activateAndDeleteContract,addAvailability
 
 };

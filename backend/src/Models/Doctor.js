@@ -51,6 +51,10 @@ const doctorSchema = new Schema({
       type: Number,
       default: 0,
     },
+    ContractStatus: {
+      type: Boolean,
+      default: false
+    },
     Availability:
       [
         new Schema({
