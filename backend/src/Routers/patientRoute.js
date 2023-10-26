@@ -2,8 +2,8 @@ const express = require('express');
 let router = express.Router();
 const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,
-    searchAppointments,viewDoctors,viewFamilyMembers,
-    viewPrescribtion,addFamilyMem,viewPrescriptions,
+    searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
+    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentCash} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
@@ -25,7 +25,8 @@ router.get('/viewDoctorAppointments/:username', viewAvailDoctorAppointments);
 router.get('/viewPatientWallet',userVerification, viewPatientWallet);
 router.get('/patient-appointments/:username', viewUpcomPastAppointments);
 router.post('/payCash',userVerification,payAppointmentCash);
-
-
-
+router.get("/packages",viewAllPacks);
+router.post('/subscribeWallet',subscribePackageCash);
+router.get('/viewMyPackage',viewPackageSubscribtion);
+router.post('/cancelSubs',cancelSubscription);
 module.exports = router;

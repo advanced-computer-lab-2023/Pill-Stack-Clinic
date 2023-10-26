@@ -460,10 +460,134 @@ res.send("Appointment booked successfully");
 
 
 
+const viewAllPacks=async(req,res)=>{
+   const package=await packageModel.find().sort({createdAt:-1});
+   if(package.length==0){
+      res.status(404).send("No available health Packages at a moment");
+   }
+   res.send(package);
+}
+
+
+
+const subscribePackageCash=async(req,res)=>{
+   const packageID=req.body.packageID;
+   const pack= await packageModel.findById(packageID);
+   if(!pack){
+      res.status(404).send("Package Not Found");
+   }
+   const userID=req.body.userId;
+   const user=await userModel.findById(userID);
+   if(!user){
+      res.status(404).send("User Not Found");
+   }
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage.Status=="Subscribed"){
+         res.send("User Already Subscribed to a Package");
+         break;
+      }
+   }
+   // if(user.healthPackage.length!=0){
+   //    res.send("User Already Subscribed to a Package");
+   // }
+   // if(user.WalletBalance<pack.Price){
+   //    res.send("No Enough Balance");
+   // }
+   //else{
+   const userPack=({
+      _id:packageID,
+      Package_Name:pack.Package_Name,
+      Price:pack.Price,
+      Session_Discount:pack.Session_Discount,
+      Family_Discount:pack.Family_Discount,
+      Pharmacy_Discount:pack.Pharmacy_Discount,
+      Status:'Subscribed',
+      Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+   });
+   user.healthPackage.push(userPack);
+   // user.WalletBalance=user.WalletBalance-pack.Price;
+   if(user.familyMembers.length==0){
+      console.log("No family members");
+   }
+   else{
+   for(let i=0;i<user.familyMembers.length;i++){
+      user.familyMembers[i].Family_Discount=pack.Family_Discount;
+   }
+   }
+   res.send("Subscribed succsefully");
+   await user.save();
+//}
+}
+
+
+const viewPackageSubscribtion=async(req,res)=>{
+   const userID=req.body.userId;
+   const user=await userModel.findById(userID);
+   if(!user){
+      res.send("User Not Found");
+   }
+   else{
+      if(user.healthPackage.length==0){
+         res.send("User Not Subscribed to any Health Package");
+      }
+      else{
+         if(user.healthPackage[0].Renewl_Date>new Date()){
+            res.send(user.healthPackage);
+         }
+         else{
+            user.healthPackage[0].Status='Unsubscribed';
+            if(user.familyMembers.length!=0){
+               for(let i=0;i<user.familyMembers.length;i++){
+                  user.familyMembers[i].Family_Discount=0;
+               }
+            }
+            await user.save();
+            res.send(user.healthPackage);
+         }
+      }
+   }
+}
+
+const cancelSubscription=async(req,res)=>{
+   const userID=req.body.userId;
+   const packageID=req.body.packageID;
+   const pack=await packageModel.findById(packageID);
+   const user=await userModel.findById(userID);
+   if(user.healthPackage.length==0){
+      res.send("User Not Subscribed");
+   }
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage[i]._id==packageID){
+         user.healthPackage.pop();
+         const userPack=({
+            _id:packageID,
+            Package_Name:pack.Package_Name,
+            Price:pack.Price,
+            Session_Discount:pack.Session_Discount,
+            Family_Discount:pack.Family_Discount,
+            Pharmacy_Discount:pack.Pharmacy_Discount,
+            Status:'Cancelled',
+            End_Date: new Date(),
+         });
+         user.healthPackage.push(userPack);
+      }
+   }
+   if(user.familyMembers.length!=0){
+      for(let i=0;i<user.familyMembers.length;i++){
+         user.familyMembers[i].Family_Discount=0;
+      }
+   }
+   await user.save();
+   res.send(user.healthPackage);
+
+   
+}
+
+
 
 module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,
-   viewPrescribtion, viewPatientWallet,
-   viewUpcomPastAppointments,payAppointmentCash};
+   viewPrescribtion, viewPatientWallet,cancelSubscription,
+   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion};

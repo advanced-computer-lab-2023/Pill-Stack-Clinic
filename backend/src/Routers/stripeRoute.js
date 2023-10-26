@@ -41,7 +41,6 @@ router.post("/pay",userVerification,async (req,res,next)=>{
         clientSecret: paymentIntent.client_secret,
       });
     
-
    // const email=req.user.Email;
  
 });
@@ -91,12 +90,81 @@ user.save();
 res.json({ success: true });
 
 
+});
 
 
 
+
+router.post("/payPack",userVerification,async (req,res,next)=>{
+  const username=req.body.Username;
+  const packid=req.body.packID;
+  const package =await packageModel.findById(packid);
+  var amount;
+  amount=package.Price;
+  console.log(amount);
+  const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount*100,
+      currency: "usd",
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
   
 
+});
+
+
+router.post('/payPack/confirm',userVerification, async (req, res) => {
+  const packageID=req.body.packageID;
+   const pack= await packageModel.findById(packageID);
+   if(!pack){
+      res.status(404).send("Package Not Found");
+   }
+   const userID=req.body.userId;
+   const user=await userModel.findById(userID);
+   if(!user){
+      res.status(404).send("User Not Found");
+   }
+   if(user.healthPackage.length!=0){
+      res.send("User Already Subscribed to a Package");
+   }
+   if(user.WalletBalance<pack.Price){
+      res.send("No Enough Balance");
+   }
+   else{
+   const userPack=({
+      _id:packageID,
+      Package_Name:pack.Package_Name,
+      Price:pack.Price,
+      Session_Discount:pack.Session_Discount,
+      Family_Discount:pack.Family_Discount,
+      Pharmacy_Discount:pack.Pharmacy_Discount,
+      Status:'Subscribed',
+      Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+   });
+   user.healthPackage.push(userPack);
+    user.WalletBalance=user.WalletBalance-pack.Price;
+   if(user.familyMembers.length==0){
+      console.log("No family members");
+   }
+   else{
+   for(let i=0;i<user.familyMembers.length;i++){
+      user.familyMembers[i].Family_Discount=pack.Family_Discount;
+   }
+   }
+   res.send("Subscribed succsefully");
+   await user.save();
+ }
+res.json({ success: true });
 
 
 });
+
+
+
+
 module.exports = router;
