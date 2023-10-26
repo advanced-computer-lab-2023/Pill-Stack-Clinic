@@ -584,7 +584,7 @@ const cancelSubscription=async(req,res)=>{
 }
 const linkPatientAsFamilyMember = async (req, res) => {
    try {
-      const linkingUserUsername = req.params.Username; // The username of the user initiating the link
+      const linkingUserUsername = req.user.Username; // The username of the user initiating the link
       const linkTargetEmailOrPhone = req.params.emailOrPhone; // Email or phone number of the user to link
       const relation = req.params.relation; // Relation (wife, husband, child, etc.)
       console.log('linkTargetEmailOrPhone:', linkTargetEmailOrPhone);

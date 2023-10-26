@@ -29,6 +29,6 @@ router.get("/packages",viewAllPacks);
 router.post('/subscribeWallet',subscribePackageCash);
 router.get('/viewMyPackage',viewPackageSubscribtion);
 router.post('/cancelSubs',cancelSubscription);
-router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',linkPatientAsFamilyMember)
+router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
 
 module.exports = router;
