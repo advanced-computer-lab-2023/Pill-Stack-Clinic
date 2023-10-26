@@ -3,7 +3,49 @@ const userModel = require('../Models/User.js');
 const { default: mongoose } = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 const packageModel=require('../Models/Packages.js');
+const path = require('path');
+const fs = require('fs');
 
+
+// Function to upload a medical history document
+const uploadMedicalDocument = async (req, res) => {
+   try {
+     const user = req.user;
+     const { originalname, path } = req.file;
+ 
+     // Save document information to the user's medicalHistory
+     user.medicalHistory.push({ documentTitle: originalname, documentPath: path });
+     await user.save();
+ 
+     res.status(201).json({ message: 'Document uploaded successfully' });
+   } catch (error) {
+     console.error('Error uploading medical document:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+ 
+ // Function to remove a medical history document
+ const removeMedicalDocument = async (req, res) => {
+   try {
+     const user = req.user;
+     const documentId = req.params.documentId;
+ 
+     // Find the document in the user's medicalHistory and remove it
+     const document = user.medicalHistory.id(documentId);
+     if (document) {
+       // Remove the file from the server
+       fs.unlinkSync(document.documentPath);
+       document.remove();
+       await user.save();
+       res.status(200).json({ message: 'Document removed successfully' });
+     } else {
+       res.status(404).json({ message: 'Document not found' });
+     }
+   } catch (error) {
+     console.error('Error removing medical document:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
 
 
 
@@ -645,4 +687,4 @@ module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,
    viewPrescribtion, viewPatientWallet,cancelSubscription,
-   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion,linkPatientAsFamilyMember};
+   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion,linkPatientAsFamilyMember, uploadMedicalDocument, removeMedicalDocument};

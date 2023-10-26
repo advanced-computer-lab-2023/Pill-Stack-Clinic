@@ -107,6 +107,8 @@ const userSchema = new Schema({
   ],
   MedicalHistory: [
     new Schema({
+      documentTitle: String,
+      documentPath: String,
       Disease: String,
       Description: String,
       StartDate: Date,

@@ -3,6 +3,9 @@ const doctorModel = require('../Models/Doctor.js');// Database of doctors on the
 const userModel = require('../Models/User.js');// Database of users on the platform
 const Contract = require('../Models/contract.js');
 const { default: mongoose } = require('mongoose');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 
 
@@ -297,6 +300,120 @@ const deleteContract = async (req, res) => {
   }
 };
 
+
+
+ //e
+
+
+  // Define storage location for uploaded documents
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Define the folder where files will be stored
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const extname = path.extname(file.originalname); // Get the file extension
+      cb(null, file.fieldname + '-' + uniqueSuffix + extname);
+    },
+  });
+
+  // Create multer middleware with storage configuration
+  const upload = multer({ storage: storage });
+
+  // // Import doctor and user models "already done above"
+  // const doctorModel = require('../Models/Doctor.js');
+  // const userModel = require('../Models/User.js');
+
+  // // ...
+
+  // Handle file uploads for document submission during registration
+  const uploadGeneralFiles = upload.fields([
+    { name: 'idDocument', maxCount: 1 },
+    { name: 'medicalLicenseDocument', maxCount: 1 },
+    { name: 'medicalDegreeDocument', maxCount: 1 }
+  ]);
+
+  // Register a new doctor, including document uploads
+  const registerDoctor = async (req, res) => {
+    // Use the uploadDocuments middleware to handle file uploads
+    uploadGeneralFiles(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error uploading documents.' });
+      }
+
+      // Extract other registration data from the request body
+      const {Username, Name, Email, Password, DateOfBirth, HourlyRate, Affiliation, EducationalBackground, idDocument, medicalLicenseDocument, medicalDegreeDocument } = req.body;
+
+      // Create a new doctor with the extracted data
+      const newDoctor = new doctorModel({
+        Username,
+        Name,
+        Email,
+        Password,
+        DateOfBirth,
+        HourlyRate,
+        Affiliation,
+        EducationalBackground,
+        idDocument,
+        medicalLicenseDocument,
+        medicalDegreeDocument
+      });
+
+      // Add the uploaded document file paths to the new doctor's data
+      if (req.files) {
+        newDoctor.idDocument = req.files.idDocument ? req.files.idDocument[0].path : null;
+        newDoctor.medicalLicenseDocument = req.files.medicalLicenseDocument ? req.files.medicalLicenseDocument[0].path : null;
+        newDoctor.medicalDegreeDocument = req.files.medicalDegreeDocument ? req.files.medicalDegreeDocument[0].path : null;
+      }
+
+      // Save the new doctor to the database
+      try {
+        await newDoctor.save();
+        res.status(201).json({ message: 'Doctor registered successfully.' });
+      } catch (error) {
+        res.status(500).json({ error: 'Error registering doctor.' });
+      }
+    });
+  };
+
+
+
+  const addHealthRecord = async (req, res) => {
+    try {
+      const doctorId = req.user.id; // Assuming you have the doctor's ID available in req.user
+
+      // Extract data from the request body
+      const { PatientUsername, RecordDetails } = req.body;
+      const RecordDate = new Date();
+
+      // Find the doctor by ID
+      const doctor = await doctorModel.findById(doctorId);
+
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+
+      // Add the new health record to the doctor's HealthRecords array
+      doctor.HealthRecords.push({ PatientUsername, RecordDetails, RecordDate });
+
+      // Save the updated doctor document
+      await doctor.save();
+
+      res.status(201).json({ message: 'Health record added successfully.' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
+
+  //e
+
+
+
+
+
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,
@@ -304,6 +421,7 @@ module.exports = {
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract
+    addAppointments,scheduleAppointment,viewContract,deleteContract,registerDoctor,
+    addHealthRecord
 
 };

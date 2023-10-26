@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const multer = require('multer');
 var bcrypt = require('bcryptjs');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
@@ -62,6 +63,97 @@ mongoose.connect(MongoURI)
 })
 .catch(err => console.log(err));
 
+
+
+
+//e
+
+// Define storage objects for different types of files
+const storageForGeneralFiles = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  },
+});
+
+const storageForMedicalHistory = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, 'uploads/medical-history'); // Use the absolute path
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = path.extname(file.originalname);
+    const uniqueFilename = Date.now() + fileExtension;
+    cb(null, uniqueFilename);
+  },
+});
+
+
+
+// Create separate upload middleware for different types of files
+const uploadGeneralFiles = multer({ storage: storageForGeneralFiles }).fields([
+  { name: 'idDocument', maxCount: 1 },
+  { name: 'medicalLicenseDocument', maxCount: 1 },
+  { name: 'medicalDegreeDocument', maxCount: 1 },
+]);
+
+
+// Use the appropriate middleware for the route where you want to handle file uploads
+app.post('/uploadGeneralFiles', uploadGeneralFiles, (req, res) => {
+ // iterate through the uploaded files and perform actions like saving them to a database
+  for (const fileField in req.files) {
+    if (req.files.hasOwnProperty(fileField)) {
+      const file = req.files[fileField][0];
+    }
+  }
+});
+
+
+
+// Define storage for a single file
+const storageForSingleFile = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/single-files/');
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = path.extname(file.originalname);
+    const uniqueFilename = Date.now() + fileExtension;
+    cb(null, uniqueFilename);
+  },
+});
+
+// Create upload middleware for a single file
+const uploadSingleFile = multer({ storage: storageForSingleFile }).single('document');
+
+// Handle the single file upload
+app.post('/uploadSingleFile', uploadSingleFile, (req, res) => {
+  if (!req.file) {
+    // If no file is uploaded, respond with an error
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // The uploaded file is available as req.file
+  const uploadedFile = req.file;
+
+  // Respond with a success message and the file details
+  res.status(200).json({
+    message: 'File uploaded successfully',
+    file: {
+      originalname: uploadedFile.originalname,
+      filename: uploadedFile.filename,
+      destination: uploadedFile.destination,
+    },
+  });
+});
+
+
+
+// // Include the doctorRoute
+// app.use('/doctor', doctorRoute);
+
+//e
 
 
 /////////////////////////////////////

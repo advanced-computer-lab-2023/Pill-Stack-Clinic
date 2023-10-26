@@ -9,9 +9,12 @@ const {viewProfile,
     selectPatient,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract
+    addAppointments,scheduleAppointment,viewContract,deleteContract, registerDoctor, addHealthRecord
         } = require('../Routes/doctorController.js');
 
+
+router.post('/addHealthRecord', userVerification, addHealthRecord);
+router.post('/register', registerDoctor);        
 router.get('/', async(req,res) => {res.render('doc_home')});
 router.get('/profile',userVerification, viewProfile);
 router.get('/profile/edit/:id',editView);
