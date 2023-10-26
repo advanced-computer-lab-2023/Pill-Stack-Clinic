@@ -1,7 +1,7 @@
 const docModel = require('../Models/Doc_Request.js'); //Doctor Applications database:still waiting on approval by admin
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 const userModel = require('../Models/User.js');// Database of users on the platform
-
+const Contract = require('../Models/contract.js');
 const { default: mongoose } = require('mongoose');
 
 
@@ -239,6 +239,63 @@ doctor.Availability.push(docApp);
 doctor.save();
 res.send("Appointment added sucessfully");
 }
+const scheduleAppointment = async (req, res) => {
+  try {
+    const doctor = await doctorModel.findById(req.params.doctorId);
+   // if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+    
+    const appointment = {
+      PatientUsername: req.body.PatientUsername,
+      PatientName: req.body.PatientName,
+      StartDate: req.body.StartDate,
+      EndDate: req.body.EndDate,
+      Status: 'upcoming' // default status for a new appointment
+    };
+
+    doctor.BookedAppointments.push(appointment);
+
+    await doctor.save();
+    res.status(201).json(appointment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+const viewContract = async (req, res) => {
+  try {
+    const doctor = await doctorModel.findOne({ Username: req.user.Username }).exec();
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const contract = await Contract.findOne({ DoctorId: doctor._id }).exec();
+
+    if (!contract) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }
+
+    res.status(200).json(contract);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteContract = async (req, res) => {
+  try {
+    const contractId = req.params.contractId;
+
+    // Check if the contract exists
+    const contract = await Contract.findById(contractId);
+    if (!contract) {
+      return res.status(404).json({ message: 'Contract not found' });
+    }await Contract.findByIdAndDelete(contractId);
+    res.status(200).json({ message: 'Contract deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 module.exports = {
     viewProfile,editView,editProfile,
@@ -247,6 +304,6 @@ module.exports = {
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,
-    addAppointments
+    addAppointments,scheduleAppointment,viewContract,deleteContract
 
 };
