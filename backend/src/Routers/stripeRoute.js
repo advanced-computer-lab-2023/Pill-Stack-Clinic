@@ -14,7 +14,7 @@ router.post("/pay",userVerification,async (req,res,next)=>{
     //calculate appointment price
     const doctor = await doctorModel.findOne({Username:doctorUsername});
 
-    const package =await packageModel.findOne({Package_Name:req.user.healthPackage});
+    const package =await packageModel.findOne({Package_Name: user.healthPackage.Package_Name});
     var amount;
     
     if(!package){

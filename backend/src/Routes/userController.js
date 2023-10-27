@@ -123,6 +123,7 @@ const getUsers = async (req, res) => {
 
    const profile = await userModel.findOne({ Username: username });
    const BookedAppointments = profile.BookedAppointments;
+   console.log(BookedAppointments);
    res.status(200).json(BookedAppointments);
  
  
@@ -255,9 +256,10 @@ const viewDoctors = async (req, res) => {
       const doctors = await doctorModel.find();
      //const user = await userModel.findOne({ Username: "omarr" });
      const username = req.user.Username;
+     console.log(username);
      const user = await userModel.findOne({Username:username});
       if (user) {
-         const package = await packageModel.findOne({ Package_Name: user.healthPackage });
+         const package = await packageModel.findOne({ Package_Name: user.healthPackage.Package_Name });
          const discount = package ? package.Session_Discount / 100 : 0;
 
          const updatedDoctors = doctors.map((doctor) => {

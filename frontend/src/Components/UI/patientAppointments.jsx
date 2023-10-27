@@ -29,10 +29,11 @@ export const AppointmentSearchAndTable = () => {
     async function fetchAppointments() {
       try {
         // Fetch all appointments
-        const response = await axios.get(
-          "http://localhost:8000/patient/viewAllAppointments",
+        const response = await axios.post(
+          "http://localhost:8000/patient/allApp",{},
           { withCredentials: true }
         );
+        console.log(response.data);
         setAppointments(response.data);
       } catch (error) {
         console.error('Error fetching appointments:', error);
@@ -44,18 +45,18 @@ export const AppointmentSearchAndTable = () => {
   const handleSearch = async () => {
     try {
       // Send a POST request to search appointments
-      const response = await axios.post("http://localhost:8000/patient/searchAppointments", {
+      const response = await axios.post("http://localhost:8000/patient/search", {
         status: status,
         sDate: startDate,
         eDate: endDate,
-      });
+      },{ withCredentials: true });
 
       if (response.data.length === 0) {
         setAppointmentsNotFound(true);
       } else {
         setAppointmentsNotFound(false);
       }
-
+       console.log(response.data);
       setFilteredAppointments(response.data);
     } catch (error) {
       console.error('Error searching appointments:', error);
@@ -123,7 +124,9 @@ export const AppointmentSearchAndTable = () => {
       <Table variant="simple" mt={4}>
         <Thead>
           <Tr>
-            <Th>Appointment Date</Th>
+          <Th>Appointment Doctor Name</Th>
+            <Th>Appointment Start Time</Th>
+            <Th>Appointment End Time</Th>
             <Th>Appointment Status</Th>
             <Th>Actions</Th>
           </Tr>
@@ -132,8 +135,10 @@ export const AppointmentSearchAndTable = () => {
           {filteredAppointments.length > 0 ? (
             filteredAppointments.map((appointment, index) => (
               <Tr key={index}>
-                <Td>{appointment.AppointmentDate}</Td>
-                <Td>{appointment.AppointmentStatus}</Td>
+                <Td>{appointment.DoctorName}</Td>
+                <Td>{appointment.StartDate}</Td>
+                <Td>{appointment.EndDate}</Td>
+                <Td>{appointment.Status}</Td>
                 <Td>
                   {/* Add actions as needed */}
                 </Td>
@@ -142,8 +147,10 @@ export const AppointmentSearchAndTable = () => {
           ) : (
             appointments.map((appointment, index) => (
               <Tr key={index}>
-                <Td>{appointment.AppointmentDate}</Td>
-                <Td>{appointment.AppointmentStatus}</Td>
+                <Td>{appointment.DoctorName}</Td>
+                <Td>{appointment.StartDate}</Td>
+                <Td>{appointment.EndDate}</Td>
+                <Td>{appointment.Status}</Td>
                 <Td>
                   {/* Add actions as needed */}
                 </Td>

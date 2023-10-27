@@ -32,7 +32,7 @@ router.post( '/upload-document', userVerification, upload.single('document'), up
 router.delete('/remove-document/:documentId', userVerification, removeMedicalDocument);
 router.get('/', async(req,res) => {res.render('patient_home.ejs',{registeredUsername})})
 router.post("/searchDoctors",searchDoctors)
-router.get('/viewDoctors',viewDoctors);
+router.get('/viewDoctors',userVerification,viewDoctors);
 router.get('/selectedDoctorDetails/:username',selectedDoctorDetails);
 router.post("/addFamMem",userVerification,addFamilyMem);
 router.get('/viewFamily',userVerification,viewFamilyMembers);
