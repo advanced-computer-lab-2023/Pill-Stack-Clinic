@@ -12,11 +12,11 @@ import UserManagement from './Components/Pages/UserManagement';
 import DocReqs from './Components/Pages/DocReqs';
 import  Appointments from "./Components/Pages/Appointments";
 import  Completion from "./Components/Pages/Completion";
-import DoctorTable from "./Components/UI/viewDoctors.jsx";
+import DoctorSearchAndTable from "./Components/UI/viewDoctors.jsx";
 import AppointmentSearchAndTable from "./Components/UI/patientAppointments.jsx";
-import PrescriptionSearchAndTable from "./Components/UI/patientPrescriptions.jsx";
-import DoctorAppointmentsSearchAndTable from "./Components/UI/doctorAppointments.jsx";
-import DoctorPatientsSearchAndTable from "./Components/UI/viewPatients.jsx";
+import PrescriptionViewer from "./Components/UI/patientPrescriptions.jsx";
+import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
+import DoctorPatientsTable from "./Components/UI/viewPatients.jsx";
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -33,11 +33,11 @@ function App() {
         <Route path="home/appointments" element={<Appointments/>} />
         <Route path="/completion" element={<Completion/>} />
         <Route path="/admin-requests" element={ <DocReqs/>} />
-        <Route path="home/viewDoctors" element={<DoctorTable/>} />
-        <Route path="home/appiontments" element={<AppointmentSearchAndTable/>} />
-        <Route path="home/prescriptions" element={<PrescriptionSearchAndTable/>} />
-        <Route path="doctor-home/apptsD" element={<DoctorAppointmentsSearchAndTable/>} />
-        <Route path="doctor-home/myPatients" element={<DoctorPatientsSearchAndTable/>} />
+        <Route path="home/viewDoctors" element={<DoctorSearchAndTable/>} />
+        <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
+        <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
+        <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
+        <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />
         
       </Routes>
     </div>

@@ -314,14 +314,37 @@ const viewPrescribtion= async (req, res) => {
       res.status(500).send('Internal server error');
    }
 }; 
-const viewPrescriptions=async(req,res)=>{
-   const username = req.user.Username;
-
-   const profile = await userModel.findOne({ Username: username });
-   const prescriptions = profile.Prescriptions;
-   res.ssend(prescriptions);
-
-}
+const viewPrescriptions = async (req, res) => {
+   try {
+     const username = req.user.Username;
+     console.log(username + "DODDDDDDDDDYYYY");
+     const profile = await userModel.findOne({ Username: username });
+     const prescriptions = profile.Prescriptions;
+ 
+     // Map the prescriptions to extract Medicine details
+     const mappedPrescriptions = prescriptions.map((prescription) => {
+       const medicineDetails = prescription.Medicine.map((medicine) => ({
+         MedicineID: medicine.MedicineID,
+         Quantity: medicine.Quantity,
+         Instructions: medicine.Instructions,
+       }));
+ 
+       return {
+         Medicine: medicineDetails,
+         DocUsername:prescription.DocUsername,
+         Date:prescription.PrecriptionDate,
+         Status: prescription.Status,
+       };
+     });
+ 
+     console.log(mappedPrescriptions);
+ 
+     res.send(mappedPrescriptions);
+   } catch (error) {
+     console.error('Error fetching prescriptions:', error);
+     res.status(500).send({ error: 'An error occurred while fetching prescriptions.' });
+   }
+ };
 const filterPrescriptions=async(req, res)=>{
    const username = req.user.Username;
    console.log('In filtered');
