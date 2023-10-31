@@ -152,8 +152,26 @@ const viewPack=async(req,res)=>{
             pack.Pharmacy_Discount = req.body.Pharmacy_Discount;
           if (req.body.Family_Discount)
             pack.Family_Discount = req.body.Family_Discount;
-     
          await pack.save();
+         const patients=await patientModel.find({'healthPackage._id':id});
+         console.log(patients);
+         for(let i=0;i<patients.length;i++){
+          for(let j=0;j<patients[i].healthPackage.length;j++){
+            if(patients[i].healthPackage[j]._id==id){
+               patients[i].healthPackage[j].Price=pack.Price;
+               patients[i].healthPackage[j].Session_Discount=pack.Session_Discount;
+               patients[i].healthPackage[j].Pharmacy_Discount=pack.Pharmacy_Discount;
+               patients[i].healthPackage[j].Family_Discount=pack.Family_Discount;
+               
+               await patients[i].save();
+         }
+         }
+
+          
+          console.log(patients);
+        }
+         
+        
      
          // Redirect back to the profile view or show a success message
          res.send('Pacakge Updated');
@@ -164,15 +182,22 @@ const viewPack=async(req,res)=>{
  }
  const deletePack=async(req,res)=>{
     const { id } = req.params;
-     
+    const patients=await patientModel.find({'healthPackage._id':id});
     try {
       const pack = await packageModel.findById(id);
       if (!pack) {
         return res.status(404).send('Profile not found');
       }
-  
+      for(let i=0;i<patients.length;i++){
+        for(let j=0;j<patients[i].healthPackage.length;j++){
+          if(patients[i].healthPackage[j]._id==id){
+            patients[i].healthPackage[j].remove();
+            await patients[i].save();
+          }
+        }
+      }
       await pack.delete();
-  
+      
       // Redirect back to the profile view or show a success message
       res.send('Pacakge Deleted');
     } catch (error) {

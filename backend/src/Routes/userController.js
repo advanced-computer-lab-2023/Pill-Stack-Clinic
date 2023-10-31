@@ -549,7 +549,7 @@ const subscribePackageCash=async(req,res)=>{
       res.status(404).send("User Not Found");
    }
    for(let i=0;i<user.healthPackage.length;i++){
-      if(user.healthPackage.Status=="Subscribed"){
+      if(user.healthPackage[i].Status=="Subscribed" && user.healthPackage[i].Owner==true){
          res.send("User Already Subscribed to a Package");
          break;
       }
@@ -561,6 +561,9 @@ const subscribePackageCash=async(req,res)=>{
    //    res.send("No Enough Balance");
    // }
    //else{
+      for(let i=0;i<user.healthPackage.length;i++){
+         user.healthPackage[i].remove();
+      }
    const userPack=({
       _id:packageID,
       Package_Name:pack.Package_Name,
@@ -570,21 +573,46 @@ const subscribePackageCash=async(req,res)=>{
       Pharmacy_Discount:pack.Pharmacy_Discount,
       Status:'Subscribed',
       Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      Owner:true,
    });
    user.healthPackage.push(userPack);
+  
    // user.WalletBalance=user.WalletBalance-pack.Price;
    if(user.familyMembers.length==0){
       console.log("No family members");
    }
+   if(user.LinkedPatientFam.length==0){
+      console.log("No Linked family members");
+   }
    else{
-   for(let i=0;i<user.familyMembers.length;i++){
-      user.familyMembers[i].Family_Discount=pack.Family_Discount;
+      for(let i=0;i<user.LinkedPatientFam.length;i++){
+         const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
+         for(let j=0;linkedFam.healthPackage.length;j++){
+            if( linkedFam.healthPackage[j].Status!='Subscribed'&& linkedFam.healthPackage[j].Owner==false ){
+               linkedFam.healthPackage[j].remove();
+               await linkedFam.save();
+            }
+         }
+         const userPack=({
+            _id:packageID,
+            Package_Name:pack.Package_Name,
+            Price:pack.Price,
+            Session_Discount:pack.Session_Discount,
+            Family_Discount:pack.Family_Discount,
+            Pharmacy_Discount:pack.Pharmacy_Discount,
+            Status:'Subscribed',
+            Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+            Owner:false,
+         });
+         linkedFam.healthPackage.push(userPack);
+         await linkedFam.save();
    }
    }
    res.send("Subscribed succsefully");
    await user.save();
-//}
 }
+//}
+
 
 
 const viewPackageSubscribtion=async(req,res)=>{
@@ -598,19 +626,13 @@ const viewPackageSubscribtion=async(req,res)=>{
          res.send("User Not Subscribed to any Health Package");
       }
       else{
-         if(user.healthPackage[0].Renewl_Date>new Date()){
-            res.send(user.healthPackage);
-         }
-         else{
-            user.healthPackage[0].Status='Unsubscribed';
-            if(user.familyMembers.length!=0){
-               for(let i=0;i<user.familyMembers.length;i++){
-                  user.familyMembers[i].Family_Discount=0;
-               }
-            }
+         for(let i=0;i<user.healthPackage.length;i++){
+         if(user.healthPackage[i].Renewl_Date<new Date()){
+            user.healthPackage[i].Status='Unsubscribed';
             await user.save();
-            res.send(user.healthPackage);
          }
+         }
+         res.send(user.healthPackage);
       }
    }
 }
@@ -624,8 +646,8 @@ const cancelSubscription=async(req,res)=>{
       res.send("User Not Subscribed");
    }
    for(let i=0;i<user.healthPackage.length;i++){
-      if(user.healthPackage[i]._id==packageID){
-         user.healthPackage.pop();
+      if(user.healthPackage[i]._id==packageID && user.healthPackage[i].Owner==true){
+         user.healthPackage[i].remove();
          const userPack=({
             _id:packageID,
             Package_Name:pack.Package_Name,
@@ -639,11 +661,32 @@ const cancelSubscription=async(req,res)=>{
          user.healthPackage.push(userPack);
       }
    }
-   if(user.familyMembers.length!=0){
-      for(let i=0;i<user.familyMembers.length;i++){
-         user.familyMembers[i].Family_Discount=0;
+   if(user.LinkedPatientFam.length==0){
+      console.log("No Linked family members");
+   }
+   else{
+      for(let i=0;i<user.LinkedPatientFam.length;i++){
+         const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
+         for(let j=0;j<linkedFam.healthPackage.length;j++){
+         if(linkedFam.healthPackage[j]._id==packageID && linkedFam.healthPackage[j].Owner==false){
+            linkedFam.healthPackage[j].remove();
+         const userPack=({
+            _id:packageID,
+            Package_Name:pack.Package_Name,
+            Price:pack.Price,
+            Session_Discount:pack.Session_Discount,
+            Family_Discount:pack.Family_Discount,
+            Pharmacy_Discount:pack.Pharmacy_Discount,
+            Status:'Cancelled',
+            End_Date:  new Date(),
+            Owner:false,
+         });
+         linkedFam.healthPackage.push(userPack);
+         await linkedFam.save();}
       }
    }
+   }
+   
    await user.save();
    res.send(user.healthPackage);
 
@@ -691,6 +734,25 @@ const linkPatientAsFamilyMember = async (req, res) => {
       }
 
       linkingUser.LinkedPatientFam.push(linkedFamilyMember);
+      if(linkingUser.healthPackage.length!=0){
+         for(let i=0;i<linkingUser.healthPackage.length;i++){
+            if(linkingUser.healthPackage[i].Status='Subscribed'){
+               const userPack=({
+                  _id:linkingUser.healthPackage[i]._id,
+                  Package_Name:linkingUser.healthPackage[i].Package_Name,
+                  Price:linkingUser.healthPackage[i].Price,
+                  Session_Discount:linkingUser.healthPackage[i].Session_Discount,
+                  Family_Discount:linkingUser.healthPackage[i].Family_Discount,
+                  Pharmacy_Discount:linkingUser.healthPackage[i].Pharmacy_Discount,
+                  Status:'Subscribed',
+                  Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+                  Owner:false,
+               });
+               linkedUser.healthPackage.push(userPack);
+               await linkedUser.save();
+            }
+         }
+      }
 
       await linkingUser.save();
       res.status(200).send("Family Member linked successfully");

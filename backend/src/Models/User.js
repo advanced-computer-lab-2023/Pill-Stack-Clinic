@@ -70,10 +70,6 @@ const userSchema = new Schema({
         required: true,
         default: 'Unknown' // Default value for Relation
       },
-      Family_Discount:{
-        type:Number,
-        default:0
-      }
     })
   ], BookedAppointments: [
     new Schema({
@@ -154,6 +150,10 @@ const userSchema = new Schema({
       End_Date :{
         type:Date,
         required: false
+      },
+      Owner :{
+        type:Boolean,
+        required:false
       }
       })
     ],
