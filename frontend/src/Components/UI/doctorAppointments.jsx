@@ -8,34 +8,76 @@ import {
   Th,
   Td,
   Spinner,
+  Select,
+  Input,
+  Button,
+  FormControl,
 } from '@chakra-ui/react';
 import axios from 'axios';
 
 export const ViewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [selectedDate, setSelectedDate] = useState('');
 
   useEffect(() => {
     // Fetch all appointments when the component mounts
     async function fetchAppointments() {
       try {
-        const response = await axios.post("http://localhost:8000/doctor/allApp",{}, {
+        const response = await axios.post("http://localhost:8000/doctor/allApp", {}, {
           withCredentials: true
         });
-        console.log("DAREEEEEENN")
         setAppointments(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching patients:', error);
+        console.error('Error fetching appointments:', error);
       }
     }
 
     fetchAppointments();
   }, []);
 
+  useEffect(() => {
+    // Filter appointments based on selectedStatus and selectedDate
+    const filtered = appointments.filter((appointment) => {
+      const statusMatches = selectedStatus === 'All' || appointment.Status === selectedStatus;
+      const dateMatches = selectedDate === '' || appointment.StartDate.includes(selectedDate);
+      return statusMatches && dateMatches;
+    });
+    setFilteredAppointments(filtered);
+  }, [selectedStatus, selectedDate, appointments]);
+
   return (
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <Table variant="striped" colorScheme="teal">
+      <FormControl mb={4}>
+        <Select
+          placeholder="Filter by Status"
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          size="sm"
+          fontSize="sm"
+        >
+          <option value="All">All</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="rescheduled">Rescheduled</option>
+          {/* Add other status options as needed */}
+        </Select>
+        <Input
+          type="date"
+          placeholder="Filter by Date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          size="sm"
+          fontSize="sm"
+          mb={2}
+        />
+      </FormControl>
+
+      <Table variant="striped"shadow="md">
         <Thead>
           <Tr>
             <Th>Patient Name</Th>
@@ -45,12 +87,12 @@ export const ViewAppointments = () => {
         <Tbody>
           {loading ? (
             <Tr>
-              <Td colSpan={2}>
+              <Td colSpan={2} textAlign="center">
                 <Spinner size="lg" />
               </Td>
             </Tr>
-          ) : appointments.length > 0 ? (
-            appointments.map((appointment, index) => (
+          ) : filteredAppointments.length > 0 ? (
+            filteredAppointments.map((appointment, index) => (
               <Tr key={index}>
                 <Td>{appointment.PatientName}</Td>
                 <Td>{appointment.StartDate}</Td>
@@ -58,7 +100,7 @@ export const ViewAppointments = () => {
             ))
           ) : (
             <Tr>
-              <Td colSpan={2}>No appointments found.</Td>
+              <Td colSpan={2} textAlign="center">No appointments found.</Td>
             </Tr>
           )}
         </Tbody>
@@ -66,6 +108,5 @@ export const ViewAppointments = () => {
     </Box>
   );
 };
-
 
 export default ViewAppointments;
