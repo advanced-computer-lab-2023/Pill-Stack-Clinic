@@ -5,8 +5,8 @@ const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
     viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
-    filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentCash,linkPatientAsFamilyMember,uploadMedicalDocument,
-    removeMedicalDocument} = require('../Routes/userController.js');
+    filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
+    removeMedicalDocument,getAmount,viewAllAvailableAppointments} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -32,6 +32,8 @@ router.post( '/upload-document', userVerification, upload.single('document'), up
 router.delete('/remove-document/:documentId', userVerification, removeMedicalDocument);
 router.get('/', async(req,res) => {res.render('patient_home.ejs',{registeredUsername})})
 router.post("/searchDoctors",searchDoctors)
+router.post('/getAmount',userVerification,getAmount);
+router.get("/bookAppointments",userVerification,viewAllAvailableAppointments);
 router.get('/viewDoctors',userVerification,viewDoctors);
 router.get('/selectedDoctorDetails/:username',selectedDoctorDetails);
 router.post("/addFamMem",userVerification,addFamilyMem);
@@ -45,7 +47,7 @@ router.get('/viewPrescriptions',viewPrescribtion)
 router.get('/viewDoctorAppointments/:username', viewAvailDoctorAppointments);
 router.get('/viewPatientWallet',userVerification, viewPatientWallet);
 router.get('/patient-appointments/:username', viewUpcomPastAppointments);
-router.post('/payCash',userVerification,payAppointmentCash);
+router.post('/payWallet',userVerification,payAppointmentWallet);
 router.get("/packages",viewAllPacks);
 router.post('/subscribeWallet',subscribePackageCash);
 router.get('/viewMyPackage',viewPackageSubscribtion);

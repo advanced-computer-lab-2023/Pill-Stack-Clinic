@@ -1,43 +1,34 @@
-import React, { Component } from 'react';
-import axios from "axios";
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-class Completion extends Component {
-  constructor() {
-    super();
-    this.state = {
-      message: 'Appointment booked successfully',
-    };
-  }
+export default function Completion() {
+  // Use the useParams hook to access the route parameters
+  const { doctorUsername, appointmentId, amount, memberID } = useParams();
 
-  componentDidMount() {
+  useEffect(() => {
     // Perform a POST request to the backend here, if needed
     // You can use libraries like Axios or the built-in Fetch API
     // Example with Axios:
-    fetch('http://localhost:8000/stripe/pay/confirm', {
-      method: 'POST',
-      credentials: 'include', // Pass credentials
-    })
+    axios.post('http://localhost:8000/stripe/pay/confirm', {
+      doctorUsername,
+      appid: appointmentId,
+      amount,
+      member: memberID,
+    }, { withCredentials: true })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
+        console.log(response.data);
+        // Do additional handling here
       })
       .catch(error => {
         console.error(error);
       });
-  }
+  }, [doctorUsername, appointmentId, amount, memberID]);
 
-  render() {
-    return (
-      <div>
-        <h1>{this.state.message}</h1>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h1>Appointment booked successfully</h1>
+    </div>
+  );
 }
 
-export default Completion;

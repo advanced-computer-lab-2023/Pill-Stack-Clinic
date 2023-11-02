@@ -9,22 +9,10 @@ router.post("/pay",userVerification,async (req,res,next)=>{
     const appointmentId=req.body.appid; //from doctor's available appointment;
     const username=req.user.Username;
     const doctorUsername=req.body.doctor; 
+    var amount=req.body.amount;
     //doctor's username
    // const appointmentID=req.body.app; //from doctor available array
     //calculate appointment price
-    const doctor = await doctorModel.findOne({Username:doctorUsername});
-
-    const package =await packageModel.findOne({Package_Name: user.healthPackage.Package_Name});
-    var amount;
-    
-    if(!package){
-      amount=doctor.HourlyRate * 1.1;
-      console.log('error here1');
-
-    }else{
-        const discount=package.Session_Discount/100;
-        amount= (doctor.HourlyRate * 1.1)*(1-discount);
-    }
     amount=Math.ceil(amount);
 
  console.log(amount);
@@ -51,10 +39,18 @@ router.get("/config",(req,res)=>{
   });
 })
 router.post('/pay/confirm',userVerification, async (req, res) => {
-  console.log('starting here');
+  console.log('starting here Confirm');
+    const amount=req.body.amount;
+    console.log(amount);
+    const linkedFamMember=req.body.member; //let it be ID
+    console.log(linkedFamMember);
 
-    const appointmentId='6538d28c5c0f1469e7b108d9'//req.body.appid; //from doctor's available appointment;
-    const doctorUserName='doctorTesting'//req.body.doctorUsername;
+    const appointmentId=req.body.appid; //from doctor's available appointment;
+    console.log(appointmentId);
+
+    const doctorUserName=req.body.doctorUsername;
+    console.log(doctorUserName);
+
     const username=req.user.Username;
    const user=await userModel.findOne({Username:username});
    const doctor=await doctorModel.findOne({Username:doctorUserName});
@@ -65,25 +61,53 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
  );
  console.log(Appointment)
  if(Appointment){
-const docApp=({
-   _id:Appointment._id,
-   PatientUsername:username,
-   PatientName:req.user.Name,
-   StartDate:Appointment.StartDate,
-   EndDate:Appointment.EndDate,
-   Status:'upcoming',
-});
-doctor.BookedAppointments.push(docApp);
-const userApp=({
-   _id:Appointment._id,
-   DoctorUsername:doctorUserName,
-   DoctorName:doctor.Name,
-   StartDate:Appointment.StartDate,
-   EndDate:Appointment.EndDate,
-   Status:'upcoming',
-});
-user.BookedAppointments.push(userApp);
+   if(linkedFamMember==='undefined'){
+      const docApp=({
+         _id:Appointment._id,
+         PatientUsername:username,
+         PatientName:req.user.Name,
+         StartDate:Appointment.StartDate,
+         EndDate:Appointment.EndDate,
+         Status:'upcoming',
+      });
+      doctor.BookedAppointments.push(docApp);
+      const userApp=({
+         _id:Appointment._id,
+         DoctorUsername:doctorUserName,
+         DoctorName:doctor.Name,
+         StartDate:Appointment.StartDate,
+         EndDate:Appointment.EndDate,
+         Status:'upcoming',
+      });
+      user.BookedAppointments.push(userApp);
+       }else{
+         const familyMember=await userModel.findById(linkedFamMember);
+   
+         const docApp=({
+            _id:Appointment._id,
+            PatientUsername:familyMember.Username,
+            PatientName:familyMember.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         doctor.BookedAppointments.push(docApp);
+         const userApp=({
+            _id:Appointment._id,
+            DoctorUsername:doctorUserName,
+            DoctorName:doctor.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         familyMember.BookedAppointments.push(userApp);
+         familyMember.save();
+      
+       }
+
 doctor.Availability.remove({_id:appointmentId});
+const docBalance=doctor.WalletBalance+(0.9*amount);
+doctor.WalletBalance=docBalance;
 doctor.save();
 user.save();
  }
@@ -119,7 +143,7 @@ router.post("/payPack",userVerification,async (req,res,next)=>{
 
 
 router.post('/payPack/confirm',userVerification, async (req, res) => {
-   const packageID=req.body.packageID;
+  const packageID=req.body.packageID;
    const pack= await packageModel.findById(packageID);
    if(!pack){
       res.status(404).send("Package Not Found");
@@ -129,22 +153,13 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    if(!user){
       res.status(404).send("User Not Found");
    }
-   for(let i=0;i<user.healthPackage.length;i++){
-      if(user.healthPackage[i].Status=="Subscribed" && user.healthPackage[i].Owner==true){
-         res.send("User Already Subscribed to a Package");
-         break;
-      }
+   if(user.healthPackage.length!=0){
+      res.send("User Already Subscribed to a Package");
    }
-   // if(user.healthPackage.length!=0){
-   //    res.send("User Already Subscribed to a Package");
-   // }
-   // if(user.WalletBalance<pack.Price){
-   //    res.send("No Enough Balance");
-   // }
-   //else{
-      for(let i=0;i<user.healthPackage.length;i++){
-         user.healthPackage[i].remove();
-      }
+   if(user.WalletBalance<pack.Price){
+      res.send("No Enough Balance");
+   }
+   else{
    const userPack=({
       _id:packageID,
       Package_Name:pack.Package_Name,
@@ -153,44 +168,21 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
       Family_Discount:pack.Family_Discount,
       Pharmacy_Discount:pack.Pharmacy_Discount,
       Status:'Subscribed',
-      Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-      Owner:true,
+      Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
    });
    user.healthPackage.push(userPack);
-  
-   // user.WalletBalance=user.WalletBalance-pack.Price;
+    user.WalletBalance=user.WalletBalance-pack.Price;
    if(user.familyMembers.length==0){
       console.log("No family members");
    }
-   if(user.LinkedPatientFam.length==0){
-      console.log("No Linked family members");
-   }
    else{
-      for(let i=0;i<user.LinkedPatientFam.length;i++){
-         const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
-         for(let j=0;linkedFam.healthPackage.length;j++){
-            if( linkedFam.healthPackage[j].Status!='Subscribed'&& linkedFam.healthPackage[j].Owner==false ){
-               linkedFam.healthPackage[j].remove();
-               await linkedFam.save();
-            }
-         }
-         const userPack=({
-            _id:packageID,
-            Package_Name:pack.Package_Name,
-            Price:pack.Price,
-            Session_Discount:pack.Session_Discount,
-            Family_Discount:pack.Family_Discount,
-            Pharmacy_Discount:pack.Pharmacy_Discount,
-            Status:'Subscribed',
-            Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-            Owner:false,
-         });
-         linkedFam.healthPackage.push(userPack);
-         await linkedFam.save();
+   for(let i=0;i<user.familyMembers.length;i++){
+      user.familyMembers[i].Family_Discount=pack.Family_Discount;
    }
    }
    res.send("Subscribed succsefully");
    await user.save();
+ }
 res.json({ success: true });
 
 

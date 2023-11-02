@@ -90,7 +90,7 @@ const searchDoctors = async (req, res) => {
 
 
        if (name) {
-           query["Name"] = { $regex: new RegExp(name, 'i') };
+         query["Name"] = { $regex: new RegExp(`.*${name}.*`, 'i') };
        }
 
        if (speciality) {
@@ -123,7 +123,6 @@ const getUsers = async (req, res) => {
 
    const profile = await userModel.findOne({ Username: username });
    const BookedAppointments = profile.BookedAppointments;
-   console.log(BookedAppointments);
    res.status(200).json(BookedAppointments);
  
  
@@ -172,12 +171,6 @@ const getUsers = async (req, res) => {
   );
 }
 
-
-
-
-
-
-
 res.status(200).json(BookedAppointments);
 
 }
@@ -218,6 +211,47 @@ const viewPatientWallet = async (req, res) => {
      res.status(500).json({ error: 'Internal server error' });
    }
  };
+ const getAmount = async (req, res) => {
+   const docUsername = req.body.doctor;
+   const username = req.user.Username;
+   const user = await userModel.findOne({ Username: username });
+   const doctor = await doctorModel.findOne({ Username: docUsername });
+   const healthPackage = user.healthPackage;
+   let userPrice;
+   let familyPrice;
+ 
+   if (!healthPackage || healthPackage.length === 0) {
+     userPrice = doctor.HourlyRate * 1.1;
+     familyPrice = userPrice;
+   } else {
+     for (const pack of healthPackage) {
+       if (pack.Status === 'Subscribed') {
+         const fullPackage = await packageModel.findOne({ Package_Name: pack.Package_Name });
+         const discount = fullPackage.Session_Discount / 100;
+         const familyDiscount = fullPackage.Family_Discount / 100;
+         const date = new Date();
+ 
+         if (pack.Renewl_Date >= date) {
+           if (pack.Owner) {
+             userPrice = (doctor.HourlyRate * 1.1) * (1 - discount);
+             familyPrice = (doctor.HourlyRate * 1.1) * (1 - familyDiscount);
+           } else {
+             userPrice = (doctor.HourlyRate * 1.1) * (1 - familyDiscount);
+             familyPrice = doctor.HourlyRate * 1.1;
+           }
+         }
+       }
+     }
+ 
+     if (userPrice === undefined && familyPrice === undefined) {
+       userPrice = doctor.HourlyRate * 1.1;
+       familyPrice = userPrice;
+     }
+   }
+ 
+   res.send({ userPrice: userPrice, familyPrice: familyPrice });
+ };
+ 
 // const viewDoctors = async (req, res) => {
 //    try {
 //       const doctors = await doctorModel.find();
@@ -280,6 +314,7 @@ const viewDoctors = async (req, res) => {
       res.status(500).send('Error fetching doctors');
    }
 };
+//added family members and linked family members accounts//edited for frontend
 const viewFamilyMembers = async (req, res) => {
    try {
       const username = req.user.Username;
@@ -289,8 +324,16 @@ const viewFamilyMembers = async (req, res) => {
          return res.status(404).send('User not found' );
       }else{
       const familyMembers = user.familyMembers;
-     console.log(familyMembers)
-    res.send(familyMembers);
+      const linkedIDs=user.LinkedPatientFam; 
+      //console.log(linkedIDs);
+      const linkedAccounts=[];
+      for (const userId of linkedIDs) {
+         const famMember = await userModel.findById(userId.memberID);
+         linkedAccounts.push(famMember);
+       }
+      console.log(linkedAccounts);
+
+    res.send({added:familyMembers,linkedAccounts:linkedAccounts});
       }
    } catch (error) {
       console.error('Error retrieving family members:', error);
@@ -433,25 +476,36 @@ const doctor=req.body.prepDr;
 
 
 }
+//gets all appointments for all docs
+const viewAllAvailableAppointments = async (req, res) => {
+   try {
+
+ 
+     const selectedDoctor = await doctorModel.find({});
+     var app=[];
+
+     selectedDoctor.forEach(doctor => {
+      if(doctor.Availability.length!==0)
+      app.push(doctor.Availability);
+     });
+   
+     res.status(200).json(selectedDoctor);
+   } catch (error) {
+     console.error('Error viewing doctor appointments:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+
 
 const viewAvailDoctorAppointments = async (req, res) => {
    try {
-     const selectedDoctorUsername = req.params.username; 
-     console.log(selectedDoctorUsername)
- 
+     const selectedDoctorUsername = req.params.username;  
      const selectedDoctor = await doctorModel.findOne({ Username: selectedDoctorUsername });
-     console.log(selectedDoctor)
-
-     
- 
      if (!selectedDoctor) {
        return res.status(404).json({ message: 'Doctor not found' });
      }
  
      const doctorAppointments = selectedDoctor.Availability;
-     console.log(doctorAppointments)
- 
- 
      res.status(200).json(doctorAppointments);
    } catch (error) {
      console.error('Error viewing doctor appointments:', error);
@@ -488,42 +542,85 @@ const viewAvailDoctorAppointments = async (req, res) => {
      res.status(500).json({ error: err.message });
    }
  };
- const payAppointmentCash=async(req,res)=>{
+ const payAppointmentWallet=async(req,res)=>{
+   const amount=req.body.amount;
+   const wallet=req.user.WalletBalance;
+   const linkedFamMember=req.body.member; //let it be ID
+   if(amount>wallet){
+      console.log('hereError');
+      res.send('Not enough wallet Balance');
+   }else{
    //add appointment to doctors booked app and patients booked app
-const appointmentId=req.body.appid; //from doctor's available appointment;
-const doctorUserName=req.body.doctorUsername;
-const username=req.user.Username;
-const user=await userModel.findOne({Username:username});
-const doctor=await doctorModel.findOne({Username:doctorUserName});
-const Appointment = doctor.Availability.find(
-   (av) => {
+   const appointmentId=req.body.appid; //from doctor's available appointment;
+   console.log(appointmentId);
 
-      return ((av._id).toString()=== appointmentId)}
- );
- console.log(Appointment)
-const docApp=({
-   _id:Appointment._id,
-   PatientUsername:username,
-   PatientName:req.user.Name,
-   StartDate:Appointment.StartDate,
-   EndDate:Appointment.EndDate,
-   Status:'upcoming',
-});
-doctor.BookedAppointments.push(docApp);
-const userApp=({
-   _id:Appointment._id,
-   DoctorUsername:doctorUserName,
-   DoctorName:doctor.Name,
-   StartDate:Appointment.StartDate,
-   EndDate:Appointment.EndDate,
-   Status:'upcoming',
-});
-user.BookedAppointments.push(userApp);
-doctor.Availability.remove({_id:appointmentId});
-doctor.save();
-user.save();
-res.send("Appointment booked successfully");
+   const doctorUserName=req.body.doctorUsername;
+   console.log(doctorUserName);
+   const username=req.user.Username;
+   const user=await userModel.findOne({Username:username});
+   const doctor=await doctorModel.findOne({Username:doctorUserName});
+   const Appointment = doctor.Availability.find(
+      (av) => {
+   
+         return ((av._id).toString()=== appointmentId)}
+    );
+    console.log(Appointment)
+    if(!linkedFamMember){
+   const docApp=({
+      _id:Appointment._id,
+      PatientUsername:username,
+      PatientName:req.user.Name,
+      StartDate:Appointment.StartDate,
+      EndDate:Appointment.EndDate,
+      Status:'upcoming',
+   });
+   doctor.BookedAppointments.push(docApp);
+   const userApp=({
+      _id:Appointment._id,
+      DoctorUsername:doctorUserName,
+      DoctorName:doctor.Name,
+      StartDate:Appointment.StartDate,
+      EndDate:Appointment.EndDate,
+      Status:'upcoming',
+   });
+   user.BookedAppointments.push(userApp);
+    }else{
+      const familyMember=await userModel.findById(linkedFamMember);
+   
+      const docApp=({
+         _id:Appointment._id,
+         PatientUsername:familyMember.Username,
+         PatientName:familyMember.Name,
+         StartDate:Appointment.StartDate,
+         EndDate:Appointment.EndDate,
+         Status:'upcoming',
+      });
+      doctor.BookedAppointments.push(docApp);
+      const userApp=({
+         _id:Appointment._id,
+         DoctorUsername:doctorUserName,
+         DoctorName:doctor.Name,
+         StartDate:Appointment.StartDate,
+         EndDate:Appointment.EndDate,
+         Status:'upcoming',
+      });
+      familyMember.BookedAppointments.push(userApp);
+      familyMember.save();
+   
+   
+    }
+   doctor.Availability.remove({_id:appointmentId});
+   const docBalance=doctor.WalletBalance+(0.9*amount);
+   doctor.WalletBalance=docBalance;
+   doctor.save();
+   user.WalletBalance=wallet-amount;
+   user.save();
+   res.send("Appointment booked successfully");
+   }
+
 }
+
+
 
 
 
@@ -769,9 +866,14 @@ function isValidRelation(relation) {
 
 
 
-module.exports = {selectedDoctorDetails,addFamilyMem,viewAvailDoctorAppointments,searchDoctors, getUsers,
+module.exports = {selectedDoctorDetails,addFamilyMem,
+   viewAllAvailableAppointments,getAmount,
+   viewAvailDoctorAppointments,searchDoctors, getUsers,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,
    viewPrescribtion, viewPatientWallet,cancelSubscription,
-   viewUpcomPastAppointments,payAppointmentCash,viewAllPacks,subscribePackageCash,viewPackageSubscribtion,linkPatientAsFamilyMember, uploadMedicalDocument, removeMedicalDocument};
+   viewUpcomPastAppointments,payAppointmentWallet,
+   viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
+   linkPatientAsFamilyMember, uploadMedicalDocument,
+    removeMedicalDocument};
