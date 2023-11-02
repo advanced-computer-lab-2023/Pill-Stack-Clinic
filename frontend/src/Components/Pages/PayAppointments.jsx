@@ -10,7 +10,7 @@ import CheckoutForm from "../UI/Payment";
 // This is your test publishable API key.
 //const stripePromise = loadStripe("pk_test_51O3yL5I39njhw9EQbNUhiBjpOIiumwTdlgMLVwNx8e69uOiitybCgCIckh6rTt1XQMvqgFcoFFBbN3RUjLvtyIcO00i72iHKYH");
 export default function PayAppointments() {
-  const { doctorUsername, appointmentId, amount ,memberID} = useParams();
+  const { doctorUsername, appointmentId, amount ,memberID,manualMem} = useParams();
   const [paymentParams, setPaymentParams] = useState(null);
 
     const[stripePromise,setStripePromise]=useState(null);
@@ -38,7 +38,7 @@ export default function PayAppointments() {
             console.log(response.data);
 
             setClientSecret(response.data.clientSecret);
-            setPaymentParams({ doctorUsername, appointmentId, amount, memberID });
+            setPaymentParams({ doctorUsername, appointmentId, amount, memberID ,manualMem});
 
           })
           .catch((error) => {

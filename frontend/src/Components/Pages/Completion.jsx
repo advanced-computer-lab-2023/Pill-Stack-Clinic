@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 export default function Completion() {
   // Use the useParams hook to access the route parameters
-  const { doctorUsername, appointmentId, amount, memberID } = useParams();
+  const { doctorUsername, appointmentId, amount, memberID ,manualMem} = useParams();
 
   useEffect(() => {
     // Perform a POST request to the backend here, if needed
@@ -15,6 +15,7 @@ export default function Completion() {
       appid: appointmentId,
       amount,
       member: memberID,
+      manualMem:manualMem,
     }, { withCredentials: true })
       .then(response => {
         console.log(response.data);
@@ -23,7 +24,7 @@ export default function Completion() {
       .catch(error => {
         console.error(error);
       });
-  }, [doctorUsername, appointmentId, amount, memberID]);
+  }, [doctorUsername, appointmentId, amount, memberID,manualMem]);
 
   return (
     <div>

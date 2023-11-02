@@ -10,9 +10,6 @@ router.post("/pay",userVerification,async (req,res,next)=>{
     const username=req.user.Username;
     const doctorUsername=req.body.doctor; 
     var amount=req.body.amount;
-    //doctor's username
-   // const appointmentID=req.body.app; //from doctor available array
-    //calculate appointment price
     amount=Math.ceil(amount);
 
  console.log(amount);
@@ -44,7 +41,8 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
     console.log(amount);
     const linkedFamMember=req.body.member; //let it be ID
     console.log(linkedFamMember);
-
+    const manualFamMember=req.body.manualMem;
+    console.log(manualFamMember);
     const appointmentId=req.body.appid; //from doctor's available appointment;
     console.log(appointmentId);
 
@@ -62,24 +60,47 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
  console.log(Appointment)
  if(Appointment){
    if(linkedFamMember==='undefined'){
-      const docApp=({
-         _id:Appointment._id,
-         PatientUsername:username,
-         PatientName:req.user.Name,
-         StartDate:Appointment.StartDate,
-         EndDate:Appointment.EndDate,
-         Status:'upcoming',
-      });
-      doctor.BookedAppointments.push(docApp);
-      const userApp=({
-         _id:Appointment._id,
-         DoctorUsername:doctorUserName,
-         DoctorName:doctor.Name,
-         StartDate:Appointment.StartDate,
-         EndDate:Appointment.EndDate,
-         Status:'upcoming',
-      });
-      user.BookedAppointments.push(userApp);
+      if(manualFamMember==='undefined'){
+         const docApp=({
+            _id:Appointment._id,
+            PatientUsername:username,
+            PatientName:req.user.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         doctor.BookedAppointments.push(docApp);
+         const userApp=({
+            _id:Appointment._id,
+            DoctorUsername:doctorUserName,
+            DoctorName:doctor.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         user.BookedAppointments.push(userApp);
+      }else{
+         const docApp=({
+            _id:Appointment._id,
+            PatientUsername:username,
+            PatientName:manualFamMember,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         doctor.BookedAppointments.push(docApp);
+         const userApp=({
+            _id:Appointment._id,
+            PatientName:manualFamMember,
+            DoctorUsername:doctorUserName,
+            DoctorName:doctor.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         user.FamilyBookedAppointments.push(userApp);
+      }
+      
        }else{
          const familyMember=await userModel.findById(linkedFamMember);
    

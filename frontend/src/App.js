@@ -18,6 +18,8 @@ import AppointmentSearchAndTable from "./Components/UI/patientAppointments.jsx";
 import PrescriptionViewer from "./Components/UI/patientPrescriptions.jsx";
 import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
 import DoctorPatientsTable from "./Components/UI/viewPatients.jsx";
+import FamilyAppointments from "./Components/UI/FamilyAppointment.jsx";
+
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -32,15 +34,15 @@ function App() {
         <Route path="/admin-packs" element={<AdminPacks />} />
         <Route path="/admin-users" element={<UserManagement/>} />
         <Route path="home/bookAppointments" element={<BookAppointments/>} />
-        <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID" element={<PayAppointments/>} />
-        <Route path="/completion/:doctorUsername/:appointmentId/:amount/:memberID" element={<Completion/>} />
+        <Route path="home/familyAppointments" element={<FamilyAppointments/>} />
+        <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
+        <Route path="/completion/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<Completion/>} />
         <Route path="/admin-requests" element={ <DocReqs/>} />
         <Route path="home/viewDoctors" element={<DoctorSearchAndTable/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
         <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
-        <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />
-        
+        <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
       </Routes>
     </div>
   );

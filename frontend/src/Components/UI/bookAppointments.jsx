@@ -186,7 +186,8 @@ export const BookAppointments = () => {
         console.log(response.data);
       }else{
         const memberID='undefined';
-          navigate(`/home/payAppointment/${selectedDoctorUsername}/${selectedAppointmentId}/${amount}/${memberID}`);
+        const manualMem='undefined';
+          navigate(`/home/payAppointment/${selectedDoctorUsername}/${selectedAppointmentId}/${amount}/${memberID}/${manualMem}`);
 
       }
     }else{
@@ -198,35 +199,40 @@ export const BookAppointments = () => {
         }
       })   
       if(selectedPayment==='wallet'){
-           
-        const response = await axios.post(
-          "http://localhost:8000/patient/payWallet",{amount:amount,member:memberID,doctorUsername:selectedDoctorUsername,appid:selectedAppointmentId},
-          { withCredentials: true }
-        );
+        var response;
+        if(memberID!==''){
+          response = await axios.post(
+            "http://localhost:8000/patient/payWallet",{amount:amount,member:memberID,doctorUsername:selectedDoctorUsername,appid:selectedAppointmentId},
+            { withCredentials: true }
+          );
+        }else{
+          response = await axios.post(
+            "http://localhost:8000/patient/payWallet",{amount:amount,manualMem:selectedPatient,doctorUsername:selectedDoctorUsername,appid:selectedAppointmentId},
+            { withCredentials: true }
+          );
+        }
         const finalMessage=response.data;
         if(finalMessage==='Appointment booked successfully'){
           setIsModalOpen(false); // Close the modal
           refreshAppointments();
           setConfirmationMessage('Payment successful');
         } else {
-          // Handle the case when the payment was not successful
-          // You can display an error message or take appropriate action
           setIsModalOpen(false); // Close the modal
-
           setErrorMessage('Payment failed. Not enough credit in wallet.');
         }
         console.log(response.data);
       }else{
-        navigate(`/home/payAppointment/${selectedDoctorUsername}/${selectedAppointmentId}/${amount}/${memberID}`);
-
+        if(memberID!==''){
+          const manualMem='undefined';
+          navigate(`/home/payAppointment/${selectedDoctorUsername}/${selectedAppointmentId}/${amount}/${memberID}/${manualMem}`);
+        }else{
+          const memberID='undefined';
+          navigate(`/home/payAppointment/${selectedDoctorUsername}/${selectedAppointmentId}/${amount}/${memberID}/${selectedPatient}`);
+        }
       }
+    }
 
     }
-  }
-   // navigate(`/home/appointments/${doctorUsername}/${appointmentId}`);
-    // Handle payment and any other necessary actions here
-    // You can also use the doctorUsername and appointmentId here.
-    // Close the modal when the payment is complete.
   };
   
 

@@ -83,7 +83,21 @@ const userSchema = new Schema({
         type: String,
         enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
       }    })
-  ], Prescriptions:[
+  ],
+  FamilyBookedAppointments: [
+    new Schema({
+      _id: mongoose.Schema.Types.ObjectId,
+      PatientName:String,
+      DoctorUsername: String,
+      DoctorName:String,
+      StartDate:Date,
+      EndDate:Date,
+      Status: {
+        type: String,
+        enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+      }    })
+  ]
+  , Prescriptions:[
     new Schema({
       _id: mongoose.Schema.Types.ObjectId,
 

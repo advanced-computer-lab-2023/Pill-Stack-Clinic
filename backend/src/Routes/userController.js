@@ -127,6 +127,15 @@ const getUsers = async (req, res) => {
  
  
   }
+  //Used for manually linked members,not linked to an account 
+  const viewFamilyAppointments =async(req,res)=>{
+   const username = req.user.Username;
+   const profile = await userModel.findOne({ Username: username });
+   const familyAppointments = profile.FamilyBookedAppointments;
+   res.status(200).json(familyAppointments);
+ 
+ 
+  }
   const searchAppointments =async(req,res)=>{
    const username = req.user.Username;
    const appStatus=req.body.status;
@@ -252,39 +261,6 @@ const viewPatientWallet = async (req, res) => {
    res.send({ userPrice: userPrice, familyPrice: familyPrice });
  };
  
-// const viewDoctors = async (req, res) => {
-//    try {
-//       const doctors = await doctorModel.find();
-//       const user = await userModel.findOne({Username: "omarr" });
-//       const package =await packageModel.findOne({Package_Name:user.healthPackage});
-//       const discount=package.Session_Discount/100;
-//       console.log(discount);
-//       const updatedDoctors = doctors.map((doctor) => {
-         
-//          if (user.healthPackage) {
-//             return {
-//                name: doctor.Username,
-//                price: (doctor.HourlyRate * 1.1)*(1-discount),
-//                Speciality: doctor.Speciality
-//             };
-//          } else {
-//             return {
-//                name: doctor.Username,
-//                price: doctor.HourlyRate * 1.1,
-//                Speciality:doctor.Speciality
-//             };
-//          }
-//       });
-//       // Render the EJS template with the JSON data
-//       res.send({doctors: updatedDoctors });
-//    } catch (error) {
-//       console.error(error);
-//       res.status(500).send('Error fetching doctors');
-//    }
-// };
-
-
-
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
@@ -331,7 +307,6 @@ const viewFamilyMembers = async (req, res) => {
          const famMember = await userModel.findById(userId.memberID);
          linkedAccounts.push(famMember);
        }
-      console.log(linkedAccounts);
 
     res.send({added:familyMembers,linkedAccounts:linkedAccounts});
       }
@@ -546,16 +521,14 @@ const viewAvailDoctorAppointments = async (req, res) => {
    const amount=req.body.amount;
    const wallet=req.user.WalletBalance;
    const linkedFamMember=req.body.member; //let it be ID
+   const manualFamMember=req.body.manualMem;
    if(amount>wallet){
-      console.log('hereError');
       res.send('Not enough wallet Balance');
    }else{
    //add appointment to doctors booked app and patients booked app
    const appointmentId=req.body.appid; //from doctor's available appointment;
-   console.log(appointmentId);
 
    const doctorUserName=req.body.doctorUsername;
-   console.log(doctorUserName);
    const username=req.user.Username;
    const user=await userModel.findOne({Username:username});
    const doctor=await doctorModel.findOne({Username:doctorUserName});
@@ -564,26 +537,49 @@ const viewAvailDoctorAppointments = async (req, res) => {
    
          return ((av._id).toString()=== appointmentId)}
     );
-    console.log(Appointment)
     if(!linkedFamMember){
-   const docApp=({
-      _id:Appointment._id,
-      PatientUsername:username,
-      PatientName:req.user.Name,
-      StartDate:Appointment.StartDate,
-      EndDate:Appointment.EndDate,
-      Status:'upcoming',
-   });
-   doctor.BookedAppointments.push(docApp);
-   const userApp=({
-      _id:Appointment._id,
-      DoctorUsername:doctorUserName,
-      DoctorName:doctor.Name,
-      StartDate:Appointment.StartDate,
-      EndDate:Appointment.EndDate,
-      Status:'upcoming',
-   });
-   user.BookedAppointments.push(userApp);
+      if(manualFamMember){
+         const docApp=({
+            _id:Appointment._id,
+            PatientUsername:username,
+            PatientName:manualFamMember,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         doctor.BookedAppointments.push(docApp);
+         const userApp=({
+            _id:Appointment._id,
+            PatientName:manualFamMember,
+            DoctorUsername:doctorUserName,
+            DoctorName:doctor.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         user.FamilyBookedAppointments.push(userApp);
+      }else{
+         const docApp=({
+            _id:Appointment._id,
+            PatientUsername:username,
+            PatientName:req.user.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         doctor.BookedAppointments.push(docApp);
+         const userApp=({
+            _id:Appointment._id,
+            DoctorUsername:doctorUserName,
+            DoctorName:doctor.Name,
+            StartDate:Appointment.StartDate,
+            EndDate:Appointment.EndDate,
+            Status:'upcoming',
+         });
+         user.BookedAppointments.push(userApp);
+
+      }
+ 
     }else{
       const familyMember=await userModel.findById(linkedFamMember);
    
@@ -876,4 +872,4 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,
-    removeMedicalDocument};
+    removeMedicalDocument,viewFamilyAppointments};
