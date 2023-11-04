@@ -332,8 +332,8 @@ export const BookAppointments = () => {
         <Tr key={index + '-' + appIndex}>
           <Td>{doctor.Name}</Td>
           <Td>{doctor.Speciality}</Td>
-          <Td>{new Date(appointment.StartDate).toLocaleString()}</Td>
-          <Td>{new Date(appointment.EndDate).toLocaleString()}</Td>
+          <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
+          <Td>{new Date(appointment.EndDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
           <Td>
           <Button colorScheme="teal" onClick={() => openModal(doctor.Username, appointment._id)}>
 

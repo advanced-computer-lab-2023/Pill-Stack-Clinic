@@ -19,6 +19,8 @@ import PrescriptionViewer from "./Components/UI/patientPrescriptions.jsx";
 import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
 import DoctorPatientsTable from "./Components/UI/viewPatients.jsx";
 import FamilyAppointments from "./Components/UI/FamilyAppointment.jsx";
+import ViewAvailability from "./Components/UI/doctorAvailability.jsx";
+
 
 function App() {
   
@@ -41,6 +43,7 @@ function App() {
         <Route path="home/viewDoctors" element={<DoctorSearchAndTable/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
+        <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  
         <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
         <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
       </Routes>

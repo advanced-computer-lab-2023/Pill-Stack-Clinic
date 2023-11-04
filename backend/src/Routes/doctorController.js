@@ -244,7 +244,8 @@ res.send("Appointment added sucessfully");
 }
 const scheduleAppointment = async (req, res) => {
   try {
-    const doctor = await doctorModel.findById(req.params.doctorId);
+    const doctorId=req.user._id;
+    const doctor = await doctorModel.findById(doctorId);
    // if (!doctor) return res.status(404).json({ message: "Doctor not found" });
     
     const appointment = {
@@ -445,19 +446,55 @@ const deleteContract = async (req, res) => {
 
   const addAvailability = async (req, res) => {
     try {
-      const { doctorId } = req.params; // Assuming you're passing doctor's ID as a URL parameter
-      const { startDate, endDate } = req.body; // Assuming start and end dates of availability are passed in the request body
-  
+      const  doctorId  = req.user._id; // Assuming you're passing doctor's ID as a URL parameter
+      const { date ,startTime, endTime} = req.body; // Assuming start and end dates of availability are passed in the request body
+      const startDate = new Date(`${date}T${startTime}:00.000Z`);
+      const endDate = new Date(`${date}T${endTime}:00.000Z`);
+
+
       // Validate the dates
       if (!startDate || !endDate || new Date(startDate) >= new Date(endDate)) {
-        return res.status(400).json({ message: 'Invalid date range' });
+        return res.send({ message: 'End time must be after start time' });
       }
   
       // Find the doctor and update availability
       const doctor = await doctorModel.findById(doctorId);
       if (!doctor) {
-        return res.status(404).json({ message: 'Doctor not found' });
+        return res.send({ message: 'Doctor not found' });
       }
+        // Check for availability overlap
+      const isOverlap = doctor.Availability.some((existingAvailability) => {
+      const existingStart = new Date(existingAvailability.StartDate);
+      const existingEnd = new Date(existingAvailability.EndDate);
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+
+      return (
+        (newStart >= existingStart && newStart < existingEnd) ||
+        (newEnd > existingStart && newEnd <= existingEnd) ||
+        (newStart <= existingStart && newEnd >= existingEnd)
+      );
+    });
+    const isOverlapwithBooked = doctor.BookedAppointments.some((existingAppointment) => {
+      const existingStart = new Date(existingAppointment.StartDate);
+      const existingEnd = new Date(existingAppointment.EndDate);
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+
+      return (
+        (newStart >= existingStart && newStart < existingEnd) ||
+        (newEnd > existingStart && newEnd <= existingEnd) ||
+        (newStart <= existingStart && newEnd >= existingEnd)
+      );
+    });
+
+    if (isOverlap) {
+      return res.send({ message: 'Overlap with existing slot' });
+    }
+    
+    if (isOverlapwithBooked) {
+      return res.send({ message: 'Overlap with a booked appointment' });
+    }
   
       const newAvailability = {
         _id: new mongoose.Types.ObjectId(),
@@ -468,12 +505,24 @@ const deleteContract = async (req, res) => {
       doctor.Availability.push(newAvailability);
       await doctor.save();
   
-      res.status(200).json({ message: 'Availability added successfully', data: newAvailability });
+      res.send({ message: 'Availability added successfully', data: newAvailability });
     } catch (error) {
-      console.error('Error adding availability:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.send({ message: 'Internal Server Error' });
     }
   };
+
+  const scheduleFollowUp= async (req,res) =>{
+
+  }
+  const viewAvailability= async (req,res) =>{
+    const username = req.user.Username;
+    const profile = await doctorModel.findOne({ Username: username });
+    const Availability = profile.Availability;
+    console.log(Availability)
+    res.send(Availability);
+
+  }
+  
   
 
 
@@ -487,6 +536,6 @@ module.exports = {
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,
     addAppointments,scheduleAppointment,viewContract,deleteContract,registerDoctor,
-    addHealthRecord,activateAndDeleteContract,addAvailability
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
 
 };

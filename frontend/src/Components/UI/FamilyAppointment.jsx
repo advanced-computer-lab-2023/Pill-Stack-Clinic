@@ -108,8 +108,8 @@ const  FamilyAppointments = () => {
             <Tr key={index}>
              <Td>{appointment.PatientName}</Td>
               <Td>{appointment.DoctorName}</Td>
-              <Td>{new Date(appointment.StartDate).toLocaleString()}</Td>
-          <Td>{new Date(appointment.EndDate).toLocaleString()}</Td>
+              <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
+          <Td>{new Date(appointment.EndDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
               <Td>{appointment.Status}</Td>
               <Td>
                 {/* Add actions as needed */}
