@@ -9,9 +9,13 @@ const {viewProfile,
     selectPatient,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract
+    addAppointments,scheduleAppointment,viewContract,deleteContract, registerDoctor, 
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
         } = require('../Routes/doctorController.js');
 
+
+router.post('/addHealthRecord', userVerification, addHealthRecord);
+router.post('/register', registerDoctor);        
 router.get('/', async(req,res) => {res.render('doc_home')});
 router.get('/profile',userVerification, viewProfile);
 router.get('/profile/edit/:id',editView);
@@ -24,8 +28,12 @@ router.get('/myPatients/viewPatient', selectPatient);
 router.get('/viewDoctorWallet',userVerification, viewDoctorWallet);
 router.get('/doctor-appointments/:username', viewUpcomPastAppointments);
 router.post('/addAppointment',userVerification,addAppointments );
-router.post('/:doctorId/scheduleAppointment', scheduleAppointment); 
+router.post('/scheduleAppointment',userVerification, scheduleAppointment); 
 router.get('/contract', viewContract);
 router.delete('/contract/:contractId', userVerification, deleteContract);
+router.put('/:doctorId/activate-delete-contract', userVerification, activateAndDeleteContract);
+router.post('/availability', userVerification, addAvailability);
+router.get('/availability', userVerification, viewAvailability);
+
 
 module.exports = router;

@@ -2,7 +2,7 @@ import { PaymentElement } from "@stripe/react-stripe-js";
 import {useEffect, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ paymentParams }) {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState(null);
@@ -22,8 +22,9 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
+
         // Make sure to change this to your payment completion page
-        return_url: `${window.location.origin}/completion`,
+        return_url: `${window.location.origin}/completion/${paymentParams.doctorUsername}/${paymentParams.appointmentId}/${paymentParams.amount}/${paymentParams.memberID}/${paymentParams.manualMem}`,
       },
     });
 

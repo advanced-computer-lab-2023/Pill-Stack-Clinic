@@ -70,10 +70,6 @@ const userSchema = new Schema({
         required: true,
         default: 'Unknown' // Default value for Relation
       },
-      Family_Discount:{
-        type:Number,
-        default:0
-      }
     })
   ], BookedAppointments: [
     new Schema({
@@ -87,7 +83,21 @@ const userSchema = new Schema({
         type: String,
         enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
       }    })
-  ], Prescriptions:[
+  ],
+  FamilyBookedAppointments: [
+    new Schema({
+      _id: mongoose.Schema.Types.ObjectId,
+      PatientName:String,
+      DoctorUsername: String,
+      DoctorName:String,
+      StartDate:Date,
+      EndDate:Date,
+      Status: {
+        type: String,
+        enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+      }    })
+  ]
+  , Prescriptions:[
     new Schema({
       _id: mongoose.Schema.Types.ObjectId,
 
@@ -107,6 +117,8 @@ const userSchema = new Schema({
   ],
   MedicalHistory: [
     new Schema({
+      documentTitle: String,
+      documentPath: String,
       Disease: String,
       Description: String,
       StartDate: Date,
@@ -152,6 +164,10 @@ const userSchema = new Schema({
       End_Date :{
         type:Date,
         required: false
+      },
+      Owner :{
+        type:Boolean,
+        required:false
       }
       })
     ],

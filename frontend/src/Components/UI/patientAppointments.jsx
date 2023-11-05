@@ -7,33 +7,28 @@ import {
   Tr,
   Th,
   Td,
+  Select,
   Input,
   Button,
-  Select,
   FormControl,
-  FormLabel,
-  Flex,
-  HStack,
 } from '@chakra-ui/react';
 import axios from 'axios';
 
-export const AppointmentSearchAndTable = () => {
+const AppointmentSearchAndTable = () => {
   const [appointments, setAppointments] = useState([]);
-  const [status, setStatus] = useState('null');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [filteredAppointments, setFilteredAppointments] = useState([]);
-  const [appointmentsNotFound, setAppointmentsNotFound] = useState(false);
+  const [filteredAppointments, setFilteredAppointments] = useState(appointments); // Initialize with all appointments
+  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [selectedDate, setSelectedDate] = useState('');
 
   useEffect(() => {
     async function fetchAppointments() {
       try {
         // Fetch all appointments
-        const response = await axios.get(
-          "http://localhost:8000/patient/viewAllAppointments",
-          { withCredentials: true }
-        );
+        const response = await axios.post("http://localhost:8000/patient/allApp", {}, {
+          withCredentials: true
+        });
         setAppointments(response.data);
+        setFilteredAppointments(response.data); // Initialize filteredAppointments with all appointments
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
@@ -41,86 +36,62 @@ export const AppointmentSearchAndTable = () => {
     fetchAppointments();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      // Send a POST request to search appointments
-      const response = await axios.post("http://localhost:8000/patient/searchAppointments", {
-        status: status,
-        sDate: startDate,
-        eDate: endDate,
-      });
+  useEffect(() => {
+    // Filter appointments based on selectedStatus and selectedDate
+    const filtered = appointments.filter((appointment) => {
+      const statusMatches = selectedStatus === 'All' || appointment.Status === selectedStatus;
+      const dateMatches =
+        selectedDate === '' || appointment.StartDate.includes(selectedDate);
+      return statusMatches && dateMatches;
+    });
+    setFilteredAppointments(filtered);
+  }, [selectedStatus, selectedDate, appointments]);
 
-      if (response.data.length === 0) {
-        setAppointmentsNotFound(true);
-      } else {
-        setAppointmentsNotFound(false);
-      }
-
-      setFilteredAppointments(response.data);
-    } catch (error) {
-      console.error('Error searching appointments:', error);
-    }
+  const handleSearch = () => {
+    // Trigger filtering when the user enters a date
+    setFilteredAppointments(filteredAppointments);
   };
 
-  const handleViewAllAppointments = () => {
-    // Clear search results to display all appointments
-    setFilteredAppointments([]);
-    setAppointmentsNotFound(false);
+  const handleClear = () => {
+    // Clear the date and reset the filter
+    setSelectedDate('');
   };
 
   return (
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-        <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
-          <FormControl>
-            <FormLabel>Select Status</FormLabel>
-            <Select
-              placeholder="All Statuses"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="null">All</option>
-              <option value="upcoming">upcoming</option>
-              <option value="completed">completed</option>
-              <option value="cancelled">cancelled</option>
-              <option value="rescheduled">rescheduled</option>
-              {/* Add other status options as needed */}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Start Date</FormLabel>
-            <Input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>End Date</FormLabel>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </FormControl>
-        </Flex>
-        <HStack spacing={4} mt={4}>
-          <Button colorScheme="teal" type="submit">
-            Search
-          </Button>
-          <Button colorScheme="teal" onClick={handleViewAllAppointments}>
-            View All Appointments
-          </Button>
-        </HStack>
-      </form>
+      <FormControl mb={4}>
+        <Select
+          placeholder="Filter by Status"
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          size="sm" // Smaller size
+          fontSize="sm" // Smaller font size
+        >
+          <option value="All">All</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="rescheduled">Rescheduled</option>
+          {/* Add other status options as needed */}
+        </Select>
+        <Input
+          type="date"
+          placeholder="Filter by Date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          size="sm" // Smaller size
+          fontSize="sm" // Smaller font size
+          mb={2}
+        />
+        <Button colorScheme="teal" onClick={handleSearch} size="sm" fontSize="sm" mr={2}>
+          Search
+        </Button>
+        <Button colorScheme="teal" onClick={handleClear} size="sm" fontSize="sm">
+          Clear
+        </Button>
+      </FormControl>
 
-      {appointmentsNotFound && (
-        <Box mt={4}>
-          <p>No appointments found matching the criteria.</p>
-        </Box>
-      )}
-
-      <Table variant="simple" mt={4}>
+      <Table variant="simple">
         <Thead>
           <Tr>
             <Th>Appointment Date</Th>
@@ -129,27 +100,15 @@ export const AppointmentSearchAndTable = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {filteredAppointments.length > 0 ? (
-            filteredAppointments.map((appointment, index) => (
-              <Tr key={index}>
-                <Td>{appointment.AppointmentDate}</Td>
-                <Td>{appointment.AppointmentStatus}</Td>
-                <Td>
-                  {/* Add actions as needed */}
-                </Td>
-              </Tr>
-            ))
-          ) : (
-            appointments.map((appointment, index) => (
-              <Tr key={index}>
-                <Td>{appointment.AppointmentDate}</Td>
-                <Td>{appointment.AppointmentStatus}</Td>
-                <Td>
-                  {/* Add actions as needed */}
-                </Td>
-              </Tr>
-            ))
-          )}
+          {filteredAppointments.map((appointment, index) => (
+            <Tr key={index}>
+              <Td>{appointment.StartDate}</Td>
+              <Td>{appointment.Status}</Td>
+              <Td>
+                {/* Add actions as needed */}
+              </Td>
+            </Tr>
+          ))}
         </Tbody>
       </Table>
     </Box>

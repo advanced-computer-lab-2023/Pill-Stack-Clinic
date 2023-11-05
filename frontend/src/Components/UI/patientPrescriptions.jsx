@@ -1,184 +1,143 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
-  Box,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
+  Box,
+  Select,
   Input,
   Button,
-  Select,
-  FormControl,
-  FormLabel,
-  Flex,
-  HStack,
-} from '@chakra-ui/react';
-import axios from 'axios';
+  Tooltip,
+  Text,
+} from "@chakra-ui/react";
 
-export const PrescriptionSearchAndTable = () => {
+const PrescriptionViewer = () => {
   const [prescriptions, setPrescriptions] = useState([]);
-  const [status, setStatus] = useState('null');
-  const [date, setDate] = useState('');
-  const [doctor, setDoctor] = useState('null');
-  const [filteredPrescriptions, setFilteredPrescriptions] = useState([]);
+  const [filteredPrescriptions, setFilteredPrescriptions] = useState([...prescriptions]);
+  const [filterDate, setFilterDate] = useState('');
+  const [filterDoctor, setFilterDoctor] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
   const [selectedPrescription, setSelectedPrescription] = useState(null);
-  const [prescriptionsNotFound, setPrescriptionsNotFound] = useState(false);
 
   useEffect(() => {
     async function fetchPrescriptions() {
       try {
-        // Fetch all prescriptions
-        const response = await axios.get(
-          "http://localhost:8000/user/viewPrescriptions",
-          { withCredentials: true }
-        );
+        // Send a GET request to the server to view prescriptions
+        const response = await axios.post("http://localhost:8000/patient/prescriptions", {}, {
+          withCredentials: true, // Include credentials if necessary
+        });
+
         setPrescriptions(response.data);
       } catch (error) {
         console.error('Error fetching prescriptions:', error);
       }
     }
+
     fetchPrescriptions();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      // Send a POST request to filter prescriptions
-      const response = await axios.post("http://localhost:8000/user/filterPrescriptions", {
-        prepStatus: status,
-        prepDate: date,
-        prepDr: doctor,
-      });
+  useEffect(() => {
+    // Implement filtering logic
+    let filteredPrescriptions = prescriptions.filter((prescription) => {
+      const dateMatches = !filterDate || prescription.Date.includes(filterDate);
+      const doctorMatches = !filterDoctor || prescription.DocUsername === filterDoctor;
+      const statusMatches = filterStatus === 'All' || prescription.Status === filterStatus;
+      return dateMatches && doctorMatches && statusMatches;
+    });
 
-      if (response.data.length === 0) {
-        setPrescriptionsNotFound(true);
-      } else {
-        setPrescriptionsNotFound(false);
-      }
+    setFilteredPrescriptions(filteredPrescriptions);
+  }, [filterDate, filterDoctor, filterStatus, prescriptions]);
 
-      setFilteredPrescriptions(response.data);
-      setSelectedPrescription(null); // Clear selected prescription
-    } catch (error) {
-      console.error('Error filtering prescriptions:', error);
-    }
-  };
-
-  const handleViewAllPrescriptions = () => {
-    // Clear search results to display all prescriptions
-    setFilteredPrescriptions([]);
-    setPrescriptionsNotFound(false);
-    setSelectedPrescription(null); // Clear selected prescription
-  };
-
-  const handleViewDetails = (prescription) => {
+  const viewDetails = (prescription) => {
     setSelectedPrescription(prescription);
+  };
+
+  const closeDetails = () => {
+    setSelectedPrescription(null);
   };
 
   return (
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-        <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
-          <FormControl>
-            <FormLabel>Select Status</FormLabel>
-            <Select
-              placeholder="All Statuses"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="null">All</option>
-              <option value="Filled">Filled</option>
-              <option value="Unfilled">Unfilled</option>
-              {/* Add other status options as needed */}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Date</FormLabel>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Doctor</FormLabel>
-            <Select
-              placeholder="All Doctors"
-              value={doctor}
-              onChange={(e) => setDoctor(e.target.value)}
-            >
-              <option value="null">All</option>
-              {/* Add doctor options as needed */}
-            </Select>
-          </FormControl>
-        </Flex>
-        <HStack spacing={4} mt={4}>
-          <Button colorScheme="teal" type="submit">
-            Search
-          </Button>
-          <Button colorScheme="teal" onClick={handleViewAllPrescriptions}>
-            View All Prescriptions
-          </Button>
-        </HStack>
-      </form>
-
-      {prescriptionsNotFound && (
-        <Box mt={4}>
-          <p>No prescriptions found matching the criteria.</p>
-        </Box>
-      )}
-
-      {selectedPrescription && (
-        <Box mt={4}>
-          <h2>Selected Prescription Details</h2>
-          <p>Prescription Date: {selectedPrescription.PrescriptionDate}</p>
-          <p>Doctor: {selectedPrescription.Doctor}</p>
-          <p>Status: {selectedPrescription.Status}</p>
-          {/* Add additional details as needed */}
-        </Box>
-      )}
-
-      <Table variant="simple" mt={4}>
+      <h1>Prescriptions</h1>
+      <Box mb={4}>
+        <Input
+          type="date"
+          placeholder="Filter by Date"
+          value={filterDate}
+          onChange={(e) => setFilterDate(e.target.value)}
+        />
+        <Select
+          placeholder="Filter by Doctor"
+          value={filterDoctor}
+          onChange={(e) => setFilterDoctor(e.target.value)}
+        >
+          <option value="">All Doctors</option>
+          <option value="Nada">Nada</option>
+          <option value="Mariam">Mariam</option>
+          <option value="Dareen">Dareen</option>
+        </Select>
+        <Select
+          placeholder="Filter by Status"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Filled">Filled</option>
+          <option value="Unfilled">Unfilled</option>
+        </Select>
+      </Box>
+      <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>Prescription Date</Th>
-            <Th>Doctor</Th>
+            <Th>Medicine ID</Th>
+            <Th>Quantity</Th>
+            <Th>Instructions</Th>
+            <Th>Date</Th>
+            <Th>Doctor Username</Th>
             <Th>Status</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {filteredPrescriptions.length > 0 ? (
-            filteredPrescriptions.map((prescription, index) => (
-              <Tr key={index}>
-                <Td>{prescription.PrescriptionDate}</Td>
-                <Td>{prescription.Doctor}</Td>
-                <Td>{prescription.Status}</Td>
-                <Td>
-                  <Button colorScheme="teal" onClick={() => handleViewDetails(prescription)}>
-                    View Details
+          {filteredPrescriptions.map((prescription, index) => (
+            <Tr key={index}>
+              <Td>{prescription.Medicine[0].MedicineID}</Td>
+              <Td>{prescription.Medicine[0].Quantity}</Td>
+              <Td>{prescription.Medicine[0].Instructions}</Td>
+              <Td>{prescription.Date}</Td>
+              <Td>{prescription.DocUsername}</Td>
+              <Td>{prescription.Status}</Td>
+              <Td>
+                <Tooltip label="View Details" hasArrow placement="top">
+                  <Button colorScheme="teal" onClick={() => viewDetails(prescription)}>
+                    Details
                   </Button>
-                </Td>
-              </Tr>
-            ))
-          ) : (
-            prescriptions.map((prescription, index) => (
-              <Tr key={index}>
-                <Td>{prescription.PrescriptionDate}</Td>
-                <Td>{prescription.Doctor}</Td>
-                <Td>{prescription.Status}</Td>
-                <Td>
-                  <Button colorScheme="teal" onClick={() => handleViewDetails(prescription)}>
-                    View Details
-                  </Button>
-                </Td>
-              </Tr>
-            ))
-          )}
+                </Tooltip>
+              </Td>
+            </Tr>
+          ))}
         </Tbody>
       </Table>
+      {selectedPrescription && (
+        <Box mt={4}>
+          <h2>Selected Prescription Details</h2>
+          <p>Medicine ID: {selectedPrescription.Medicine[0].MedicineID}</p>
+          <p>Quantity: {selectedPrescription.Medicine[0].Quantity}</p>
+          <p>Instructions: {selectedPrescription.Medicine[0].Instructions}</p>
+          <p>Date: {selectedPrescription.Date}</p>
+          <p>Doctor Username: {selectedPrescription.DocUsername}</p>
+          <p>Status: {selectedPrescription.Status}</p>
+          <Button colorScheme="teal" onClick={closeDetails}>
+            Close Details
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
 
-export default PrescriptionSearchAndTable;
+export default PrescriptionViewer;

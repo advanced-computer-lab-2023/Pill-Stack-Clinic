@@ -10,13 +10,18 @@ import  AdminHome from "./Components/Pages/AdminHome";
 import  AdminPacks from "./Components/Pages/AdminPacks";
 import UserManagement from './Components/Pages/UserManagement';
 import DocReqs from './Components/Pages/DocReqs';
-import  Appointments from "./Components/Pages/Appointments";
+import  PayAppointments from "./Components/Pages/PayAppointments.jsx";
 import  Completion from "./Components/Pages/Completion";
-import DoctorTable from "./Components/UI/viewDoctors.jsx";
+import BookAppointments from "./Components/UI/bookAppointments.jsx";
+import DoctorSearchAndTable from "./Components/UI/viewDoctors.jsx";
 import AppointmentSearchAndTable from "./Components/UI/patientAppointments.jsx";
-import PrescriptionSearchAndTable from "./Components/UI/patientPrescriptions.jsx";
-import DoctorAppointmentsSearchAndTable from "./Components/UI/doctorAppointments.jsx";
-import DoctorPatientsSearchAndTable from "./Components/UI/viewPatients.jsx";
+import PrescriptionViewer from "./Components/UI/patientPrescriptions.jsx";
+import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
+import DoctorPatientsTable from "./Components/UI/viewPatients.jsx";
+import FamilyAppointments from "./Components/UI/FamilyAppointment.jsx";
+import ViewAvailability from "./Components/UI/doctorAvailability.jsx";
+
+
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -30,15 +35,17 @@ function App() {
         <Route path="/admin-home" element={<AdminHome />} />
         <Route path="/admin-packs" element={<AdminPacks />} />
         <Route path="/admin-users" element={<UserManagement/>} />
-        <Route path="home/appointments" element={<Appointments/>} />
-        <Route path="/completion" element={<Completion/>} />
+        <Route path="home/bookAppointments" element={<BookAppointments/>} />
+        <Route path="home/familyAppointments" element={<FamilyAppointments/>} />
+        <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
+        <Route path="/completion/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<Completion/>} />
         <Route path="/admin-requests" element={ <DocReqs/>} />
-        <Route path="home/viewDoctors" element={<DoctorTable/>} />
-        <Route path="home/appiontments" element={<AppointmentSearchAndTable/>} />
-        <Route path="home/prescriptions" element={<PrescriptionSearchAndTable/>} />
-        <Route path="doctor-home/apptsD" element={<DoctorAppointmentsSearchAndTable/>} />
-        <Route path="doctor-home/myPatients" element={<DoctorPatientsSearchAndTable/>} />
-        
+        <Route path="home/viewDoctors" element={<DoctorSearchAndTable/>} />
+        <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
+        <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
+        <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  
+        <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
+        <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
       </Routes>
     </div>
   );

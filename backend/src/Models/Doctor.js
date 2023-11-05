@@ -51,6 +51,10 @@ const doctorSchema = new Schema({
       type: Number,
       default: 0,
     },
+    ContractStatus: {
+      type: Boolean,
+      default: false
+    },
     Availability:
       [
         new Schema({
@@ -74,6 +78,13 @@ const doctorSchema = new Schema({
           enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
         }
               })
+    ],
+    HealthRecords: [
+      {
+        PatientUsername: { type: String, required: true },
+        RecordDetails: { type: String, required: true },
+        RecordDate: { type: Date, required: true },
+      },
     ]
 
 }, { timestamps: true });

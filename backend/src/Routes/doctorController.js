@@ -3,6 +3,9 @@ const doctorModel = require('../Models/Doctor.js');// Database of doctors on the
 const userModel = require('../Models/User.js');// Database of users on the platform
 const Contract = require('../Models/contract.js');
 const { default: mongoose } = require('mongoose');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 
 
@@ -241,7 +244,8 @@ res.send("Appointment added sucessfully");
 }
 const scheduleAppointment = async (req, res) => {
   try {
-    const doctor = await doctorModel.findById(req.params.doctorId);
+    const doctorId=req.user._id;
+    const doctor = await doctorModel.findById(doctorId);
    // if (!doctor) return res.status(404).json({ message: "Doctor not found" });
     
     const appointment = {
@@ -297,6 +301,233 @@ const deleteContract = async (req, res) => {
   }
 };
 
+
+
+ //e
+
+
+  // Define storage location for uploaded documents
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Define the folder where files will be stored
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const extname = path.extname(file.originalname); // Get the file extension
+      cb(null, file.fieldname + '-' + uniqueSuffix + extname);
+    },
+  });
+
+  // Create multer middleware with storage configuration
+  const upload = multer({ storage: storage });
+
+  // // Import doctor and user models "already done above"
+  // const doctorModel = require('../Models/Doctor.js');
+  // const userModel = require('../Models/User.js');
+
+  // // ...
+
+  // Handle file uploads for document submission during registration
+  const uploadGeneralFiles = upload.fields([
+    { name: 'idDocument', maxCount: 1 },
+    { name: 'medicalLicenseDocument', maxCount: 1 },
+    { name: 'medicalDegreeDocument', maxCount: 1 }
+  ]);
+
+  // Register a new doctor, including document uploads
+  const registerDoctor = async (req, res) => {
+    // Use the uploadDocuments middleware to handle file uploads
+    uploadGeneralFiles(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error uploading documents.' });
+      }
+
+      // Extract other registration data from the request body
+      const {Username, Name, Email, Password, DateOfBirth, HourlyRate, Affiliation, EducationalBackground, idDocument, medicalLicenseDocument, medicalDegreeDocument } = req.body;
+
+      // Create a new doctor with the extracted data
+      const newDoctor = new doctorModel({
+        Username,
+        Name,
+        Email,
+        Password,
+        DateOfBirth,
+        HourlyRate,
+        Affiliation,
+        EducationalBackground,
+        idDocument,
+        medicalLicenseDocument,
+        medicalDegreeDocument
+      });
+
+      // Add the uploaded document file paths to the new doctor's data
+      if (req.files) {
+        newDoctor.idDocument = req.files.idDocument ? req.files.idDocument[0].path : null;
+        newDoctor.medicalLicenseDocument = req.files.medicalLicenseDocument ? req.files.medicalLicenseDocument[0].path : null;
+        newDoctor.medicalDegreeDocument = req.files.medicalDegreeDocument ? req.files.medicalDegreeDocument[0].path : null;
+      }
+
+      // Save the new doctor to the database
+      try {
+        await newDoctor.save();
+        res.status(201).json({ message: 'Doctor registered successfully.' });
+      } catch (error) {
+        res.status(500).json({ error: 'Error registering doctor.' });
+      }
+    });
+  };
+
+
+
+  const addHealthRecord = async (req, res) => {
+    try {
+      const doctorId = req.user.id; // Assuming you have the doctor's ID available in req.user
+
+      // Extract data from the request body
+      const { PatientUsername, RecordDetails } = req.body;
+      const RecordDate = new Date();
+
+      // Find the doctor by ID
+      const doctor = await doctorModel.findById(doctorId);
+
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+
+      // Add the new health record to the doctor's HealthRecords array
+      doctor.HealthRecords.push({ PatientUsername, RecordDetails, RecordDate });
+
+      // Save the updated doctor document
+      await doctor.save();
+
+      res.status(201).json({ message: 'Health record added successfully.' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
+
+  //e
+  const activateAndDeleteContract = async (req, res) => {
+    try {
+      // Extract doctor ID from the request params
+      const { doctorId } = req.params;
+  
+      // Find the doctor by ID
+      const doctor = await doctorModel.findById(doctorId);
+  
+      if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      // Find the contract associated with the doctor
+      const contract = await Contract.findOne({ DoctorId: doctor._id });
+  
+      if (!contract) {
+        return res.status(404).json({ message: 'Contract not found' });
+      }
+  
+      // Set the contract status to true
+      contract.Status = true;
+      await contract.save();
+  
+      // Delete the contract
+      await Contract.findByIdAndDelete(contract._id);
+  
+      res.status(200).json({ message: 'Contract activated and deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
+
+
+  const addAvailability = async (req, res) => {
+    try {
+      const  doctorId  = req.user._id; // Assuming you're passing doctor's ID as a URL parameter
+      const { date ,startTime, endTime} = req.body; // Assuming start and end dates of availability are passed in the request body
+      const startDate = new Date(`${date}T${startTime}:00.000Z`);
+      const endDate = new Date(`${date}T${endTime}:00.000Z`);
+
+
+      // Validate the dates
+      if (!startDate || !endDate || new Date(startDate) >= new Date(endDate)) {
+        return res.send({ message: 'End time must be after start time' });
+      }
+  
+      // Find the doctor and update availability
+      const doctor = await doctorModel.findById(doctorId);
+      if (!doctor) {
+        return res.send({ message: 'Doctor not found' });
+      }
+        // Check for availability overlap
+      const isOverlap = doctor.Availability.some((existingAvailability) => {
+      const existingStart = new Date(existingAvailability.StartDate);
+      const existingEnd = new Date(existingAvailability.EndDate);
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+
+      return (
+        (newStart >= existingStart && newStart < existingEnd) ||
+        (newEnd > existingStart && newEnd <= existingEnd) ||
+        (newStart <= existingStart && newEnd >= existingEnd)
+      );
+    });
+    const isOverlapwithBooked = doctor.BookedAppointments.some((existingAppointment) => {
+      const existingStart = new Date(existingAppointment.StartDate);
+      const existingEnd = new Date(existingAppointment.EndDate);
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+
+      return (
+        (newStart >= existingStart && newStart < existingEnd) ||
+        (newEnd > existingStart && newEnd <= existingEnd) ||
+        (newStart <= existingStart && newEnd >= existingEnd)
+      );
+    });
+
+    if (isOverlap) {
+      return res.send({ message: 'Overlap with existing slot' });
+    }
+    
+    if (isOverlapwithBooked) {
+      return res.send({ message: 'Overlap with a booked appointment' });
+    }
+  
+      const newAvailability = {
+        _id: new mongoose.Types.ObjectId(),
+        StartDate: startDate,
+        EndDate: endDate
+      };
+  
+      doctor.Availability.push(newAvailability);
+      await doctor.save();
+  
+      res.send({ message: 'Availability added successfully', data: newAvailability });
+    } catch (error) {
+      res.send({ message: 'Internal Server Error' });
+    }
+  };
+
+  const scheduleFollowUp= async (req,res) =>{
+
+  }
+  const viewAvailability= async (req,res) =>{
+    const username = req.user.Username;
+    const profile = await doctorModel.findOne({ Username: username });
+    const Availability = profile.Availability;
+    console.log(Availability)
+    res.send(Availability);
+
+  }
+  
+  
+
+
+
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,
@@ -304,6 +535,7 @@ module.exports = {
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract
+    addAppointments,scheduleAppointment,viewContract,deleteContract,registerDoctor,
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
 
 };

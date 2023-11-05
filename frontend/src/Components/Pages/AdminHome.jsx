@@ -17,7 +17,7 @@ export const AdminHome = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
-        navigate("/login");
+        navigate("/");
       }
       const { data } = await axios.post(
         "http://localhost:8000",
@@ -30,13 +30,13 @@ export const AdminHome = () => {
         ? toast(`Hello ${user}`, {
             position: "top-right",
           })
-        : (removeCookie("token"), navigate("/login"));
+        : (removeCookie("token"), navigate("/"));
     };
     verifyCookie();
   }, [cookies, navigate, removeCookie]);
   const Logout = () => {
     removeCookie("token");
-    navigate("/signup");
+    navigate("/");
   };
     const handlePacks = () => {
         navigate("/admin-packs");
