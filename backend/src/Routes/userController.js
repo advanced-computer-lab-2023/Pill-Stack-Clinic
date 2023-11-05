@@ -60,6 +60,10 @@ const addFamilyMem = async (req, res) => {
       }
 
       console.log(req.body.username)
+
+      // iff all inputs are not empty
+      if (req.body.username && req.body.nationalID &&  req.body.age && req.body.gender && req.body.relation)
+      {
       const member = ({
          MemberName: req.body.username,
          NationalID: req.body.nationalID,
@@ -76,7 +80,10 @@ const addFamilyMem = async (req, res) => {
       
       await user.save();
       res.status(200).send("Family Member added successfully")
-
+   } 
+   else {
+      res.status(400).send("Please fill all inputs")
+   }
 
    } catch (error) {
       console.error('Error adding family member:', error);
@@ -791,12 +798,8 @@ const linkPatientAsFamilyMember = async (req, res) => {
       const linkTargetEmailOrPhone = req.params.emailOrPhone; // Email or phone number of the user to link
       const relation = req.params.relation; // Relation (wife, husband, child, etc.)
       console.log('linkTargetEmailOrPhone:', linkTargetEmailOrPhone);
-
-
-      
       let linkedUser;
       if (linkTargetEmailOrPhone.includes('@')) {
-         
          linkedUser = await userModel.findOne({ Email: linkTargetEmailOrPhone });
       } else {
          linkedUser = await userModel.findOne({ MobileNumber: linkTargetEmailOrPhone });
