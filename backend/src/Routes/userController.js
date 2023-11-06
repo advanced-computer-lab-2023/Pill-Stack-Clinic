@@ -281,9 +281,18 @@ const viewDoctors = async (req, res) => {
 
          const updatedDoctors = doctors.map((doctor) => {
             return {
+               username:doctor.Username,
                name: doctor.Username,
                price: (doctor.HourlyRate * 1.1) * (1 - discount),
                speciality: doctor.Speciality,
+               availability: doctor.Availability.map((availability) => ({
+                  StartDate: availability.StartDate,
+                  EndDate: availability.EndDate,
+                })),
+               
+                affiliation:doctor.Affiliation,
+                background:doctor.EducationalBackground
+               // availability: formattedAvailability[0],
             };
          });
          // Render the EJS template with the JSON data
@@ -353,7 +362,6 @@ const viewPrescriptions = async (req, res) => {
          Quantity: medicine.Quantity,
          Instructions: medicine.Instructions,
        }));
- 
        return {
          Medicine: medicineDetails,
          DocUsername:prescription.DocUsername,
@@ -486,7 +494,6 @@ const viewAvailDoctorAppointments = async (req, res) => {
      if (!selectedDoctor) {
        return res.status(404).json({ message: 'Doctor not found' });
      }
- 
      const doctorAppointments = selectedDoctor.Availability;
      res.status(200).json(doctorAppointments);
    } catch (error) {

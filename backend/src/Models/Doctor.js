@@ -56,10 +56,8 @@ const doctorSchema = new Schema({
       default: false
     },
     Availability:
-      [
-        new Schema({
+      [ new Schema({
           _id: mongoose.Schema.Types.ObjectId,
-
           StartDate: Date,
           EndDate:Date,
         })

@@ -68,12 +68,37 @@ const fs = require('fs');
 res.send(appointments);  
    }
 
-   const selectPatient= async(req,res)=>{
-    // http://localhost:8000/doctor/viewPatient?username=pep
-    const { username } = req.query;
-    const profile = await userModel.findOne({Username: username});
-    res.send(profile);
-   }
+   const selectPatient = async (req, res) => {
+    try {
+      const { username } = req.query;
+  console.log(username);
+      // Find the doctor's profile
+      const doctor = await userModel.findOne({ Username: req.user.Username });
+      console.log(doctor.Username);
+      // Check if the doctor has the health records array
+      if (doctor.HealthRecords && Array.isArray(doctor.HealthRecords)) {
+        // Find the health record for the specified patient username
+        const patientHealthRecord = doctor.HealthRecords.find(
+          (record) => record.PatientUsername === username
+        );
+  
+        if (patientHealthRecord) {
+          // If the health record is found, send it as a response
+          res.send(patientHealthRecord);
+        } else {
+          // If the health record is not found, return an appropriate response
+          res.status(404).json({ message: `Health record not found for patient: ${username}` });
+        }
+      } else {
+        // If the doctor doesn't have a HealthRecords array, return an appropriate response
+        res.status(404).json({ message: `Doctor's health records not found` });
+      }
+    } catch (error) {
+      console.error('Error selecting patient:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
    const searchAppointments =async(req,res)=>{
     const username = req.user.Username;
 
