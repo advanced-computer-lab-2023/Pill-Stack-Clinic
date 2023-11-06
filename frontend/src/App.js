@@ -20,8 +20,8 @@ import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
 import DoctorPatientsTable from "./Components/UI/viewPatients.jsx";
 import FamilyAppointments from "./Components/UI/FamilyAppointment.jsx";
 import ViewAvailability from "./Components/UI/doctorAvailability.jsx";
-
-
+import ForgotPassword from './Components/Pages/ForgotPassword.jsx';
+import PasswordReset from './Components/Pages/PasswordReset.jsx';
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -46,6 +46,9 @@ function App() {
         <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  
         <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
         <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/PasswordReset" element={<PasswordReset/>} />
+
       </Routes>
     </div>
   );

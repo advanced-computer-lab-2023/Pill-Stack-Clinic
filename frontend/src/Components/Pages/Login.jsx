@@ -124,6 +124,8 @@ export const Login = () => {
           onClick={handleSubmit}>
               Login
           </Button>
+          <Link to="/forgot-password">Forgot Password?</Link>
+
           </Box>
 
           

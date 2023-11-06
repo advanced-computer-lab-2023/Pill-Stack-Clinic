@@ -254,7 +254,6 @@ console.log(username);
   
  
   const email=req.body.email;
-  console.log(email);
   const user = await userModel.findOne({ Email:email });
   const doctor= await doctorModel.findOne({ Email:email });
   const admin = await adminModel.findOne({ Email:email });
@@ -319,7 +318,7 @@ console.log(username);
   }
      
       if (!newPassword.match(/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/)) {
-        return res.status(400).json({ message: 'New password does not meet requirements' });
+        return res.status(400).json({message: 'New password does not meet requirements'});
     }
     const salt = await bcrypt.genSalt(10);
     const secPass = await bcrypt.hash(newPassword, salt) ;

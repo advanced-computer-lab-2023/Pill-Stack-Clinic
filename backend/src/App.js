@@ -159,7 +159,7 @@ app.post('/uploadSingleFile', uploadSingleFile, (req, res) => {
 /////////////////////////////////////
 
 // root route
-app.use("/",auth );
+app.use("/auth",auth );
 // /doctor routes
 app.use("/doctor", doctor);
 //Admin routes
