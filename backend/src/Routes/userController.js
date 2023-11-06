@@ -870,6 +870,23 @@ function isValidRelation(relation) {
    return allowedRelations.includes(relation);
 }
 
+const viewMyHealthRecords = async (req, res) => {
+   try {
+     const username  = req.params.Username; 
+ 
+     const user = await userModel.findOne({ Username: username });
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+ 
+     const healthRecords = user.HealthRecords;
+     
+     return res.status(200).json({ healthRecords });
+   } catch (error) {
+     console.error(error);
+     return res.status(500).json({ message: 'Internal server error' });
+   }
+ };
 
 
 module.exports = {selectedDoctorDetails,addFamilyMem,
@@ -882,4 +899,4 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,
-    removeMedicalDocument,viewFamilyAppointments};
+    removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords};

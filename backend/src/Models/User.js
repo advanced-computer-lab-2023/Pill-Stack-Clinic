@@ -43,6 +43,12 @@ const userSchema = new Schema({
     type: Number,
     default: 0,
   },
+  HealthRecords: [
+    {
+      RecordDetails: { type: String, required: true },
+      RecordDate: { type: Date, required: true },
+    },
+  ],
   familyMembers: [
     new Schema({
       MemberName: {

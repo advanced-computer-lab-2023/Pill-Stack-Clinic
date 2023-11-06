@@ -6,7 +6,7 @@ const {viewALLAppointments,searchDoctors,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
     viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
-    removeMedicalDocument,getAmount,viewAllAvailableAppointments,viewFamilyAppointments} = require('../Routes/userController.js');
+    removeMedicalDocument,getAmount,viewAllAvailableAppointments,viewFamilyAppointments,viewMyHealthRecords} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -54,5 +54,6 @@ router.post('/subscribeWallet',subscribePackageCash);
 router.get('/viewMyPackage',viewPackageSubscribtion);
 router.post('/cancelSubs',cancelSubscription);
 router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
+router.get('/viewMyHealthRecords/:Username',userVerification,viewMyHealthRecords)
 
 module.exports = router;
