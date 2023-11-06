@@ -61,6 +61,41 @@ function DocReqs() {
 
     const onClose = () => setIsOpen(false);
 
+    
+    const handleAccept = async () => {
+      try {
+        // router.post('/applications/accept-registeration/:id',acceptRegRequest);
+        
+        await axios.post(
+          `http://localhost:8000/admin/applications/accept-registeration/${viewReq._id}`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        setReqs(reqs.filter((req) => req._id !== viewReq._id));
+        onClose();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleReject = async () => {
+      try {        
+        await axios.post(
+          `http://localhost:8000/admin/applications/reject-registeration/${viewReq._id}`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        setReqs(reqs.filter((req) => req._id !== viewReq._id));
+        onClose();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   return (
     <>
         <Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
@@ -199,8 +234,8 @@ function DocReqs() {
             
             </DrawerBody>
             <DrawerFooter>
-            <Button colorScheme='green' m={1}>Accept</Button>
-            <Button variant='outline' colorScheme='red' m={1} onClick={onClose}>
+            <Button colorScheme='green' m={1} onClick={handleAccept}>Accept</Button>
+            <Button variant='outline' colorScheme='red' m={1} onClick={handleReject}>
                 Reject
             </Button>
 

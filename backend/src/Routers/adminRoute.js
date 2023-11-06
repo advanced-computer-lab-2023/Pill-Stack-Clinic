@@ -6,8 +6,8 @@ const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,view
 router.get("/", async(req,res) => {res.render('admin_home')});
 router.get("/applications",viewAllApp);
 router.get('/applications/view/:id',viewDocApp);
-router.get('/applications/accept-registeration/:id',acceptRegRequest);
-router.get('/applications/reject-registeration/:id',rejectRegRequest);
+router.post('/applications/accept-registeration/:id',acceptRegRequest);
+router.post('/applications/reject-registeration/:id',rejectRegRequest);
 router.get('/applications/accept-Platform/:id',acceptPlatformRequest);
 router.get('/applications/reject-Platform/:id',rejectPlatformRequest);
 

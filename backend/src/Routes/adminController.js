@@ -37,7 +37,7 @@ const acceptRegRequest = async (req, res) => {
       EducationalBackground: request.EducationalBackground,
       Speciality: request.Speciality,
       WalletBalance: 0,
-      ContractStatus: true,
+      ContractStatus: false,
       Availability: request.Availability, 
       BookedAppointments: [],
       HealthRecords: [], 
