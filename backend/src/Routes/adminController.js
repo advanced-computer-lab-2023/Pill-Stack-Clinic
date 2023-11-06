@@ -26,8 +26,27 @@ const acceptRegRequest = async (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    request.RegisterationStatus = 'Accepted';
-    await request.save();
+    const newDoctor = new doctorModel({
+      Username: request.Username,
+      Name: request.Name,
+      Email: request.Email,
+      Password: request.Password,
+      DateOfBirth: request.DateOfBirth,
+      HourlyRate: request.HourlyRate,
+      Affiliation: request.Affiliation,
+      EducationalBackground: request.EducationalBackground,
+      Speciality: request.Speciality,
+      WalletBalance: 0,
+      ContractStatus: true,
+      Availability: request.Availability, 
+      BookedAppointments: [],
+      HealthRecords: [], 
+    });
+
+    await newDoctor.save();
+
+    // Remove the accepted request from the doc_request model
+    await docModel.findByIdAndRemove(id);
 
     res.json({ message: 'Request accepted' });
   } catch (error) {
@@ -44,8 +63,7 @@ const rejectRegRequest = async (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    request.RegisterationStatus = 'Rejected';
-    await request.save();
+    await docModel.findByIdAndRemove(id);
 
     res.json({ message: 'Request rejected' });
   } catch (error) {
@@ -62,8 +80,27 @@ const acceptPlatformRequest = async (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    request.PlatformStatus = 'Accepted';
-    await request.save();
+    const newDoctor = new doctorModel({
+      Username: request.Username,
+      Name: request.Name,
+      Email: request.Email,
+      Password: request.Password,
+      DateOfBirth: request.DateOfBirth,
+      HourlyRate: request.HourlyRate,
+      Affiliation: request.Affiliation,
+      EducationalBackground: request.EducationalBackground,
+      Speciality: request.Speciality,
+      WalletBalance: 0, 
+      ContractStatus: true, 
+      Availability: request.Availability,
+      BookedAppointments: [],
+      HealthRecords: [],
+    });
+
+    await newDoctor.save();
+
+    // Remove the accepted request from the doc_request model
+    await docModel.findByIdAndRemove(id);
 
     res.json({ message: 'Request accepted' });
   } catch (error) {
@@ -80,8 +117,7 @@ const rejectPlatformRequest = async (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    request.PlatformStatus = 'Rejected';
-    await request.save();
+    await docModel.findByIdAndRemove(id);
 
     res.json({ message: 'Request rejected' });
   } catch (error) {
