@@ -10,7 +10,7 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/auth/sendOTP", { email });
+      const response = await axios.post("http://localhost:8000/sendOTP", { email });
       console.log(response);
       if (response.data === "password reset otp sent to your email account") {
         setMessage('OTP sent successfully. Check your email for the OTP.');

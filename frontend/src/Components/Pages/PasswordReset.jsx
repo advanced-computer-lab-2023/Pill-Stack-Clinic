@@ -15,7 +15,7 @@ function OTP() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/auth/resetPassword", { otp, newPassword, email });
+      const response = await axios.post("http://localhost:8000/resetPassword", { otp, newPassword, email });
       console.log(response.data);
       if (response.data.success) {
         setMessage('Password changed successfully.');
