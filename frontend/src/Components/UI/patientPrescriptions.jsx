@@ -13,6 +13,13 @@ import {
   Button,
   Tooltip,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 
 const PrescriptionViewer = () => {
@@ -22,6 +29,7 @@ const PrescriptionViewer = () => {
   const [filterDoctor, setFilterDoctor] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedPrescription, setSelectedPrescription] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchPrescriptions() {
@@ -59,7 +67,15 @@ const PrescriptionViewer = () => {
   const closeDetails = () => {
     setSelectedPrescription(null);
   };
+  const openModal = (prescription) => {
+    setSelectedPrescription(prescription);
+    setIsModalOpen(true);
+  };
 
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
       <h1>Prescriptions</h1>
@@ -113,7 +129,7 @@ const PrescriptionViewer = () => {
               <Td>{prescription.Status}</Td>
               <Td>
                 <Tooltip label="View Details" hasArrow placement="top">
-                  <Button colorScheme="teal" onClick={() => viewDetails(prescription)}>
+                  <Button colorScheme="teal" onClick={() => openModal(prescription)}>
                     Details
                   </Button>
                 </Tooltip>
@@ -122,20 +138,26 @@ const PrescriptionViewer = () => {
           ))}
         </Tbody>
       </Table>
-      {selectedPrescription && (
-        <Box mt={4}>
-          <h2>Selected Prescription Details</h2>
-          <p>Medicine ID: {selectedPrescription.Medicine[0].MedicineID}</p>
-          <p>Quantity: {selectedPrescription.Medicine[0].Quantity}</p>
-          <p>Instructions: {selectedPrescription.Medicine[0].Instructions}</p>
-          <p>Date: {selectedPrescription.Date}</p>
-          <p>Doctor Username: {selectedPrescription.DocUsername}</p>
-          <p>Status: {selectedPrescription.Status}</p>
-          <Button colorScheme="teal" onClick={closeDetails}>
-            Close Details
-          </Button>
-        </Box>
-      )}
+      <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Prescription Details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Medicine ID: {selectedPrescription?.Medicine[0].MedicineID}</p>
+            <p>Quantity: {selectedPrescription?.Medicine[0].Quantity}</p>
+            <p>Instructions: {selectedPrescription?.Medicine[0].Instructions}</p>
+            <p>Date: {selectedPrescription?.Date}</p>
+            <p>Doctor Username: {selectedPrescription?.DocUsername}</p>
+            <p>Status: {selectedPrescription?.Status}</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={closeModal}>
+              Close Details
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

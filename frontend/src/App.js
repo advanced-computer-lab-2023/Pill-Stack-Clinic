@@ -13,7 +13,7 @@ import DocReqs from './Components/Pages/DocReqs';
 import  PayAppointments from "./Components/Pages/PayAppointments.jsx";
 import  Completion from "./Components/Pages/Completion";
 import BookAppointments from "./Components/UI/bookAppointments.jsx";
-import DoctorSearchAndTable from "./Components/UI/viewDoctors.jsx";
+import DoctorList from "./Components/UI/viewDoctors.jsx";
 import AppointmentSearchAndTable from "./Components/UI/patientAppointments.jsx";
 import PrescriptionViewer from "./Components/UI/patientPrescriptions.jsx";
 import ViewAppointments from "./Components/UI/doctorAppointments.jsx";
@@ -40,7 +40,7 @@ function App() {
         <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
         <Route path="/completion/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<Completion/>} />
         <Route path="/admin-requests" element={ <DocReqs/>} />
-        <Route path="home/viewDoctors" element={<DoctorSearchAndTable/>} />
+        <Route path="home/viewDoctors" element={<DoctorList/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
         <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  

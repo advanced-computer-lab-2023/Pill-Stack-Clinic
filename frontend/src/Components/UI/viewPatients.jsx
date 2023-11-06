@@ -17,21 +17,21 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
-  Button, // Import Button from Chakra UI
+  Button,
 } from "@chakra-ui/react";
 
 const DoctorPatientsTable = () => {
   const [patients, setPatients] = useState([]);
-  const [statusFilter, setStatusFilter] = useState('All'); // Initialize with 'All' to show all patients
-  const [searchInput, setSearchInput] = useState(''); // State for the search input
-  const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected patient
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [patientHealthRecord, setPatientHealthRecord] = useState(null);
 
   useEffect(() => {
     async function fetchPatients() {
       try {
-        // Make a GET request to the server to fetch patient data for the logged-in doctor
         const response = await axios.get('http://localhost:8000/doctor/myPatients', {
-          withCredentials: true, // Include credentials if necessary
+          withCredentials: true,
         });
 
         setPatients(response.data);
@@ -43,19 +43,25 @@ const DoctorPatientsTable = () => {
     fetchPatients();
   }, []);
 
-  // Filter patients based on status and search input
-  const filteredPatients = patients.filter(patient => {
-    const statusMatches = statusFilter === 'All' || patient.Status === statusFilter;
-    const nameMatches = patient.PatientName && patient.PatientName.toLowerCase().includes(searchInput.toLowerCase());
-    return statusMatches && nameMatches;
-  });
-
-  const openPatientDetails = (patient) => {
+  const openPatientDetails = async (patient) => {
     setSelectedPatient(patient);
+
+    // Fetch the patient's health record based on their username
+    try {
+      const response = await axios.get(`http://localhost:8000/doctor/healthRecord/${patient.PatientUsername}`, {
+        withCredentials: true,
+      });
+
+      setPatientHealthRecord(response.data);
+    } catch (error) {
+      console.error('Error fetching patient health record:', error);
+      setPatientHealthRecord(null);
+    }
   };
 
   const closePatientDetails = () => {
     setSelectedPatient(null);
+    setPatientHealthRecord(null);
   };
 
   return (
@@ -84,36 +90,41 @@ const DoctorPatientsTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredPatients.map((patient, index) => (
+            {patients.map((patient, index) => (
               <Tr key={index}>
-                <Td>
-                  {patient.PatientName}
-                  
-                </Td>
+                <Td>{patient.PatientName}</Td>
                 <Td>{patient.Status}</Td>
                 <Td>{patient.StartDate}</Td>
                 <Popover>
-                    <PopoverTrigger>
-                      {/* Wrap "View Details" in a Chakra UI Button component */}
-                      <Button
-                        size="sm"
-                        colorScheme="teal"
-                        onClick={() => openPatientDetails(patient)}
-                      >
-                        View Details
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Patient Details</PopoverHeader>
-                      <PopoverBody>
-                        <p>Patient Name: {patient.PatientName}</p>
-                        <p>Status: {patient.Status}</p>
-                        <p>Start Date: {patient.StartDate}</p>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
+                  <PopoverTrigger>
+                    <Button
+                      size="sm"
+                      colorScheme="teal"
+                      onClick={() => openPatientDetails(patient)}
+                    >
+                      View Details
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverHeader>Patient Details</PopoverHeader>
+                    <PopoverBody>
+                    <p>Patient username: {patient.PatientUsername}</p>
+                      <p>Patient Name: {patient.PatientName}</p>
+                      <p>Status: {patient.Status}</p>
+                      <p>Start Date: {patient.StartDate}</p>
+                      {patientHealthRecord && (
+                        <Box mt={4}>
+                          <h2>Health Record</h2>
+                          <p>Patient Username: {patientHealthRecord.PatientUsername}</p>
+                          <p>Record Date: {patientHealthRecord.RecordDate}</p>
+                          <p>Record Details: {patientHealthRecord.RecordDetails}</p>
+                        </Box>
+                      )}
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
               </Tr>
             ))}
           </Tbody>

@@ -8,32 +8,35 @@ import {
   Th,
   Td,
   Input,
-  Button,
   Select,
-  FormControl,
-  FormLabel,
-  Flex,
-  HStack,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  chakra,
 } from '@chakra-ui/react';
 import axios from 'axios';
 
-export const DoctorSearchAndTable = () => {
+const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [searchName, setSearchName] = useState('');
-  const [speciality, setSpeciality] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchSpeciality, setSearchSpeciality] = useState('');
+  const [searchDate, setSearchDate] = useState('');
+  const [searchTime, setSearchTime] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [specialityNotFound, setSpecialityNotFound] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [availability, setAvailability] = useState([]); // Add a state for availability
 
   useEffect(() => {
     async function fetchDoctors() {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/patient/viewDoctors",
-          { withCredentials: true }
-        );
+        const response = await axios.get("http://localhost:8000/patient/viewDoctors", {
+          withCredentials: true
+        });
         setDoctors(response.data);
       } catch (error) {
         console.error('Error fetching doctors:', error);
@@ -42,159 +45,137 @@ export const DoctorSearchAndTable = () => {
     fetchDoctors();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      const response = await axios.post("http://localhost:8000/patient/searchDoctors", {
-        name: searchName,
-        speciality: speciality,
-        date: date,
-        time: time,
-      });
-      if (response.data.length === 0) {
-        setSpecialityNotFound(true);
-      } else {
-        setSpecialityNotFound(false);
-      }
-      setSearchResults(response.data);
-      setSelectedDoctor(null); // Clear the selected doctor
-    } catch (error) {
-      console.error('Error searching doctors:', error);
-    }
-  };
+  const filteredDoctors = doctors.filter((doctor) => {
+    const nameMatch = doctor.name.toLowerCase().includes(searchName.toLowerCase());
+    const specialityMatch =
+      searchSpeciality === '' || doctor.speciality.toLowerCase().includes(searchSpeciality.toLowerCase());
 
-  const handleViewAllDoctors = () => {
-    setSearchResults([]); // Clear search results to display all doctors
-    setSelectedDoctor(null); // Clear the selected doctor
-    setSpecialityNotFound(false);
-  };
+    // Filter doctors by date and time
+    const dateMatch = (searchDate && doctor.availability.find((a) => a.StartDate.includes(searchDate))) || !searchDate;
+    const timeMatch = (searchTime && doctor.availability.find((a) => a.StartDate.includes(searchDate) && a.StartDate.includes(searchTime))) || !searchTime;
 
+    return nameMatch && specialityMatch && dateMatch && timeMatch;
+  });
 
-  const handleViewDetails = async (doctor) => {
+  const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
-    // Use the doctor's username to fetch details from the server
+    openModal();
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleViewAvailability = async (doctor) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/patient/selectedDoctorDetails/${doctor.Username}`
-      );
-      setSelectedDoctor(response.data);
+      const response = await axios.get(`http://localhost:8000/patient/viewDoctorAppointments/${doctor.username}`, {
+        withCredentials: true
+      });
+      setAvailability(response.data);
     } catch (error) {
-      console.error('Error fetching doctor details:', error);
+      console.error('Error fetching availability:', error);
     }
   };
 
   return (
-   <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-    <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-        <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
-          <FormControl>
-            <FormLabel>Search by Name or Speciality</FormLabel>
-            <Input
-              placeholder="Enter name or speciality"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Speciality</FormLabel>
-            <Select
-              placeholder="All Specialities"
-              value={speciality}
-              onChange={(e) => setSpeciality(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Neurology">Neurology</option>
-              <option value="Internal medicine">Internal medicine</option>
-              <option value="Death">Death</option>
-              <option value="Plastic Surgery">Plastic Surgery</option>
-              <option value="Nervous System">Nervous System</option>
-              <option value="ENT">ENT</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Date</FormLabel>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Select Time</FormLabel>
-            <Input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            />
-          </FormControl>
-        </Flex>
-        <HStack spacing={4} mt={4}>
-          <Button colorScheme="teal" type="submit">
-            Search
-          </Button>
-          <Button colorScheme="teal" onClick={handleViewAllDoctors}>
-            View All Doctors
-          </Button>
-        </HStack>
-      </form>
-
-      {specialityNotFound && (
-        <Box mt={4}>
-          <p>Speciality not found</p>
-        </Box>
-      )}
-
-{selectedDoctor && (
-        <Box mt={4}>
-          <h2>Selected Doctor Details</h2>
-          <p>Specialty: {selectedDoctor.Speciality}</p>
-          <p>Affiliation: {selectedDoctor.Affiliation}</p>
-          <p>Educational background: {selectedDoctor.EducationalBackground}</p>
-        </Box>
-      )}
-
-      <Table variant="simple" mt={4}>
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+      <Input
+        type="text"
+        placeholder="Search for a doctor by name"
+        value={searchName}
+        onChange={(e) => setSearchName(e.target.value)}
+        mb={2}
+      />
+      <Select
+        placeholder="Search for a doctor by speciality"
+        value={searchSpeciality}
+        onChange={(e) => setSearchSpeciality(e.target.value)}
+        mb={2}
+      >
+        <option value="">All Specialities</option>
+        <option value="ENT">ENT</option>
+        <option value="Nervous System">Nearvous System</option>
+        <option value="Plastic Surgery">Plastic Surgery</option>
+        <option value="Death">Death</option>
+        {/* Add other speciality options as needed */}
+      </Select>
+      <Input
+        type="date"
+        placeholder="Search by Date"
+        value={searchDate}
+        onChange={(e) => setSearchDate(e.target.value)}
+        mb={2}
+      />
+      <Input
+        type="time"
+        placeholder="Search by Time"
+        value={searchTime}
+        onChange={(e) => setSearchTime(e.target.value)}
+        mb={2}
+      />
+      <Table variant="simple">
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th>Specialty</Th>
+            <Th>Speciality</Th>
             <Th>Price</Th>
-            <Th>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {searchResults.length > 0 ? (
-            searchResults.map((doctor, index) => (
-              <Tr key={index}>
-                <Td>{doctor.Name}</Td>
-                <Td>{doctor.Speciality}</Td>
-                <Td>{doctor.Price}</Td>
-                <Td>
-                  <Button colorScheme="teal" onClick={() => handleViewDetails(doctor)}>
-                    View Details
-                  </Button>
-                </Td>
-              </Tr>
-            ))
-          ) : (
-            doctors.map((doctor, index) => (
-              <Tr key={index}>
-                <Td>{doctor.name}</Td>
-                <Td>{doctor.speciality}</Td>
-                <Td>{doctor.price}</Td>
-                <Td>
-                  <Button colorScheme="teal" onClick={() => handleViewDetails(doctor)}>
-                    View Details
-                  </Button>
-                </Td>
-              </Tr>
-            ))
-          )}
+          {filteredDoctors.map((doctor, index) => (
+            <Tr
+              key={index}
+              onClick={() => {
+                handleSelectDoctor(doctor);
+                handleViewAvailability(doctor); // Fetch availability when clicking on a doctor
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              <Td>{doctor.name}</Td>
+              <Td>{doctor.speciality}</Td>
+              <Td>{doctor.price}</Td>
+            </Tr>
+          ))}
         </Tbody>
       </Table>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Doctor Details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Name: {selectedDoctor?.name}</p>
+            <p>Speciality: {selectedDoctor?.speciality}</p>
+            <p>Affiliation: {selectedDoctor?.affiliation}</p>
+            <p style={{ marginBottom: '30px' }}>Educational background: {selectedDoctor?.background}</p>
+            {/* Add more doctor details here */}
+            {selectedDoctor?.availability.length > 0 && (
+              <div>
+                <strong style={{ fontWeight: 'bold' }}>Available Appointments</strong>
+                <ul>
+                  {selectedDoctor?.availability.map((appointment, index) => (
+                    <li key={index}>
+                      Start Date: {appointment.StartDate}, End Date: {appointment.EndDate}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={closeModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
- }
+};
 
-export default DoctorSearchAndTable;
+export default DoctorList;

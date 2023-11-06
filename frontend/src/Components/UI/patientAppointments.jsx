@@ -47,10 +47,8 @@ const AppointmentSearchAndTable = () => {
     setFilteredAppointments(filtered);
   }, [selectedStatus, selectedDate, appointments]);
 
-  const handleSearch = () => {
-    // Trigger filtering when the user enters a date
-    setFilteredAppointments(filteredAppointments);
-  };
+
+  
 
   const handleClear = () => {
     // Clear the date and reset the filter
@@ -83,9 +81,7 @@ const AppointmentSearchAndTable = () => {
           fontSize="sm" // Smaller font size
           mb={2}
         />
-        <Button colorScheme="teal" onClick={handleSearch} size="sm" fontSize="sm" mr={2}>
-          Search
-        </Button>
+
         <Button colorScheme="teal" onClick={handleClear} size="sm" fontSize="sm">
           Clear
         </Button>
