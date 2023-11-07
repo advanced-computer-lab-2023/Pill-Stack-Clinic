@@ -17,15 +17,34 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
-  Button, // Import Button from Chakra UI
+  Button, 
+  Select,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
+
 
 const DoctorPatientsTable = () => {
   const [patients, setPatients] = useState([]);
   const [statusFilter, setStatusFilter] = useState('All'); // Initialize with 'All' to show all patients
   const [searchInput, setSearchInput] = useState(''); // State for the search input
   const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected patient
-  const [newRecordInput, setNewRecordInput] = useState('');   
+  const [newRecordInput, setNewRecordInput] = useState(''); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadingAvailbility, setIsLoadingAvailability] = useState(false);
+  const [followUpPatient, setFollowUpPatient] = useState('');
+  const [availbility, setAvailability] = useState([]);
+  const [appointment, setAppointment] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function fetchPatients() {
@@ -58,11 +77,48 @@ const DoctorPatientsTable = () => {
   const closePatientDetails = () => {
     setSelectedPatient(null);
   };
+  const openModal = async (patient) => {
+    setIsModalOpen(true);
+    setConfirmationMessage('');
+    setErrorMessage('');
+    setFollowUpPatient(patient)
+       // Fetch family members for the dropdown
+       try {
+        setIsLoadingAvailability(true);
+        const response = await axios.get(
+          'http://localhost:8000/doctor/availability',
+          { withCredentials: true }
+        );
+        setAvailability(response.data);
+      } catch (error) {
+        console.error('Error fetching family members:', error);
+      } finally {
+        setIsLoadingAvailability(false);
+      }
+  };
+  const scheduleFollowUp= async ()=>{
 
+    if(appointment!==null){
+    const response = await axios.post('http://localhost:8000/doctor/scheduleFollowUp',{oldAppointment:followUpPatient,newAppointment:appointment}, {
+      withCredentials: true, // Include credentials if necessary
+    });
+    if(response.data==='follow up booked successfully'){
+      setConfirmationMessage(response.data);
+      setIsModalOpen(false);
+    }else{
+      setIsError(true);
+      setErrorMessage(response.data);
+    }
+  }else{
+    setIsError(true);
+    setErrorMessage('Please select an appointment');
+  }
+
+  };
   const addHealthRecorda = async (patient) => {
     try {
       const response = await axios.post('http://localhost:8000/doctor/addHealthRecord', {
-        PatientUsername: patient.PatientName, // Assuming you have a unique identifier for patients
+        PatientUsername: patient.PatientUsername, // Assuming you have a unique identifier for patients
         RecordDetails: newRecordInput,
       }
       ,
@@ -83,6 +139,13 @@ const DoctorPatientsTable = () => {
   return (
     <Container maxW="container.xl">
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+      {confirmationMessage && (
+      <Alert status="success">
+        <AlertIcon />
+        <AlertTitle>Confirmation</AlertTitle>
+        <AlertDescription>{confirmationMessage}</AlertDescription>
+      </Alert>
+    )}
         <h1>My Patients</h1>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="All">All</option>
@@ -103,6 +166,10 @@ const DoctorPatientsTable = () => {
               <Th>Patient Name</Th>
               <Th>Status</Th>
               <Th>Start Date</Th>
+              <Th> </Th>
+              <Th> </Th>
+              <Th> </Th>
+
             </Tr>
           </Thead>
           <Tbody>
@@ -113,7 +180,7 @@ const DoctorPatientsTable = () => {
                   
                 </Td>
                 <Td>{patient.Status}</Td>
-                <Td>{patient.StartDate}</Td>
+                <Td>{new Date(patient.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
                 <Td>
                 <Popover>
                     <PopoverTrigger>
@@ -175,10 +242,66 @@ const DoctorPatientsTable = () => {
                     </PopoverContent>
                   </Popover>
                   </Td>
+                  <Td>
+                  <Button
+                        size="sm"
+                        colorScheme="teal"
+                        onClick={() => openModal(patient)}
+                      >
+                        Schedule a follow up
+                      </Button></Td>
+
               </Tr>
             ))}
           </Tbody>
         </Table>
+        <Modal isOpen={isModalOpen} onClose={() => {setIsModalOpen(false);
+       setFollowUpPatient('');
+       setIsError(false);
+       setErrorMessage('');
+      }}>
+  <ModalOverlay />
+  <ModalContent>
+    <ModalHeader>Select Appointment</ModalHeader>
+    <ModalCloseButton />
+    <ModalBody>
+    {isError &&(<Alert status='error'>
+  <AlertIcon />
+  <AlertTitle>Missing input</AlertTitle>
+  <AlertDescription>{errorMessage}</AlertDescription>
+</Alert>)}
+      <FormControl>
+        <FormLabel>Select appointment</FormLabel>
+        <Select
+    value={appointment}
+    onChange={(e) => {setAppointment(e.target.value);
+    }
+  }
+  >
+    <option value="">Select</option>
+
+
+    {isLoadingAvailbility? (
+      <option>Loading Appointments..</option>
+    ) : (
+      
+      availbility.map((appointment) => (
+        <option key={appointment._id} value={appointment._id}>
+          {new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})} {new Date(appointment.EndDate).toLocaleString('en-US',{ timeZone: 'UTC'})}
+        </option>
+      ))
+    )}
+  </Select>
+      </FormControl>
+  
+    </ModalBody>
+    <ModalFooter>
+      <Button colorScheme="teal" onClick={()=>scheduleFollowUp()}>
+        Schedule
+      </Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
       </Box>
     </Container>
   );

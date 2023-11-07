@@ -255,18 +255,7 @@ const found1 = await Promise.all(promises);
     res.status(500).json({ error: err.message });
   }
 };
-const addAppointments=async(req,res)=>{
-  const{startDate,endDate}=req.body;
-const doctor=await doctorModel.findOne({Username:req.user.Username});
-const docApp=({
- _id: mongoose.Types.ObjectId(),
-  StartDate:startDate,
-  EndDate:endDate,
-});
-doctor.Availability.push(docApp);
-doctor.save();
-res.send("Appointment added sucessfully");
-}
+
 const scheduleAppointment = async (req, res) => {
   try {
     const doctorId=req.user._id;
@@ -500,6 +489,9 @@ const deleteContract = async (req, res) => {
         (newStart <= existingStart && newEnd >= existingEnd)
       );
     });
+    if (isOverlap) {
+      return res.send({ message: 'Overlap with existing slot' });
+    }
     const isOverlapwithBooked = doctor.BookedAppointments.some((existingAppointment) => {
       const existingStart = new Date(existingAppointment.StartDate);
       const existingEnd = new Date(existingAppointment.EndDate);
@@ -513,9 +505,7 @@ const deleteContract = async (req, res) => {
       );
     });
 
-    if (isOverlap) {
-      return res.send({ message: 'Overlap with existing slot' });
-    }
+   
     
     if (isOverlapwithBooked) {
       return res.send({ message: 'Overlap with a booked appointment' });
@@ -537,7 +527,71 @@ const deleteContract = async (req, res) => {
   };
 
   const scheduleFollowUp= async (req,res) =>{
+    const doctorId=req.user._id;
+    const oldAppointment=req.body.oldAppointment;
+    const patient=oldAppointment.PatientUsername;
+    const patientName=oldAppointment.PatientName;
+    const newAppointmentID=req.body.newAppointment;
+    const doctor = await doctorModel.findById(doctorId);
+    const newAppointment = doctor.Availability.find(
+      (av) => {
+   
+         return ((av._id).toString()=== newAppointmentID)}
+    );
+    const user=await userModel.findOne({Username:patient});
+    const newStart=newAppointment.StartDate;
+    const newEnd=newAppointment.EndDate;
+    const isOverlap = doctor.BookedAppointments.some((existingApp) => {
+     const existingStart = new Date(existingApp.StartDate);
+     const existingEnd = new Date(existingApp.EndDate);
+          return (
+            (newStart >= existingStart && newStart < existingEnd) ||
+            (newEnd > existingStart && newEnd <= existingEnd) ||
+            (newStart <= existingStart && newEnd >= existingEnd)
+          );
+        });
+        if (isOverlap) {
+          return res.send({ message: 'Overlap with existing appointment' });
+        }
 
+        const isOverlapwithUser = user.BookedAppointments.some((existingApp) => {
+          const existingStart = new Date(existingApp.StartDate);
+          const existingEnd = new Date(existingApp.EndDate);
+               return (
+                 (newStart >= existingStart && newStart < existingEnd) ||
+                 (newEnd > existingStart && newEnd <= existingEnd) ||
+                 (newStart <= existingStart && newEnd >= existingEnd)
+               );
+             });
+        if (isOverlapwithUser) {
+          return res.send({ message: 'Overlap with existing user appointment' });
+        }
+        const docApp=({
+          _id:newAppointment._id,
+          PatientUsername:patient,
+          PatientName:patientName,
+          StartDate:newAppointment.StartDate,
+          EndDate:newAppointment.EndDate,
+          Status:'upcoming',
+       });
+       doctor.BookedAppointments.push(docApp);
+       const userApp=({
+          _id:newAppointment._id,
+          DoctorUsername:doctor.Username,
+          DoctorName:doctor.Name,
+          StartDate:newAppointment.StartDate,
+          EndDate:newAppointment.EndDate,
+          Status:'upcoming',
+       }); 
+        if(user.Name===patientName){  
+         user.BookedAppointments.push(userApp);
+        }else{
+          user.FamilyBookedAppointments.push(userApp);
+        }
+        doctor.Availability.remove({_id:newAppointmentID});
+        doctor.save();
+        user.save();
+        res.send("follow up booked successfully");
   }
   const viewAvailability= async (req,res) =>{
     const username = req.user.Username;
@@ -559,8 +613,8 @@ module.exports = {
     selectPatient,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
-    viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract,registerDoctor,
+    viewUpcomPastAppointments,scheduleFollowUp,
+   scheduleAppointment,viewContract,deleteContract,registerDoctor,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
 
 };

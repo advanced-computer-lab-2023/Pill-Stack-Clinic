@@ -7,9 +7,9 @@ const {viewProfile,
     editProfile,
     viewMyPatients, 
     selectPatient,
-    searchAppointments,viewALLAppointments,
+    searchAppointments,viewALLAppointments,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
-    addAppointments,scheduleAppointment,viewContract,deleteContract, registerDoctor, 
+    scheduleAppointment,viewContract,deleteContract, registerDoctor, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
         } = require('../Routes/doctorController.js');
 
@@ -27,8 +27,8 @@ router.get('/myPatients',userVerification, viewMyPatients);
 router.get('/myPatients/viewPatient', selectPatient);
 router.get('/viewDoctorWallet',userVerification, viewDoctorWallet);
 router.get('/doctor-appointments/:username', viewUpcomPastAppointments);
-router.post('/addAppointment',userVerification,addAppointments );
-router.post('/scheduleAppointment',userVerification, scheduleAppointment); 
+router.post('/scheduleAppointment',userVerification, scheduleAppointment);
+router.post('/scheduleFollowUp',userVerification, scheduleFollowUp); 
 router.get('/contract', viewContract);
 router.delete('/contract/:contractId', userVerification, deleteContract);
 router.put('/:doctorId/activate-delete-contract', userVerification, activateAndDeleteContract);
