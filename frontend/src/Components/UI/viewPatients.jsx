@@ -25,6 +25,7 @@ const DoctorPatientsTable = () => {
   const [statusFilter, setStatusFilter] = useState('All'); // Initialize with 'All' to show all patients
   const [searchInput, setSearchInput] = useState(''); // State for the search input
   const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected patient
+  const [newRecordInput, setNewRecordInput] = useState('');   
 
   useEffect(() => {
     async function fetchPatients() {
@@ -56,6 +57,27 @@ const DoctorPatientsTable = () => {
 
   const closePatientDetails = () => {
     setSelectedPatient(null);
+  };
+
+  const addHealthRecorda = async (patient) => {
+    try {
+      const response = await axios.post('http://localhost:8000/doctor/addHealthRecord', {
+        PatientUsername: patient.PatientName, // Assuming you have a unique identifier for patients
+        RecordDetails: newRecordInput,
+      }
+      ,
+      { withCredentials: true });
+
+      if (response.status === 201) {
+        alert('Health record added successfully!');
+        // Optionally, you can clear the input field or close the popover here.
+      } else {
+        alert('Failed to add health record. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error adding health record:', error);
+      alert('Failed to add health record. Please try again.');
+    }
   };
 
   return (
@@ -92,6 +114,7 @@ const DoctorPatientsTable = () => {
                 </Td>
                 <Td>{patient.Status}</Td>
                 <Td>{patient.StartDate}</Td>
+                <Td>
                 <Popover>
                     <PopoverTrigger>
                       {/* Wrap "View Details" in a Chakra UI Button component */}
@@ -115,6 +138,43 @@ const DoctorPatientsTable = () => {
                       </PopoverBody>
                     </PopoverContent>
                   </Popover>
+                  </Td>
+                  <Td>
+                  <Popover>
+                    <PopoverTrigger>
+                      {/* Wrap "View Details" in a Chakra UI Button component */}
+                      <Button
+                        size="sm"
+                        colorScheme="teal"
+                        onClick={() => openPatientDetails(patient)}
+                      >
+                        Add Health Record
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Health Record</PopoverHeader>
+                      <PopoverBody>
+                      <Input
+                        type="text"
+                        placeholder='Input Record Here'
+                        value={newRecordInput}
+                        onChange={(e) => setNewRecordInput(e.target.value)}
+                      />
+                      <Button
+                        marginTop="10px"
+                        size="sm"
+                        alignSelf="end"
+                        onClick={() => addHealthRecorda(patient)}
+                      >
+                        Save
+
+                      </Button>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                  </Td>
               </Tr>
             ))}
           </Tbody>
