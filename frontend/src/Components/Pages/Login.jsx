@@ -49,10 +49,12 @@ export const Login = () => {
           setTimeout(() => {
             if (role === 'patient') {
               navigate('/home');
-            } else if (role === 'doctor') {
+            } else if (role === 'doctorContractSigned') {
               navigate('/doctor-home');
             } else if (role === 'admin') {
               navigate('/admin-home');
+            }else if(role === 'doctorContractUnSigned'){
+              navigate('/Unsigned-doctor-home');
             }
           }, 1000);
         } else {

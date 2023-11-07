@@ -134,7 +134,13 @@ module.exports.Login = async (req, res, next) => {
       }else{
         if(doctor){
           loggedIn=doctor;
-          role='doctor';
+          if(doctor.ContractStatus){
+            role='doctorContractSigned'
+          }else{
+            role='doctorContractUnSigned'
+
+          }
+     
         }else{
           loggedIn=admin;
           console.log(loggedIn.Password);
@@ -175,7 +181,8 @@ module.exports.Login = async (req, res, next) => {
         if(data.role==='patient'){
          user = await userModel.findById(data.id);
         }
-        if(data.role==='doctor'){
+
+        if(data.role==='doctorContractSigned' || data.role==='doctorContractUnSigned' ){
            user = await doctorModel.findById(data.id);
           }
           if(data.role==='admin'){
@@ -220,11 +227,13 @@ console.log(username);
   }else{
     if(doctor){
       loggedIn=doctor;
-      role='doctor';
+      if(doctor.ContractStatus){
+        role='doctorContractSigned';
+      }else{
+        role='doctorContractUnSigned';
+      }
     }else{
       loggedIn=admin;
-      console.log(loggedIn.Password);
-
       role='admin';
     }
   }
@@ -310,7 +319,11 @@ console.log(username);
   }else{
     if(doctor){
       loggedIn=doctor;
-      role='doctor';
+      if(doctor.ContractStatus){
+        role='doctorContractSigned' 
+      }else{
+        role='doctorContractUnSigned' 
+      }
     }else{
       loggedIn=admin;
       role='admin';

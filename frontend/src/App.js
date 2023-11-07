@@ -6,6 +6,7 @@ import { Box , Flex,  Button, ButtonGroup } from "@chakra-ui/react"
 import { Route, Routes } from "react-router-dom";
 import { Login, Home} from "./Components/Pages";
 import { Doctor} from './Components/Pages/Doctor.jsx';
+import { UnsignedDoctor} from './Components/Pages/DoctorUnsigned.jsx';
 import  AdminHome from "./Components/Pages/AdminHome";
 import  AdminPacks from "./Components/Pages/AdminPacks";
 import UserManagement from './Components/Pages/UserManagement';
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/doctor-home" element={<Doctor />} />
+        <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />
         <Route path="/" element={<Login />} />
         <Route path="/admin-home" element={<AdminHome />} />
         <Route path="/admin-packs" element={<AdminPacks />} />

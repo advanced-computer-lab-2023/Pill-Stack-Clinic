@@ -20,7 +20,7 @@ module.exports.userVerification = (req, res,next) => {
         if(data.role==='patient'){
          user = await userModel.findById(data.id);
         }
-        if(data.role==='doctor'){
+        if(data.role==='doctorContractSigned' || data.role==='doctorContractUnSigned' ){
            user = await doctorModel.findById(data.id);
           }
           if(data.role==='admin'){
