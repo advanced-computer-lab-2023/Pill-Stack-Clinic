@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -204,6 +205,9 @@ export const Home = () => {
           onOpen();
           setTab('newMem')}}
         > Add Family Members </Button>
+        <Link to={`/my-health-records/${username}`}>
+          <Button colorScheme="teal" variant="outline">View My Health Records</Button>
+        </Link>
         <button onClick={Logout}>LOGOUT</button>
       </div>
       <ToastContainer />
