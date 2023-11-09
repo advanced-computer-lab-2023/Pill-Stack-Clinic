@@ -671,7 +671,8 @@ const subscribePackageCash=async(req,res)=>{
    // }
    //else{
       for(let i=0;i<user.healthPackage.length;i++){
-         user.healthPackage[i].remove();
+         if(user.healthPackage[i].Owner==true){
+         user.healthPackage[i].remove();}
       }
    const userPack=({
       _id:packageID,
@@ -685,7 +686,7 @@ const subscribePackageCash=async(req,res)=>{
       Owner:true,
    });
    user.healthPackage.push(userPack);
-  
+   await user.save();
    // user.WalletBalance=user.WalletBalance-pack.Price;
    if(user.familyMembers.length==0){
       console.log("No family members");
@@ -696,8 +697,11 @@ const subscribePackageCash=async(req,res)=>{
    else{
       for(let i=0;i<user.LinkedPatientFam.length;i++){
          const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
-         for(let j=0;linkedFam.healthPackage.length;j++){
-            if( linkedFam.healthPackage[j].Status!='Subscribed'&& linkedFam.healthPackage[j].Owner==false ){
+         for(let j=0;j<linkedFam.healthPackage.length;j++){
+            console.log(!linkedFam.healthPackage[j].Status==='Subscribed');
+            const bool=!linkedFam.healthPackage[j].Status==='Subscribed';
+            if(bool && linkedFam.healthPackage[j].Owner==false ){
+               console.log("in1");
                linkedFam.healthPackage[j].remove();
                await linkedFam.save();
             }
@@ -845,15 +849,31 @@ const linkPatientAsFamilyMember = async (req, res) => {
          username: linkedUser.Username, 
          relation:relation,
       };
+      let relationFor="";
+      if(relation == "husband"){
+         relationFor="wife";
+      }
+      if(relation == "wife"){
+         relationFor="husband";
+      }
+      if(relation == "child"){
+         relationFor="Father/Mother";
+      }
+      const linkingFamilyMember = {
+         memberID: linkingUser.id, 
+         username: linkingUser.Username,
+         relation:relationFor,
+      };
 
       if (!linkingUser.LinkedPatientFam) {
          linkingUser.LinkedPatientFam = [];
       }
 
       linkingUser.LinkedPatientFam.push(linkedFamilyMember);
+      linkedUser.LinkedPatientFam.push(linkingFamilyMember);
       if(linkingUser.healthPackage.length!=0){
          for(let i=0;i<linkingUser.healthPackage.length;i++){
-            if(linkingUser.healthPackage[i].Status='Subscribed'){
+            if(linkingUser.healthPackage[i].Status=='Subscribed'&& linkingUser.healthPackage[i].Owner==true){
                const userPack=({
                   _id:linkingUser.healthPackage[i]._id,
                   Package_Name:linkingUser.healthPackage[i].Package_Name,
@@ -870,7 +890,26 @@ const linkPatientAsFamilyMember = async (req, res) => {
             }
          }
       }
-
+      if(linkedUser.healthPackage.length!=0){
+         for(let i=0;i<linkedUser.healthPackage.length;i++){
+            if(linkedUser.healthPackage[i].Status=='Subscribed'&& linkedUser.healthPackage[i].Owner==true){
+               const userPack=({
+                  _id:linkedUser.healthPackage[i]._id,
+                  Package_Name:linkedUser.healthPackage[i].Package_Name,
+                  Price:linkedUser.healthPackage[i].Price,
+                  Session_Discount:linkedUser.healthPackage[i].Session_Discount,
+                  Family_Discount:linkedUser.healthPackage[i].Family_Discount,
+                  Pharmacy_Discount:linkedUser.healthPackage[i].Pharmacy_Discount,
+                  Status:'Subscribed',
+                  Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+                  Owner:false,
+               });
+               linkingUser.healthPackage.push(userPack);
+               await linkingUser.save();
+            }
+         }
+      }
+      await linkedUser.save();
       await linkingUser.save();
       res.status(200).send("Family Member linked successfully");
 

@@ -164,7 +164,7 @@ router.post("/payPack",userVerification,async (req,res,next)=>{
 
 
 router.post('/payPack/confirm',userVerification, async (req, res) => {
-   const packageID=req.body.packID;
+   const packageID=req.body.packageID;
    console.log(packageID);
    const pack= await packageModel.findById(packageID);
    if(!pack){
@@ -190,7 +190,8 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    // }
    //else{
       for(let i=0;i<user.healthPackage.length;i++){
-         user.healthPackage[i].remove();
+         if(user.healthPackage[i].Owner==true){
+         user.healthPackage[i].remove();}
       }
    const userPack=({
       _id:packageID,
@@ -204,7 +205,7 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
       Owner:true,
    });
    user.healthPackage.push(userPack);
-  
+   await user.save();
    // user.WalletBalance=user.WalletBalance-pack.Price;
    if(user.familyMembers.length==0){
       console.log("No family members");
@@ -215,8 +216,11 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    else{
       for(let i=0;i<user.LinkedPatientFam.length;i++){
          const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
-         for(let j=0;linkedFam.healthPackage.length;j++){
-            if( linkedFam.healthPackage[j].Status!='Subscribed'&& linkedFam.healthPackage[j].Owner==false ){
+         for(let j=0;j<linkedFam.healthPackage.length;j++){
+            console.log(!linkedFam.healthPackage[j].Status==='Subscribed');
+            const bool=!linkedFam.healthPackage[j].Status==='Subscribed';
+            if(bool && linkedFam.healthPackage[j].Owner==false ){
+               console.log("in1");
                linkedFam.healthPackage[j].remove();
                await linkedFam.save();
             }
@@ -237,7 +241,8 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    }
    }
    res.send("Subscribed succsefully");
-   await user.save();});
+   await user.save();
+});
 
 
 
