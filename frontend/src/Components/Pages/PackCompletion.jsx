@@ -25,7 +25,7 @@ export default function Completion() {
 
   return (
     <div>
-      <h1>Appointment booked successfully</h1>
+      <h1>Subscribed successfully</h1>
     </div>
   );
 }
