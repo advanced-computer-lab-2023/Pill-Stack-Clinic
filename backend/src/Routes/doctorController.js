@@ -350,47 +350,47 @@ const deleteContract = async (req, res) => {
   ]);
 
   // Register a new doctor, including document uploads
-  const registerDoctor = async (req, res) => {
-    // Use the uploadDocuments middleware to handle file uploads
-    uploadGeneralFiles(req, res, async (err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error uploading documents.' });
-      }
+  // const registerDoctor = async (req, res) => {
+  //   // Use the uploadDocuments middleware to handle file uploads
+  //   uploadGeneralFiles(req, res, async (err) => {
+  //     if (err) {
+  //       return res.status(500).json({ error: 'Error uploading documents.' });
+  //     }
 
-      // Extract other registration data from the request body
-      const {Username, Name, Email, Password, DateOfBirth, HourlyRate, Affiliation, EducationalBackground, idDocument, medicalLicenseDocument, medicalDegreeDocument } = req.body;
+  //     // Extract other registration data from the request body
+  //     const {Username, Name, Email, Password, DateOfBirth, HourlyRate, Affiliation, EducationalBackground, idDocument, medicalLicenseDocument, medicalDegreeDocument } = req.body;
 
-      // Create a new doctor with the extracted data
-      const newDoctor = new doctorModel({
-        Username,
-        Name,
-        Email,
-        Password,
-        DateOfBirth,
-        HourlyRate,
-        Affiliation,
-        EducationalBackground,
-        idDocument,
-        medicalLicenseDocument,
-        medicalDegreeDocument
-      });
+  //     // Create a new doctor with the extracted data
+  //     const newDoctor = new doctorModel({
+  //       Username,
+  //       Name,
+  //       Email,
+  //       Password,
+  //       DateOfBirth,
+  //       HourlyRate,
+  //       Affiliation,
+  //       EducationalBackground,
+  //       idDocument,
+  //       medicalLicenseDocument,
+  //       medicalDegreeDocument
+  //     });
 
-      // Add the uploaded document file paths to the new doctor's data
-      if (req.files) {
-        newDoctor.idDocument = req.files.idDocument ? req.files.idDocument[0].path : null;
-        newDoctor.medicalLicenseDocument = req.files.medicalLicenseDocument ? req.files.medicalLicenseDocument[0].path : null;
-        newDoctor.medicalDegreeDocument = req.files.medicalDegreeDocument ? req.files.medicalDegreeDocument[0].path : null;
-      }
+  //     // Add the uploaded document file paths to the new doctor's data
+  //     if (req.files) {
+  //       newDoctor.idDocument = req.files.idDocument ? req.files.idDocument[0].path : null;
+  //       newDoctor.medicalLicenseDocument = req.files.medicalLicenseDocument ? req.files.medicalLicenseDocument[0].path : null;
+  //       newDoctor.medicalDegreeDocument = req.files.medicalDegreeDocument ? req.files.medicalDegreeDocument[0].path : null;
+  //     }
 
-      // Save the new doctor to the database
-      try {
-        await newDoctor.save();
-        res.status(201).json({ message: 'Doctor registered successfully.' });
-      } catch (error) {
-        res.status(500).json({ error: 'Error registering doctor.' });
-      }
-    });
-  };
+  //     // Save the new doctor to the database
+  //     try {
+  //       await newDoctor.save();
+  //       res.status(201).json({ message: 'Doctor registered successfully.' });
+  //     } catch (error) {
+  //       res.status(500).json({ error: 'Error registering doctor.' });
+  //     }
+  //   });
+  // };
 
 
 
