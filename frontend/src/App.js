@@ -28,6 +28,7 @@ import HealthRecords from './Components/Pages/MyHealthRecords.jsx';
 import Packages from "./Components/Pages/Packages.jsx";
 import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
+import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -60,6 +61,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/PasswordReset" element={<PasswordReset/>} />
         <Route path="/my-health-records/:Username" element={<HealthRecords />} />
+        <Route path="/patient-register" element={<PatientRegisterForm />} />
 
       </Routes>
     </div>

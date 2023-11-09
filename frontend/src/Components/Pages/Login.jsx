@@ -70,46 +70,14 @@ export const Login = () => {
       });
     };
   
-    return (
-      // <div className="form_container">
-      //   <h2>Login Account</h2>
-      //   <form onSubmit={handleSubmit}>
-      //     <div>
-      //       <label htmlFor="username">Username</label>
-      //       <input
-      //         type="username"
-      //         name="username"
-      //         value={username}
-      //         placeholder="Enter your username"
-      //         onChange={handleOnChange}
-      //       />
-      //     </div>
-      //     <div>
-      //       <label htmlFor="password">Password</label>
-      //       <input
-      //         type="password"
-      //         name="password"
-      //         value={password}
-      //         placeholder="Enter your password"
-      //         onChange={handleOnChange}
-      //       />
-      //     </div>
-      //     <button type="submit">Submit</button>
-      //     <span>
-      //       Already have an account? <Link to={"/signup"}>Signup</Link>
-      //     </span>
-      //   </form>
-      //   <ToastContainer />
-      // </div>
-      <>
-        <Box display='flex' justifyContent={'center'} alignItems={'center'}  flexDirection={'column'}
-          w={'100%'} h={'100%'}   height='100vh'  
-          className="gradBG">
-          
-          <Box bg={'#4bbbf3'} p={50} rounded={10} display='flex' justifyContent={'center'} alignItems={'center'}  flexDirection={'column'} 
-            boxShadow={'2xl'}>
-            <Text fontSize={'5xl'} color={'black'} textAlign={'center'}>Login</Text>
-          <Flex p={5} >
+    return ( <>
+      <Box display='flex' justifyContent={'center'} alignItems={'center'} flexDirection={'column'}
+        w={'100%'} h={'100%'} height='100vh' className="gradBG">
+        
+        <Box bg={'#4bbbf3'} p={50} rounded={10} display='flex' justifyContent={'center'} alignItems={'center'} flexDirection={'column'} 
+          boxShadow={'2xl'}>
+          <Text fontSize={'5xl'} color={'black'} textAlign={'center'}>Login</Text>
+          <Flex p={5}>
             <Box display="flex" alignItems="center">
               <Text fontSize={'2xl'} mr={2}>Username</Text>
               <Input placeholder="Username" id={'username'} />
@@ -118,24 +86,19 @@ export const Login = () => {
           <Flex p={5}>
             <Box display="flex" alignItems="center">
               <Text fontSize={'2xl'} mr={2}>Password</Text>
-              <Input placeholder="Password" id={'password'}  type="password" />
+              <Input placeholder="Password" id={'password'} type="password" />
             </Box>
           </Flex>
-
-          <Button  size="lg" bg={'grey'} m={5}
-          onClick={handleSubmit}>
+  
+          <Button size="lg" bg={'grey'} m={5} onClick={handleSubmit}>
               Login
           </Button>
           <Link to="/forgot-password">Forgot Password?</Link>
-
-          </Box>
-
-          
-
+          <Text mt={2}>Don't have an account?</Text>
+          <Link to="/patient-register">Register as Patient</Link>
         </Box>
-        <ToastContainer />
-
-      </>
-    );
+        
+      </Box>
+      <ToastContainer />
+      </> ); 
 };
-
