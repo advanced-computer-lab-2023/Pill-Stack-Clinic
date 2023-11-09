@@ -672,7 +672,9 @@ const subscribePackageCash=async(req,res)=>{
    //else{
       for(let i=0;i<user.healthPackage.length;i++){
          if(user.healthPackage[i].Owner==true){
-         user.healthPackage[i].remove();}
+         user.healthPackage[i].remove();
+         await user.save();
+      }
       }
    const userPack=({
       _id:packageID,
@@ -698,8 +700,8 @@ const subscribePackageCash=async(req,res)=>{
       for(let i=0;i<user.LinkedPatientFam.length;i++){
          const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
          for(let j=0;j<linkedFam.healthPackage.length;j++){
-            console.log(!linkedFam.healthPackage[j].Status==='Subscribed');
-            const bool=!linkedFam.healthPackage[j].Status==='Subscribed';
+            let bool=linkedFam.healthPackage[j].Status!='Subscribed';
+            console.log(bool );
             if(bool && linkedFam.healthPackage[j].Owner==false ){
                console.log("in1");
                linkedFam.healthPackage[j].remove();
@@ -718,10 +720,12 @@ const subscribePackageCash=async(req,res)=>{
             Owner:false,
          });
          linkedFam.healthPackage.push(userPack);
+         SortPackByOwner(linkedFam);
          await linkedFam.save();
    }
    }
    res.send("Subscribed succsefully");
+   SortPackByOwner(user);
    await user.save();
 }
 //}
@@ -737,6 +741,28 @@ const checkSubscribed=(async(req,res)=>{
    }
    res.send("ok");
 })
+
+function SortPackByOwner(user){
+   let arr = new Array();
+   let arr2=new Array();
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage[i].Owner==true){
+         arr.push(user.healthPackage[i]);
+      }
+      else{
+         arr2.push(user.healthPackage[i]);
+      }
+   }
+   for(let i=0;i<user.healthPackage.length+1;i++){
+         user.healthPackage.pop();
+}
+for(let i=0;i<arr.length;i++){
+   user.healthPackage.push(arr[i]);   
+}
+for(let i=0;i<arr2.length;i++){
+   user.healthPackage.push(arr2[i]);   
+}
+}
 
 
 
@@ -769,9 +795,12 @@ const cancelSubscription=async(req,res)=>{
    const user=await userModel.findById(userID);
    if(user.healthPackage.length==0){
       res.send("User Not Subscribed");
+      return;
    }
+   let bool=false;
    for(let i=0;i<user.healthPackage.length;i++){
       if(user.healthPackage[i]._id==packageID && user.healthPackage[i].Owner==true){
+         bool=true;
          user.healthPackage[i].remove();
          const userPack=({
             _id:packageID,
@@ -781,10 +810,15 @@ const cancelSubscription=async(req,res)=>{
             Family_Discount:pack.Family_Discount,
             Pharmacy_Discount:pack.Pharmacy_Discount,
             Status:'Cancelled',
+            Owner:true,
             End_Date: new Date(),
          });
          user.healthPackage.push(userPack);
       }
+   }
+   if(bool ==false){
+      res.send("You cannot Cancel linked Package");
+      return;
    }
    if(user.LinkedPatientFam.length==0){
       console.log("No Linked family members");

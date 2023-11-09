@@ -614,7 +614,7 @@ module.exports = {
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,
     viewUpcomPastAppointments,scheduleFollowUp,
-   scheduleAppointment,viewContract,deleteContract,registerDoctor,
+   scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
 
 };
