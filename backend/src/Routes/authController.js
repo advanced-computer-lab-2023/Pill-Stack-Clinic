@@ -357,4 +357,67 @@ console.log(username);
 
  }
 
-  
+ module.exports.CheckOTP = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const OTP = req.body.otp;
+
+    const matchedOTP = await otpModel.findOne({ email: email });
+
+    if (!matchedOTP || matchedOTP.expiresAt < Date.now() || matchedOTP.otp !== OTP) {
+      return res.status(400).json({ message: 'OTP verification failed' });
+    }
+
+    return res.status(200).json({ message: 'OTP verification successful', success: true });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: 'An error occurred during OTP verification' });
+  }
+};
+
+module.exports.ResetPass = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+
+    if (!newPassword.match(/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/)) {
+      return res.status(400).json({ message: 'New password does not meet requirements' });
+    }
+
+    const user = await userModel.findOne({ Email: email });
+    const doctor = await doctorModel.findOne({ Email: email });
+    const admin = await adminModel.findOne({ Email: email });
+
+    let loggedIn = null;
+    let role = null;
+
+    if (user) {
+      loggedIn = user;
+      role = 'patient';
+    } else {
+      if (doctor) {
+        loggedIn = doctor;
+        role = doctor.ContractStatus ? 'doctorContractSigned' : 'doctorContractUnSigned';
+      } else {
+        loggedIn = admin;
+        role = 'admin';
+      }
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const secPass = await bcrypt.hash(newPassword, salt);
+    loggedIn.Password = secPass;
+    loggedIn.save();
+
+    const token = createSecretToken(loggedIn._id, role);
+    res.cookie('token', token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+
+    return res.status(201).json({ message: 'Password changed successfully', success: true });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: 'An error occurred during password reset' });
+  }
+};
