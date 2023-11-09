@@ -24,7 +24,7 @@ import ViewAvailability from "./Components/UI/doctorAvailability.jsx";
 import ForgotPassword from './Components/Pages/ForgotPassword.jsx';
 import PasswordReset from './Components/Pages/PasswordReset.jsx';
 import DoctorContract from './Components/Pages/doctorContract.jsx';
-import MyHealthRecords from './Components/Pages/MyHealthRecords.jsx';
+import HealthRecords from './Components/Pages/MyHealthRecords.jsx';
 import Packages from "./Components/Pages/Packages.jsx";
 import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
@@ -59,7 +59,7 @@ function App() {
         <Route path="doctor-home/contract" element={<DoctorContract/>} />  
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/PasswordReset" element={<PasswordReset/>} />
-        <Route path="/my-health-records/:Username" element={<MyHealthRecords />} />
+        <Route path="/my-health-records/:Username" element={<HealthRecords />} />
 
       </Routes>
     </div>

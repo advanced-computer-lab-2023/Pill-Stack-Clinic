@@ -50,6 +50,10 @@ const secPass = await bcrypt.hash(req.body.password, salt)
 };
 //CREATED AS AN APPLICATION NOT AN ACCOUNT 
 module.exports.DoctorRegister = async (req, res, next) => {
+  uploadGeneralFiles(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error uploading documents.' });
+    }
   try {
     const existingUserinPatient = await userModel.findOne({ Username:req.body.username });
     const existingUserinDoctor = await doctorModel.findOne({ Username:req.body.username });
@@ -69,8 +73,12 @@ const secPass = await bcrypt.hash(req.body.password, salt)
        DateOfBirth: req.body.dob,
        HourlyRate: req.body.hourly_rate,
        Affiliation: req.body.affiliation,
-       Speciality: req.body.speciality,
-       EducationalBackground: req.body.educational_background   });
+       EducationalBackground: req.body.educational_background,
+       idDocument:req.body.idDocument,
+       medicalLicenseDocument:req.body.medicalLicenseDocument,
+       medicalDegreeDocument:req.body.medicalDegreeDocument });
+
+       
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
       withCredentials: true,
@@ -83,7 +91,7 @@ const secPass = await bcrypt.hash(req.body.password, salt)
   } catch (error) {
     console.error(error);
   }
-};
+})};
 module.exports.addAdmin = async (req, res, next) => {
   try {
     console.log(req.body);

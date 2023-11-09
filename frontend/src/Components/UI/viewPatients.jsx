@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 import {
   Table,
   Thead,
@@ -250,6 +252,13 @@ const DoctorPatientsTable = () => {
                       >
                         Schedule a follow up
                       </Button></Td>
+                      <td>
+                      <Link to={`/my-health-records/${patient.PatientUsername}`}>
+                      <Button size="sm" colorScheme="teal">
+                        View Health Records
+                      </Button>
+                    </Link>
+                      </td>
 
               </Tr>
             ))}

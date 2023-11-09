@@ -9,13 +9,13 @@ const {viewProfile,
     selectPatient,
     searchAppointments,viewALLAppointments,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
-    scheduleAppointment,viewContract,deleteContract, registerDoctor, 
+    scheduleAppointment,viewContract,deleteContract, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
         } = require('../Routes/doctorController.js');
 
 
 router.post('/addHealthRecord', userVerification, addHealthRecord);
-router.post('/register', registerDoctor);        
+// router.post('/register', registerDoctor);        
 router.get('/', async(req,res) => {res.render('doc_home')});
 router.get('/profile',userVerification, viewProfile);
 router.get('/profile/edit/:id',editView);
