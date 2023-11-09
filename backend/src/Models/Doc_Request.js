@@ -51,6 +51,9 @@ const docReqSchema = new Schema({
       type: String,
       default: 'Pending',
     },
+    Speciality: {
+      type: String,
+    },
 
 }, { timestamps: true });
 docReqSchema.pre('save', function(next) {

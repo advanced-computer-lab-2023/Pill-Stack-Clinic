@@ -646,19 +646,21 @@ const viewAllPacks=async(req,res)=>{
 
 const subscribePackageCash=async(req,res)=>{
    const packageID=req.body.packageID;
+   console.log(packageID);
    const pack= await packageModel.findById(packageID);
    if(!pack){
       res.status(404).send("Package Not Found");
    }
-   const userID=req.body.userId;
-   const user=await userModel.findById(userID);
+   const username=req.body.username;
+   const user=await userModel.findOne({Username:username});
+   console.log(user);
    if(!user){
       res.status(404).send("User Not Found");
    }
    for(let i=0;i<user.healthPackage.length;i++){
       if(user.healthPackage[i].Status=="Subscribed" && user.healthPackage[i].Owner==true){
-         res.send("User Already Subscribed to a Package");
-         break;
+         res.send("User Already Subscribed to Package: "+ user.healthPackage[i].Package_Name);
+         return;
       }
    }
    // if(user.healthPackage.length!=0){
@@ -719,6 +721,18 @@ const subscribePackageCash=async(req,res)=>{
    await user.save();
 }
 //}
+const checkSubscribed=(async(req,res)=>{
+   const username=req.body.username;
+   console.log(username);
+   const user=await userModel.findOne({Username:username});
+   for(let i=0;i<user.healthPackage.length;i++){
+      if(user.healthPackage[i].Owner===true && user.healthPackage[i].Status==='Subscribed'){
+         res.send("User is already Subscribed to "+user.healthPackage[i].Package_Name);
+         return;
+      }
+   }
+   res.send("ok");
+})
 
 
 
@@ -901,5 +915,5 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewPrescribtion, viewPatientWallet,cancelSubscription,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
-   linkPatientAsFamilyMember, uploadMedicalDocument,
+   linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords};

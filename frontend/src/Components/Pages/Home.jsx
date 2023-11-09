@@ -209,6 +209,7 @@ export const Home = () => {
           <Button colorScheme="teal" variant="outline">View My Health Records</Button>
         </Link>
         <button onClick={Logout}>LOGOUT</button>
+         <Link to={`/home/viewPackages/${username}`}>Packages</Link> 
       </div>
       <ToastContainer />
 

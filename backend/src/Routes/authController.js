@@ -69,6 +69,7 @@ const secPass = await bcrypt.hash(req.body.password, salt)
        DateOfBirth: req.body.dob,
        HourlyRate: req.body.hourly_rate,
        Affiliation: req.body.affiliation,
+       Speciality: req.body.speciality,
        EducationalBackground: req.body.educational_background   });
     const token = createSecretToken(user._id);
     res.cookie("token", token, {

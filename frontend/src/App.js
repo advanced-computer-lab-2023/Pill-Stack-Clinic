@@ -25,6 +25,9 @@ import ForgotPassword from './Components/Pages/ForgotPassword.jsx';
 import PasswordReset from './Components/Pages/PasswordReset.jsx';
 import DoctorContract from './Components/Pages/doctorContract.jsx';
 import MyHealthRecords from './Components/Pages/MyHealthRecords.jsx';
+import Packages from "./Components/Pages/Packages.jsx";
+import PayPackage from "./Components/Pages/payPackage.jsx";
+import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -43,6 +46,9 @@ function App() {
         <Route path="home/familyAppointments" element={<FamilyAppointments/>} />
         <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
         <Route path="/completion/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<Completion/>} />
+        <Route path="/completion/:username/:packID" element={<PackCompletion />} />
+        <Route path="/home/viewPackages/:username" element={<Packages/>}/>
+        <Route path="/home/payPack/:username/:packID" element={<PayPackage />}/>
         <Route path="/admin-requests" element={ <DocReqs/>} />
         <Route path="home/viewDoctors" element={<DoctorList/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />

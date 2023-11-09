@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 let router = express.Router();
 const {viewALLAppointments,searchDoctors,
-    selectedDoctorDetails,viewAvailDoctorAppointments,
+    selectedDoctorDetails,viewAvailDoctorAppointments,checkSubscribed,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
     viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
@@ -55,5 +55,6 @@ router.get('/viewMyPackage',viewPackageSubscribtion);
 router.post('/cancelSubs',cancelSubscription);
 router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
 router.get('/viewMyHealthRecords/:Username',userVerification,viewMyHealthRecords)
+router.post('/checkSubscribed',checkSubscribed);
 
 module.exports = router;
