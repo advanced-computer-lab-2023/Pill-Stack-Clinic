@@ -9,7 +9,7 @@ const {viewProfile,
     selectPatient,
     searchAppointments,viewALLAppointments,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
-    scheduleAppointment,viewContract,deleteContract, 
+    scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
         } = require('../Routes/doctorController.js');
 
@@ -25,6 +25,7 @@ router.post('/searchName',userVerification,PostByName);
 router.post('/search',userVerification,searchAppointments);
 router.get('/myPatients',userVerification, viewMyPatients);
 router.get('/myPatients/viewPatient', selectPatient);
+router.post('/profile/edit/:id', editProfileInfo);
 router.get('/viewDoctorWallet',userVerification, viewDoctorWallet);
 router.get('/doctor-appointments/:username', viewUpcomPastAppointments);
 router.post('/scheduleAppointment',userVerification, scheduleAppointment);

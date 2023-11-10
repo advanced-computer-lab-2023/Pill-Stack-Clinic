@@ -38,7 +38,7 @@ import { Box, Flex, Modal,
   Input,
   Center
 } from "@chakra-ui/react";
-import ShortcutsCard from "../UI/ShortcutsCard";
+import ShortcutsCard from "../UI/DoctorShortcuts";
 import PatientInfoCard from "../UI/PatientInfoCard";
 import WithSubnavigation from "../UI/navbar";
 import PatientShortcuts from "../UI/patientShortcuts";

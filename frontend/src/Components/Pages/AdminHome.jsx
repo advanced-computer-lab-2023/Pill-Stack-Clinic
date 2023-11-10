@@ -7,7 +7,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { Heading, Stack, StackDivider, Box, Text } from "@chakra-ui/react"
 import { Flex, Image } from '@chakra-ui/react';
 import AdminInfoCard from '../UI/AdminInfoCard';
-import ShortcutsCard from "../UI/ShortcutsCard";
+import ShortcutsCard from "../UI/DoctorShortcuts";
 
 
 export const AdminHome = () => {

@@ -34,6 +34,34 @@ const fs = require('fs');
    }
  
   }
+
+  
+  const editProfileInfo = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const profile = await doctorModel.findById(id);
+      if (!profile) {
+        return res.status(404).send('Profile not found');
+      }
+  
+      // Update the specific fields based on the JSON data sent in the request body
+      profile.Email = req.body.email;
+      profile.HourlyRate = req.body.HourlyRate;
+      profile.Affiliation = req.body.affiliation;
+  
+      await profile.save();
+  
+      // Send the updated profile as a response
+      res.json(profile);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  };
+
+
+
   const editProfile=async(req,res)=>{
     
        const { id } = req.params;
@@ -612,7 +640,7 @@ module.exports = {
     viewMyPatients,
     selectPatient,
     searchAppointments,viewALLAppointments,
-    PostByName, viewDoctorWallet,
+    PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
