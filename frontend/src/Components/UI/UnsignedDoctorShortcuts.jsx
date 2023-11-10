@@ -39,15 +39,15 @@ function DoctorShortcuts(props) {
   templateColumns='repeat(2, 1fr)'  
   gap={1}
 >
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="doctor-home/contract"
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="Unsigned-doctor-home/contract"
 _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
-  <LinkOverlay href="doctor-home/contract"></LinkOverlay>
+  <LinkOverlay href="Unsigned-doctor-home/contract"></LinkOverlay>
   <AbsoluteCenter>
     
       <Box fontSize="16px" mb="10px">Contract</Box>
     
     <Center>
-      <a href="doctor-home/contract" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href="Unsigned-doctor-home/contract" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
       </a>
