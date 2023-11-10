@@ -156,6 +156,55 @@ export const Home = () => {
       });
     }
   };
+
+  const handleChangePass = async () => {
+    const oldPassword = document.querySelector('#oldPassword').value;
+    const newPassword = document.querySelector('#newPassword').value;
+    const confirmNewPassword = document.querySelector('#confirmNewPassword').value;
+  
+    if (newPassword !== confirmNewPassword) {
+      toast.error('Passwords dont match', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
+  
+    const data = {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+  
+    try {
+      const response = await axios.post('http://localhost:8000/changePassword', data, {
+        withCredentials: true,
+      });
+  
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } else {
+        toast.error(response.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      // Log the detailed error response for debugging
+      if (error.response) {
+        console.error('Response Data:', error.response.data);
+        toast.error(error.response.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      }
+    }
+  };
+  
+
   const handleAddFamilyMember = async () => {
     if (tab === 'linkMem') {
       try {
@@ -534,6 +583,41 @@ export const Home = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <Modal
+          initialFocusRef={initialRef}
+          finalFocusRef={finalRef}
+          isOpen={isOpen}
+          onClose={onClose}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Change Password</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <FormControl>
+                <FormLabel>Old Password</FormLabel>
+                <Input id="oldPassword" type="password" ref={initialRef} placeholder="Old Password" />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>New Password</FormLabel>
+                <Input id="newPassword" type="password" placeholder="New Password" />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input id="confirmNewPassword" type="password" placeholder="Confirm New Password" />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button onClick={handleChangePass} colorScheme="blue" mr={3}>
+                Save
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
 
 
 
