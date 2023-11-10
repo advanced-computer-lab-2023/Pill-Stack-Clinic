@@ -41,8 +41,8 @@ function App() {
         <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />
         <Route path="/" element={<Login />} />
         <Route path="/admin-home" element={<AdminHome />} />
-        <Route path="/admin-packs" element={<AdminPacks />} />
-        <Route path="/admin-users" element={<UserManagement/>} />
+        <Route path="admin-home/admin-packs" element={<AdminPacks />} />
+        <Route path="admin-home/admin-users" element={<UserManagement/>} />
         <Route path="home/bookAppointments" element={<BookAppointments/>} />
         <Route path="home/familyAppointments" element={<FamilyAppointments/>} />
         <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
@@ -50,7 +50,7 @@ function App() {
         <Route path="/completion/:username/:packID" element={<PackCompletion />} />
         <Route path="/home/viewPackages/:username" element={<Packages/>}/>
         <Route path="/home/payPack/:username/:packID" element={<PayPackage />}/>
-        <Route path="/admin-requests" element={ <DocReqs/>} />
+        <Route path="admin-home/admin-requests" element={ <DocReqs/>} />
         <Route path="home/viewDoctors" element={<DoctorList/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />

@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react'
 
 
-function DoctorShortcuts(props) {
+function AdminShortcuts(props) {
   const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username} = props;
   
   
@@ -39,15 +39,15 @@ function DoctorShortcuts(props) {
   templateColumns='repeat(2, 1fr)'  
   gap={1}
 >
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="doctor-home/myAvailability"
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="admin-home/admin-packs"
 _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
-  <LinkOverlay href="doctor-home/myAvailability"></LinkOverlay>
+  <LinkOverlay href="admin-home/admin-packs"></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">MyAvailability</Box>
+      <Box fontSize="16px" mb="10px">ManagePacks</Box>
     
     <Center>
-      <a href="/doctor-home/myAvailability" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href="admin-home/admin-packs" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
       </a>
@@ -55,15 +55,15 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
   </AbsoluteCenter>
 </LinkBox>
 
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="doctor-home/apptsD"
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="admin-home/admin-users"
 _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
-  <LinkOverlay href="doctor-home/apptsD"></LinkOverlay>
+  <LinkOverlay href="admin-home/admin-users"></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">ViewAppointments</Box>
+      <Box fontSize="16px" mb="10px">ManageUsers</Box>
     
     <Center>
-      <a href="doctor-home/apptsD" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href="admin-home/admin-users" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
       </a>
@@ -71,15 +71,15 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
   </AbsoluteCenter>
 </LinkBox>
 
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="doctor-home/myPatients"
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="admin-home/admin-requests"
 _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
-  <LinkOverlay href="doctor-home/myPatients"></LinkOverlay>
+  <LinkOverlay href="admin-home/admin-requests"></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">MyPatients</Box>
+      <Box fontSize="16px" mb="10px">Requests</Box>
     
     <Center>
-      <a href="doctor-home/myPatients" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href="admin-home/admin-requests" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
       </a>
@@ -97,4 +97,4 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
   );
 }
 
-export default DoctorShortcuts;
+export default AdminShortcuts;

@@ -10,6 +10,14 @@ const viewDocApp= async (req, res) => {
     const application = await docModel.findById(applicationId);
     res.send(application);
 }
+const viewProfile= async(req,res)=>{
+  const username = req.user.Username;
+  const profile = await adminModel.findOne({Username:username});
+     res.send(profile);
+
+     console.log(profile);
+ 
+  }
 
 const viewAllApp= async (req, res) => {
     const applications = await docModel.find({});
@@ -302,7 +310,7 @@ const getAllUsers = async (req, res) => {
 
 
 module.exports = {
-    viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,
+    viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewProfile,
     viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest
 };
 

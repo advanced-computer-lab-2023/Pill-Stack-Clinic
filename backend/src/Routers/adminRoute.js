@@ -1,7 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const {userVerification } = require('../Middleware/AuthMiddleware')
-const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest} = require('../Routes/adminController.js');
+const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack,removeUser,viewProfile, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest} = require('../Routes/adminController.js');
 
 router.get("/", async(req,res) => {res.render('admin_home')});
 router.get("/applications",viewAllApp);
@@ -10,7 +10,7 @@ router.post('/applications/accept-registeration/:id',acceptRegRequest);
 router.post('/applications/reject-registeration/:id',rejectRegRequest);
 router.get('/applications/accept-Platform/:id',acceptPlatformRequest);
 router.get('/applications/reject-Platform/:id',rejectPlatformRequest);
-
+router.get('/profile',userVerification, viewProfile);
 router.get("/packages",viewAllPacks)
 router.get("/add_packages",(req,res)=>{res.render('add_packages')})
 router.post("/packages",createPackage)
