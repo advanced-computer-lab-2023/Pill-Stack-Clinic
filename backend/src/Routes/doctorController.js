@@ -34,7 +34,26 @@ const fs = require('fs');
    }
  
   }
-
+const updateContractStatus=async(req,res)=>{
+  console.log("DAREEEEEENN");
+  const username= req.body.username;
+  console.log(username);
+  doctorModel.findOneAndUpdate(
+    { Username: username },
+    { $set: { ContractStatus: true } },
+    (err, doctor) => {
+      if (err) {
+        console.error('Error updating contract status:', err);
+        console.log(doctor.contractStatus);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+      res.status(200).json({ success: true });
+    }
+  );
+}
   
   const editProfileInfo = async (req, res) => {
     const { id } = req.params;
@@ -93,7 +112,7 @@ const fs = require('fs');
     const profile = await doctorModel.findOne({ Username: username });
     const appointments = profile.BookedAppointments
     console.log('the doc:' , appointments);
-res.send(appointments);  
+    res.send(appointments);  
    }
 
    const selectPatient = async (req, res) => {
@@ -628,7 +647,6 @@ const deleteContract = async (req, res) => {
     const Availability = profile.Availability;
     console.log(Availability)
     res.send(Availability);
-
   }
   
   
@@ -644,6 +662,6 @@ module.exports = {
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,
-    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus
 
 };
