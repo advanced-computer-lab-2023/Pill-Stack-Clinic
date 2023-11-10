@@ -1,180 +1,3 @@
-
-
-
-
-import {
-
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  HStack,
-  Select,
-  Stack
-
-
-
-  } from "@chakra-ui/react";
-
-// export const Home = () => {
-//   const navigate = useNavigate();
-//   const [cookies, removeCookie] = useCookies([]);
-//   const [username, setUsername] = useState("");
-//   const { isOpen, onOpen, onClose } = useDisclosure()
-   
-
-//   useEffect(() => {
-//     const verifyCookie = async () => {
-//       if (!cookies.token) {
-//         navigate("/");
-//       }
-//       const { data } = await axios.post(
-//         "http://localhost:8000",
-//         {},
-//         { withCredentials: true }
-//       );
-//       const { status, user } = data;
-//       setUsername(user);
-//       return status
-//         ? toast(`Hello ${user}`, {
-//             position: "top-right",
-//           })
-//         : (removeCookie("token"), navigate("/"));
-//     };
-//     verifyCookie();
-//   }, [cookies, navigate, removeCookie]);
-//   const Logout = () => {
-//     removeCookie("token");
-//     navigate("/");
-//   };
-
-//   // router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
-
-//   /////////
-// //   const linkPatientAsFamilyMember = async (req, res) => {
-// //     try {
-// //        const linkingUserUsername = req.user.Username; // The username of the user initiating the link
-// //        const linkTargetEmailOrPhone = req.params.emailOrPhone; // Email or phone number of the user to link
-// //        const relation = req.params.relation; // Relation (wife, husband, child, etc.)
-// //        console.log('linkTargetEmailOrPhone:', linkTargetEmailOrPhone);
- 
- 
-       
-// //        let linkedUser;
-// //        if (linkTargetEmailOrPhone.includes('@')) {
-          
-// //           linkedUser = await userModel.findOne({ Email: linkTargetEmailOrPhone });
-// //        } else {
-// //           linkedUser = await userModel.findOne({ MobileNumber: linkTargetEmailOrPhone });
-// //        }
- 
-// //        if (!linkedUser) {
-// //           return res.status(404).json({ message: 'User to link not found' });
-// //        }
- 
-// //        const linkingUser = await userModel.findOne({ Username: linkingUserUsername });
- 
-// //        if (!linkingUser) {
-// //           return res.status(404).json({ message: 'User not found' });
-// //        }
- 
-// //        if (!isValidRelation(relation)) {
-// //           return res.status(400).json({ message: 'Invalid relation' });
-// //        }
- 
-// //        const linkedFamilyMember = {
-// //           memberID: linkedUser.id, 
-// //           username: linkedUser.Username, 
-// //           relation:relation,
-// //        };
- 
-// //        if (!linkingUser.LinkedPatientFam) {
-// //           linkingUser.LinkedPatientFam = [];
-// //        }
- 
-// //        linkingUser.LinkedPatientFam.push(linkedFamilyMember);
-// //        if(linkingUser.healthPackage.length!=0){
-// //           for(let i=0;i<linkingUser.healthPackage.length;i++){
-// //              if(linkingUser.healthPackage[i].Status='Subscribed'){
-// //                 const userPack=({
-// //                    _id:linkingUser.healthPackage[i]._id,
-// //                    Package_Name:linkingUser.healthPackage[i].Package_Name,
-// //                    Price:linkingUser.healthPackage[i].Price,
-// //                    Session_Discount:linkingUser.healthPackage[i].Session_Discount,
-// //                    Family_Discount:linkingUser.healthPackage[i].Family_Discount,
-// //                    Pharmacy_Discount:linkingUser.healthPackage[i].Pharmacy_Discount,
-// //                    Status:'Subscribed',
-// //                    Renewl_Date:  new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-// //                    Owner:false,
-// //                 });
-// //                 linkedUser.healthPackage.push(userPack);
-// //                 await linkedUser.save();
-// //              }
-// //           }
-// //        }
- 
-// //        await linkingUser.save();
-// //        res.status(200).send("Family Member linked successfully");
- 
-// //     } catch (error) {
-// //        console.error('Error linking family member:', error);
-// //        res.status(500).json({ message: 'Internal server error' });
-// //     }
-// //  }
-  
-
-
-//   return (
-//     <>
-//       <div className="home_page">
-//         <h4>
-//           {" "}
-//           Welcome <span>{username}</span>
-//         </h4>
-//         <Button colorScheme="teal" variant="outline"
-//           onClick={() => {
-//           setInputs({})
-//           onOpen();
-//           setTab('newMem')}}
-//         > Add Family Members </Button>
-//         <Link to={`/my-health-records/${username}`}>
-//           <Button colorScheme="teal" variant="outline">View My Health Records</Button>
-//         </Link>
-//         <button onClick={Logout}>LOGOUT</button>
-//          <Link to={`/home/viewPackages/${username}`}>Packages</Link> 
-//       </div>
-//       <ToastContainer />
-
-
-//     </>
-//   );
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -188,6 +11,14 @@ import { Box, Flex, Modal,
   ModalHeader,
   Link,
   ModalFooter,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  HStack,
+  Select,
+  Stack,
   TableContainer,
   Tag,
   Table,
@@ -359,10 +190,10 @@ export const Home = () => {
         );
   
         if (response.status === 200) {
-          toast.success(response.data.message, {
+          toast.success('Added Successfuly', {
             position: 'top-right',
           });
-          onClose(); // Close the modal on success
+          closeAddFamilyModal(); // Close the modal on success
         } else {
           toast.error('Failed to add family member. Please try again.', {
             position: 'bottom-left',
@@ -377,9 +208,6 @@ export const Home = () => {
     }
   };
   
-
-
-
 
   useEffect(() => {
     // Check if patientData is not null and log it
@@ -403,32 +231,6 @@ export const Home = () => {
     username={patientData.Name}
     onOpenModal={onOpen}
     />
-
-
-<Button colorScheme="teal" variant="outline"
-          onClick={() => {
-          setInputs({})
-          onOpen();
-          setTab('newMem')}}
-        > Add Family Members </Button>
-        <Button
-  colorScheme="teal"
-  variant="outline"
-  onClick={() => navigate(`/my-health-records/${username}`)}
->
-  View My Health Records
-</Button>
-
-        <button onClick={Logout}>LOGOUT</button>
-        <Button
-  colorScheme="teal"
-  variant="outline"
-  onClick={() => navigate(`/home/viewPackages/${username}`)}
->
-  Packages
-</Button>
-
-
 
  
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
@@ -456,7 +258,8 @@ export const Home = () => {
 
           <Box style={{ margin: "0 10px", flex: 1 }}>
             <PatientShortcuts openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
-            setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal} style={{ height: "100%" }} />
+            setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal}
+            navigate={navigate} username={username} style={{ height: "100%" }} />
           </Box>
         </Flex>
 
@@ -721,7 +524,7 @@ export const Home = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button colorScheme='blue' mr={3} onClick={closeAddFamilyModal}>
               Close
             </Button>
             <Button variant='outline'

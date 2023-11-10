@@ -9,7 +9,7 @@ import { DeleteIcon, AddIcon, EmailIcon ,EditIcon,ViewIcon,AttachmentIcon} from 
 import { Link } from 'react-router-dom'; // Import the Link component
 import { LinkBox, LinkOverlay } from '@chakra-ui/react'
 import { useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
-
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   Thead,
@@ -24,7 +24,7 @@ import {
 
 
 function PatientShortcuts(props) {
-  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, setTab, setInputs } = props;
+  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username, setTab, setInputs } = props;
   
   
   return (
@@ -34,9 +34,9 @@ function PatientShortcuts(props) {
           </CardHeader>
 <Grid
   h='452px'
-  w='400px'
-  templateRows='repeat(2, 1fr)'
-  templateColumns='repeat(2, 1fr)'
+  w='800px'  
+  templateRows='repeat(4, 1fr)'
+  templateColumns='repeat(4, 1fr)'  
   gap={1}
 >
 <LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' onClick={openViewFamilyModal}
@@ -70,30 +70,30 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' 
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href='home/viewDoctors'
 _hover={{ bg: '#353535',  color: 'white' }}>
-  <LinkOverlay href='/admin-users'></LinkOverlay>
+  <LinkOverlay href='home/viewDoctors'></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">Accept/reject</Box>
+      <Box fontSize="16px" mb="10px">viewDoctors</Box>
     
     <Center>
-      <a href="/admin-users" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href='home/viewDoctors' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <EmailIcon boxSize={5} />
        
       </a>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' 
-_hover={{ bg: '#353535',  color: 'white' }}>
-  <LinkOverlay href='/admin-users'></LinkOverlay>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/bookAppointments"
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
+  <LinkOverlay href="home/bookAppointments"></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">Edit User</Box>
+      <Box fontSize="16px" mb="10px">BookAppointment</Box>
     
     <Center>
-      <a href="/admin-users" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a href="home/bookAppointments" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <EditIcon boxSize={5} />
        
       </a>
@@ -125,7 +125,7 @@ _hover={{ bg: '#353535',  color: 'white' }}>
 >
   <LinkOverlay onClick={openSecondModal}></LinkOverlay>
   <AbsoluteCenter>
-    <Box fontSize="16px" mb="10px">Packages</Box>
+    <Box fontSize="16px" mb="10px">MyPackages</Box>
     <Center>
       <a
         onClick={openSecondModal}
@@ -140,6 +140,82 @@ _hover={{ bg: '#353535',  color: 'white' }}>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/familyAppointments"
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
+  <LinkOverlay href="home/familyAppointments"></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">FamAppointments</Box>
+    
+    <Center>
+      <a href="home/familyAppointments" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <EditIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/apptsP"
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
+  <LinkOverlay href="home/apptsP"></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">MyAppointments</Box>
+    
+    <Center>
+      <a href="home/apptsP" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <EditIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/prescriptions"
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
+  <LinkOverlay href="home/prescriptions"></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">MyPrescriptions</Box>
+    
+    <Center>
+      <a href="home/prescriptions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <EditIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md'  onClick={() => navigate(`/home/viewPackages/${username}`)}
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
+  <LinkOverlay  onClick={() => navigate(`/home/viewPackages/${username}`)}></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">SubscribePackages</Box>
+    
+    <Center>
+      <a  onClick={() => navigate(`/home/viewPackages/${username}`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <EditIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md'  onClick={() => navigate(`/my-health-records/${username}`)}
+_hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
+  <LinkOverlay  onClick={() => navigate(`/my-health-records/${username}`)}></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">HealthRecords</Box>
+    
+    <Center>
+      <a  onClick={() => navigate(`/my-health-records/${username}`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <EditIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+
 
 
 </Grid>
