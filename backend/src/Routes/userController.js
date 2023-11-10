@@ -966,18 +966,19 @@ function isValidRelation(relation) {
 
 const viewMyHealthRecords = async (req, res) => {
    try {
-      console.log("mmmm")
-
-     const username  = req.params.Username; 
-      console.log(username)
+     const username = req.params.Username;
+     const patientName = req.params.Patientname;
+      console.log(username);
+      console.log(patientName)
      const user = await userModel.findOne({ Username: username });
      if (!user) {
        return res.status(404).json({ message: 'User not found' });
      }
+     const healthRecords = user.HealthRecords.filter(record => record.PatientName === patientName);
+     if (healthRecords.length === 0) {
+       return res.status(404).json({ message: 'Health records not found for the specified patient' });
+     }
  
-     const healthRecords = user.HealthRecords;
-     console.log(healthRecords)
-     
      return res.status(200).json({ healthRecords });
    } catch (error) {
      console.error(error);

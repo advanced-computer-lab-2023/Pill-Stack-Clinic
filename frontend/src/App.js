@@ -60,7 +60,7 @@ function App() {
         <Route path="Unsigned-doctor-home/contract" element={<DoctorContract/>} />  
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/PasswordReset" element={<PasswordReset/>} />
-        <Route path="/my-health-records/:Username" element={<HealthRecords />} />
+        <Route path="/my-health-records/:patientUsername/:patientName" element={<HealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
 
       </Routes>

@@ -120,7 +120,8 @@ const DoctorPatientsTable = () => {
   const addHealthRecorda = async (patient) => {
     try {
       const response = await axios.post('http://localhost:8000/doctor/addHealthRecord', {
-        PatientUsername: patient.PatientUsername, // Assuming you have a unique identifier for patients
+        PatientUsername: patient.PatientUsername,
+        PatientName:patient.PatientName,
         RecordDetails: newRecordInput,
       }
       ,
@@ -253,7 +254,7 @@ const DoctorPatientsTable = () => {
                         Schedule a follow up
                       </Button></Td>
                       <td>
-                      <Link to={`/my-health-records/${patient.PatientUsername}`}>
+                      <Link to={`/my-health-records/${patient.PatientUsername}/${patient.PatientName}`}>
                       <Button size="sm" colorScheme="teal">
                         View Health Records
                       </Button>

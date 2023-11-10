@@ -427,27 +427,28 @@ const deleteContract = async (req, res) => {
       const doctorId = req.user.id; // Assuming you have the doctor's ID available in req.user
 
       // Extract data from the request body
-      const { PatientUsername, RecordDetails } = req.body;
+      const { PatientUsername,PatientName, RecordDetails } = req.body;
       const RecordDate = new Date();
 
       // Find the doctor by ID
       const doctor = await doctorModel.findById(doctorId);
-
+      const user=await userModel.findOne({Username:PatientUsername})
       if (!doctor) {
         return res.status(404).json({ error: 'Doctor not found' });
       }
 
       // Add the new health record to the doctor's HealthRecords array
-      doctor.HealthRecords.push({ PatientUsername, RecordDetails, RecordDate });
-
+      //doctor.HealthRecords.push({ PatientUsername, RecordDetails, RecordDate });
+      user.HealthRecords.push({PatientName:PatientName,DoctorName:doctor.Name,RecordDetails:RecordDetails,RecordDate:RecordDate})
       // Save the updated doctor document
-      await doctor.save();
+      doctor.save();
+      user.save();
 
       res.status(201).json({ message: 'Health record added successfully.' });
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
 
 
   //e
