@@ -1,0 +1,11 @@
+/* Add the CSS for the header background image */
+.header-image {
+    background-image: url('../Images/PillGradient.png'); /* Replace with the actual image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: aliceblue;
+    border-radius: 5px;
+  }
+  .card-width {
+    width: 300px; /* Adjust the width as per your requirements */
+  }

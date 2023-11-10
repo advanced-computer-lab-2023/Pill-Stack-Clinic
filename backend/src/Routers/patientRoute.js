@@ -4,7 +4,7 @@ let router = express.Router();
 const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,checkSubscribed,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
-    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,
+    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,viewProfile,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
     removeMedicalDocument,getAmount,viewAllAvailableAppointments,viewFamilyAppointments,viewMyHealthRecords} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
@@ -35,6 +35,7 @@ router.post("/searchDoctors",searchDoctors)
 router.post('/getAmount',userVerification,getAmount);
 router.get("/bookAppointments",userVerification,viewAllAvailableAppointments);
 router.get('/viewDoctors',userVerification,viewDoctors);
+router.get('/profile',userVerification, viewProfile)
 router.get('/selectedDoctorDetails/:username',selectedDoctorDetails);
 router.post("/addFamMem",userVerification,addFamilyMem);
 router.get('/viewFamily',userVerification,viewFamilyMembers);

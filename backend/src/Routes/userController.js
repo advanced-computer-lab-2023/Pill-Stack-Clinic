@@ -47,6 +47,13 @@ const uploadMedicalDocument = async (req, res) => {
    }
  };
 
+ const viewProfile= async(req,res)=>{
+   const username = req.user.Username;
+   const profile = await userModel.findOne({Username:username});
+      res.send(profile);
+  
+   }
+
 
 
 const addFamilyMem = async (req, res) => {
@@ -984,7 +991,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAvailDoctorAppointments,searchDoctors, getUsers,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
-   filterPrescriptions,viewPrescriptions,
+   filterPrescriptions,viewPrescriptions,viewProfile,
    viewPrescribtion, viewPatientWallet,cancelSubscription,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,

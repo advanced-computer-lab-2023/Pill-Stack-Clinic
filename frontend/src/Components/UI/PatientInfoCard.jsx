@@ -1,16 +1,18 @@
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@chakra-ui/react';
 import { Heading, Stack, StackDivider, Box, Text } from '@chakra-ui/react';
+import './Styles/DoctorInfoCard.css';
 
-function DoctorInfoCard(props) {
-  const { title, username, name, email, DateOfBirth, HourlyRate,affiliation,EducationalBackground } = props;
+function PatientInfoCard(props) {
+  const { title, username, name, email, DateOfBirth, Gender,MobileNumber,EmergencyContact_Name,EmergencyContact_MobileNumber,WalletBalance } = props;
 
   return (
     <Card>
+      <div className="header-image">
       <CardHeader>
         <Heading size='md'>{title}</Heading>
       </CardHeader>
-
+      </div>
       <CardBody>
         <Stack divider={<StackDivider />} spacing='4'>
           <Box>
@@ -47,26 +49,42 @@ function DoctorInfoCard(props) {
           </Box>
           <Box>
             <Heading size='xs' textTransform='uppercase'>
-              Hourly Rate:
+              Gender:
             </Heading>
             <Text pt='2' fontSize='sm'>
-              {HourlyRate}
+              {Gender}
             </Text>
           </Box>
           <Box>
             <Heading size='xs' textTransform='uppercase'>
-              Affiliation:
+              Mobile Number:
             </Heading>
             <Text pt='2' fontSize='sm'>
-              {affiliation}
+              {MobileNumber}
             </Text>
           </Box>
           <Box>
             <Heading size='xs' textTransform='uppercase'>
-              Educational Background:
+              Emergency Contact Name:
             </Heading>
             <Text pt='2' fontSize='sm'>
-              {EducationalBackground}
+              {EmergencyContact_Name}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size='xs' textTransform='uppercase'>
+              Emergency Contact Number:
+            </Heading>
+            <Text pt='2' fontSize='sm'>
+              {EmergencyContact_MobileNumber}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size='xs' textTransform='uppercase'>
+              Wallet Balance:
+            </Heading>
+            <Text pt='2' fontSize='sm'>
+              {WalletBalance}
             </Text>
           </Box>
         </Stack>
@@ -75,4 +93,4 @@ function DoctorInfoCard(props) {
   );
 }
 
-export default DoctorInfoCard;
+export default PatientInfoCard;

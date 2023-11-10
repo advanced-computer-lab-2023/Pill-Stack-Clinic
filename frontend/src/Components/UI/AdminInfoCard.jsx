@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@chakra-ui/react';
 import { Heading, Stack, StackDivider, Box, Text } from '@chakra-ui/react';
-import './Styles/AdminInfoCard.css'; // Import the CSS file
+import './Styles/AdminInfoCard.css';
 
 function AdminInfoCard(props) {
   const { title, username, name, email} = props;
