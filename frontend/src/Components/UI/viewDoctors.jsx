@@ -25,17 +25,19 @@ const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [searchName, setSearchName] = useState('');
   const [searchSpeciality, setSearchSpeciality] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  const [searchTime, setSearchTime] = useState('');
+  const [searchStartDate, setSearchStartDate] = useState('');
+  const [searchStartTime, setSearchStartTime] = useState('');
+  const [searchEndDate, setSearchEndDate] = useState('');
+  const [searchEndTime, setSearchEndTime] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [availability, setAvailability] = useState([]); // Add a state for availability
+  const [availability, setAvailability] = useState([]);
 
   useEffect(() => {
     async function fetchDoctors() {
       try {
-        const response = await axios.get("http://localhost:8000/patient/viewDoctors", {
-          withCredentials: true
+        const response = await axios.get('http://localhost:8000/patient/viewDoctors', {
+          withCredentials: true,
         });
         setDoctors(response.data);
       } catch (error) {
@@ -50,9 +52,27 @@ const DoctorList = () => {
     const specialityMatch =
       searchSpeciality === '' || doctor.speciality.toLowerCase().includes(searchSpeciality.toLowerCase());
 
-    // Filter doctors by date and time
-    const dateMatch = (searchDate && doctor.availability.find((a) => a.StartDate.includes(searchDate))) || !searchDate;
-    const timeMatch = (searchTime && doctor.availability.find((a) => a.StartDate.includes(searchDate) && a.StartDate.includes(searchTime))) || !searchTime;
+    // Filter doctors by date and time range
+    const dateMatch =
+      (searchStartDate &&
+        doctor.availability.find(
+          (a) =>
+            new Date(a.StartDate).toLocaleDateString('en-US') ===
+            new Date(searchStartDate).toLocaleDateString('en-US')
+        )) ||
+      !searchStartDate;
+
+    const timeMatch =
+      (searchStartTime &&
+        searchEndTime &&
+        doctor.availability.find(
+          (a) =>
+            new Date(a.StartDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) >=
+              searchStartTime &&
+            new Date(a.EndDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) <=
+              searchEndTime
+        )) ||
+      !searchStartTime || !searchEndTime;
 
     return nameMatch && specialityMatch && dateMatch && timeMatch;
   });
@@ -73,7 +93,7 @@ const DoctorList = () => {
   const handleViewAvailability = async (doctor) => {
     try {
       const response = await axios.get(`http://localhost:8000/patient/viewDoctorAppointments/${doctor.username}`, {
-        withCredentials: true
+        withCredentials: true,
       });
       setAvailability(response.data);
     } catch (error) {
@@ -98,23 +118,37 @@ const DoctorList = () => {
       >
         <option value="">All Specialities</option>
         <option value="ENT">ENT</option>
-        <option value="Nervous System">Nearvous System</option>
+        <option value="Nervous System">Nervous System</option>
         <option value="Plastic Surgery">Plastic Surgery</option>
         <option value="Death">Death</option>
         {/* Add other speciality options as needed */}
       </Select>
       <Input
         type="date"
-        placeholder="Search by Date"
-        value={searchDate}
-        onChange={(e) => setSearchDate(e.target.value)}
+        placeholder="Search by Start Date"
+        value={searchStartDate}
+        onChange={(e) => setSearchStartDate(e.target.value)}
         mb={2}
       />
       <Input
         type="time"
-        placeholder="Search by Time"
-        value={searchTime}
-        onChange={(e) => setSearchTime(e.target.value)}
+        placeholder="Search by Start Time"
+        value={searchStartTime}
+        onChange={(e) => setSearchStartTime(e.target.value)}
+        mb={2}
+      />
+      <Input
+        type="date"
+        placeholder="Search by End Date"
+        value={searchEndDate}
+        onChange={(e) => setSearchEndDate(e.target.value)}
+        mb={2}
+      />
+      <Input
+        type="time"
+        placeholder="Search by End Time"
+        value={searchEndTime}
+        onChange={(e) => setSearchEndTime(e.target.value)}
         mb={2}
       />
       <Table variant="simple">
@@ -131,7 +165,7 @@ const DoctorList = () => {
               key={index}
               onClick={() => {
                 handleSelectDoctor(doctor);
-                handleViewAvailability(doctor); // Fetch availability when clicking on a doctor
+                handleViewAvailability(doctor);
               }}
               style={{ cursor: 'pointer' }}
             >
@@ -153,7 +187,6 @@ const DoctorList = () => {
             <p>Speciality: {selectedDoctor?.speciality}</p>
             <p>Affiliation: {selectedDoctor?.affiliation}</p>
             <p style={{ marginBottom: '30px' }}>Educational background: {selectedDoctor?.background}</p>
-            {/* Add more doctor details here */}
             {selectedDoctor?.availability.length > 0 && (
               <div>
                 <strong style={{ fontWeight: 'bold' }}>Available Appointments</strong>

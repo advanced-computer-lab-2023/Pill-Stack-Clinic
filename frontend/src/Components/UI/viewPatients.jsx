@@ -6,6 +6,7 @@ import {
   Table,
   Thead,
   Tbody,
+  Text,
   Tr,
   Th,
   Td,
@@ -31,6 +32,9 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@chakra-ui/react'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 const DoctorPatientsTable = () => {
@@ -47,7 +51,8 @@ const DoctorPatientsTable = () => {
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   useEffect(() => {
     async function fetchPatients() {
       try {
@@ -69,7 +74,13 @@ const DoctorPatientsTable = () => {
   const filteredPatients = patients.filter(patient => {
     const statusMatches = statusFilter === 'All' || patient.Status === statusFilter;
     const nameMatches = patient.PatientName && patient.PatientName.toLowerCase().includes(searchInput.toLowerCase());
-    return statusMatches && nameMatches;
+    const dateMatches = (
+      startDate === null ||
+      endDate === null ||
+      (new Date(patient.StartDate) >= startDate && new Date(patient.StartDate) <= endDate)
+    );
+
+    return statusMatches && nameMatches && dateMatches;
   });
 
   const openPatientDetails = (patient) => {
@@ -141,28 +152,47 @@ const DoctorPatientsTable = () => {
 
   return (
     <Container maxW="container.xl">
-      <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      {confirmationMessage && (
-      <Alert status="success">
-        <AlertIcon />
-        <AlertTitle>Confirmation</AlertTitle>
-        <AlertDescription>{confirmationMessage}</AlertDescription>
-      </Alert>
-    )}
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+        {confirmationMessage && (
+          <Alert status="success">
+            <AlertIcon />
+            <AlertTitle>Confirmation</AlertTitle>
+            <AlertDescription>{confirmationMessage}</AlertDescription>
+          </Alert>
+        )}
         <h1>My Patients</h1>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="All">All</option>
           <option value="upcoming">Upcoming</option>
           <option value="completed">completed</option>
           <option value="cancelled">cancelled</option>
           <option value="rescheduled">rescheduled</option>
-        </select>
+        </Select>
         <Input
           type="text"
           placeholder="Search by Patient Name"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
+        <Text>Filter by Date Range:</Text>
+        <Box display="flex" justifyContent="space-between" mb="4">
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="Start Date"
+          />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="End Date"
+          />
+        </Box>
         <Table variant="simple">
           <Thead>
             <Tr>
