@@ -96,7 +96,10 @@ export const Login = () => {
           <Link to="/forgot-password">Forgot Password?</Link>
           <Text mt={2}>Don't have an account?</Text>
           <Link to="/patient-register">Register as Patient</Link>
-       
+          
+          
+          <Link to="/doctor-register">Register as Doctor</Link>
+
         </Box>
         
       </Box>

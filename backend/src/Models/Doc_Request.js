@@ -54,6 +54,18 @@ const docReqSchema = new Schema({
     Speciality: {
       type: String,
     },
+    idDocument: {
+      data: Buffer,
+      contentType: String,
+    },
+    medicalLicenseDocument: {
+      data: Buffer,
+      contentType: String,
+    },
+    medicalDegreeDocument: {
+      data: Buffer,
+      contentType: String,
+    }
 
 }, { timestamps: true });
 docReqSchema.pre('save', function(next) {

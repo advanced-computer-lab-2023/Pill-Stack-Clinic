@@ -29,6 +29,9 @@ import Packages from "./Components/Pages/Packages.jsx";
 import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
+import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
+
+
 function App() {
   
   const loginIns = ["Username", "Password"];
@@ -41,8 +44,8 @@ function App() {
         <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />
         <Route path="/" element={<Login />} />
         <Route path="/admin-home" element={<AdminHome />} />
-        <Route path="admin-home/admin-packs" element={<AdminPacks />} />
-        <Route path="admin-home/admin-users" element={<UserManagement/>} />
+        <Route path="/admin-packs" element={<AdminPacks />} />
+        <Route path="/admin-users" element={<UserManagement/>} />
         <Route path="home/bookAppointments" element={<BookAppointments/>} />
         <Route path="home/familyAppointments" element={<FamilyAppointments/>} />
         <Route path="home/payAppointment/:doctorUsername/:appointmentId/:amount/:memberID/:manualMem" element={<PayAppointments/>} />
@@ -50,18 +53,19 @@ function App() {
         <Route path="/completion/:username/:packID" element={<PackCompletion />} />
         <Route path="/home/viewPackages/:username" element={<Packages/>}/>
         <Route path="/home/payPack/:username/:packID" element={<PayPackage />}/>
-        <Route path="admin-home/admin-requests" element={ <DocReqs/>} />
+        <Route path="/admin-requests" element={ <DocReqs/>} />
         <Route path="home/viewDoctors" element={<DoctorList/>} />
         <Route path="home/apptsP" element={<AppointmentSearchAndTable/>} />
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
         <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  
         <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
         <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
-        <Route path="Unsigned-doctor-home/contract" element={<DoctorContract/>} />  
+        <Route path="doctor-home/contract" element={<DoctorContract/>} />  
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/PasswordReset" element={<PasswordReset/>} />
-        <Route path="/my-health-records/:patientUsername/:patientName" element={<HealthRecords />} />
+        <Route path="/my-health-records/:Username" element={<HealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
+        <Route path="/doctor-register" element={<DoctorRegisterPage />} />
 
       </Routes>
     </div>
