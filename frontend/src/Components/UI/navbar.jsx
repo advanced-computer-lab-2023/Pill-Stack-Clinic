@@ -83,9 +83,25 @@ const WithSubnavigation = ({ username, onOpenModal }) => {
             Log Out
           </Button>
           <Menu>
-  <MenuButton as={Avatar} name={ username }  _hover={{ backgroundColor: 'grey', cursor: 'pointer'}}  style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
-    {/* You can add an icon or text inside the circular button if needed */}
-  </MenuButton>
+  
+          <MenuButton
+  as={Avatar}
+  name={username}
+  _hover={{ backgroundColor: 'grey', cursor: 'pointer' }}
+  style={{
+    margin: 'auto',
+    borderRadius: 'full',
+    border: '2px solid white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxSizing: 'border-box', // Ensure padding and border are included in total width and height
+    padding: '17px', // Adjust padding as needed
+  }}
+>
+  {/* Content goes here */}
+</MenuButton>
+
   <MenuList>
     <MenuGroup title="Profile">
       <MenuItem>My Account</MenuItem>

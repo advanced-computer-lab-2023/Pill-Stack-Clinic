@@ -110,7 +110,7 @@ export const AdminHome = () => {
 
   return (
     <>
-      <WithSubnavigation username={adminData.Name} onOpenModal={onOpen} />
+      <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} />
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
         <h4>
           Welcome Docc {adminData[0]?.Email} <span>{username}</span>
