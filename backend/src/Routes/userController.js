@@ -122,7 +122,6 @@ const searchDoctors = async (req, res) => {
       let newDoc=[];
        doctors.forEach((doctor)=>{
          let newAvailability=[]
-         console.log(doctor.Name)
          doctor.Availability.forEach((availability)=>{
             const appStartDate=new Date(availability.StartDate);
             const formattedAppointmentStartDate = appStartDate.toISOString().split('T')[0];
@@ -299,19 +298,31 @@ const viewPatientWallet = async (req, res) => {
 const viewDoctors = async (req, res) => {
    try {
       const doctors = await doctorModel.find();
-     //const user = await userModel.findOne({ Username: "omarr" });
-     const username = req.user.Username;
-     console.log(username);
-     const user = await userModel.findOne({Username:username});
+     const userId = req.user.id;
+     const user = await userModel.findById(userId);
       if (user) {
-         const package = await packageModel.findOne({ Package_Name: user.healthPackage.Package_Name });
-         const discount = package ? package.Session_Discount / 100 : 0;
-
+         var discount=0;
+         const healthPackage = user.healthPackage;
+         if (healthPackage && healthPackage.length !== 0) {
+            for (const pack of healthPackage) {
+               if (pack.Status === 'Subscribed') {
+                  const date = new Date();
+                  if (pack.Renewl_Date >= date) {
+                     const fullPackage = await packageModel.findOne({ Package_Name: pack.Package_Name });
+                     if (pack.Owner) {
+                        discount=fullPackage.Session_Discount/100;
+                      } else {
+                        discount=fullPackage.Family_Discount/100;  
+                      }
+                  }
+               }
+            }
+         }
          const updatedDoctors = doctors.map((doctor) => {
             return {
                username:doctor.Username,
                name: doctor.Username,
-               price: (doctor.HourlyRate * 1.1) * (1 - discount),
+               price: Math.ceil((doctor.HourlyRate * 1.1) * (1 - discount)),
                speciality: doctor.Speciality,
                availability: doctor.Availability.map((availability) => ({
                   StartDate: availability.StartDate,
@@ -320,10 +331,8 @@ const viewDoctors = async (req, res) => {
                
                 affiliation:doctor.Affiliation,
                 background:doctor.EducationalBackground
-               // availability: formattedAvailability[0],
             };
          });
-         // Render the EJS template with the JSON data
          res.send(updatedDoctors);
       } else {
          // Handle the case when the user is not found

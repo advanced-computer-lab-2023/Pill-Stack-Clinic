@@ -38,16 +38,11 @@ router.get("/config",(req,res)=>{
 router.post('/pay/confirm',userVerification, async (req, res) => {
   console.log('starting here Confirm');
     const amount=req.body.amount;
-    console.log(amount);
     const linkedFamMember=req.body.member; //let it be ID
-    console.log(linkedFamMember);
     const manualFamMember=req.body.manualMem;
-    console.log(manualFamMember);
     const appointmentId=req.body.appid; //from doctor's available appointment;
-    console.log(appointmentId);
 
     const doctorUserName=req.body.doctorUsername;
-    console.log(doctorUserName);
 
     const username=req.user.Username;
    const user=await userModel.findOne({Username:username});
