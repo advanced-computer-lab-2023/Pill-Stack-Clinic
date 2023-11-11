@@ -37,7 +37,6 @@ export const BookAppointments = () => {
 
   const [time, setTime] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState(doctors);
-  const [appointmentsNotFound, setAppointmentsNotFound] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('');
@@ -92,7 +91,6 @@ export const BookAppointments = () => {
       { withCredentials: true }
     );
     setFilteredAppointments(response.data);
-    setAppointmentsNotFound(filteredAppointments.length === 0);
     
   };
 
@@ -120,7 +118,6 @@ export const BookAppointments = () => {
   const handleViewAllAppointments = () => {
     // Clear search results to display all appointments
     setFilteredAppointments(doctors);
-    setAppointmentsNotFound(false);
   };
 
   const openModal = async (doctorUsername, appointmentId) => {
@@ -309,11 +306,7 @@ export const BookAppointments = () => {
         </HStack>
       </form>
 
-      {appointmentsNotFound && (
-        <Box mt={4}>
-          <p>No appointments found matching the criteria.</p>
-        </Box>
-      )}
+     
 
       <Table variant="simple" mt={4}>
         <Thead>
