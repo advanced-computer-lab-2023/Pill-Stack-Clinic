@@ -24,7 +24,7 @@ import {
 
 
 function PatientShortcuts(props) {
-  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username, setTab, setInputs } = props;
+  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username,name, setTab, setInputs } = props;
   
   
   return (
@@ -200,9 +200,9 @@ _hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md'  onClick={() => navigate(`/my-health-records/${username}`)}
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md'  onClick={() => navigate(`/my-health-records/${username}/${name}`)}
 _hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
-  <LinkOverlay  onClick={() => navigate(`/my-health-records/${username}`)}></LinkOverlay>
+  <LinkOverlay  onClick={() => navigate(`/my-health-records/${username}/${name}`)}></LinkOverlay>
   <AbsoluteCenter>
     
       <Box fontSize="16px" mb="10px">HealthRecords</Box>

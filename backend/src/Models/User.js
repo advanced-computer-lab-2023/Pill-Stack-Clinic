@@ -45,6 +45,8 @@ const userSchema = new Schema({
   },
   HealthRecords: [
     {
+      PatientName: { type:String, required: true },
+      DoctorName:{type: String, required: true},
       RecordDetails: { type: String, required: true },
       RecordDate: { type: Date, required: true },
     },

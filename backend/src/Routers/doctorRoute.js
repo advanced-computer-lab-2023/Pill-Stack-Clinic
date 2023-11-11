@@ -11,7 +11,7 @@ const {viewProfile,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability
-        } = require('../Routes/doctorController.js');
+       ,updateContractStatus } = require('../Routes/doctorController.js');
 
 
 router.post('/addHealthRecord', userVerification, addHealthRecord);
@@ -35,6 +35,6 @@ router.delete('/contract/:contractId', userVerification, deleteContract);
 router.put('/:doctorId/activate-delete-contract', userVerification, activateAndDeleteContract);
 router.post('/availability', userVerification, addAvailability);
 router.get('/availability', userVerification, viewAvailability);
-
+router.post('/updateContractStatus',userVerification,updateContractStatus);
 
 module.exports = router;

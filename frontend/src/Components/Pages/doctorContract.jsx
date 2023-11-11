@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -18,29 +18,66 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 import { FaFileContract } from 'react-icons/fa';
 
 const theme = extendTheme({
-    styles: {
-      global: (props) => ({
-        'html, body': {
-          bg: props.colorMode === 'dark' ? 'gray.800' : 'white',
-          color: props.colorMode === 'dark' ? 'white' : 'gray.800',
-        },
-      }),
-    },
-  });
-  
+  styles: {
+    global: (props) => ({
+      'html, body': {
+        bg: props.colorMode === 'dark' ? 'gray.800' : 'white',
+        color: props.colorMode === 'dark' ? 'white' : 'gray.800',
+      },
+    }),
+  },
+});
 
 const Contract = () => {
+  const navigate = useNavigate();
+  const [cookies, removeCookie] = useCookies([]);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const verifyCookie = async () => {
+      if (!cookies.token) {
+        navigate('/');
+      }
+      const { data } = await axios.post('http://localhost:8000', {}, { withCredentials: true });
+      const { status, user } = data;
+      setUsername(user);
+      return status
+        ? toast(`Hello ${user}`, {
+            position: 'top-right',
+          })
+        : (removeCookie('token'), navigate('/'));
+    };
+    verifyCookie();
+  }, [cookies, navigate, removeCookie]);
+
   const [accepted, setAccepted] = useState(false);
   const [rejected, setRejected] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState('');
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     setConfirmationAction('accept');
     setConfirmationOpen(true);
+    const doctorUsername = username;
+    try {
+      // Send a request to update the contract status
+      await axios.post('http://localhost:8000/doctor/updateContractStatus', {
+      username: doctorUsername,
+      },{withCredentials:true});
+      // Update the local state
+      setAccepted(true);
+      setRejected(false);
+    } catch (error) {
+      console.error('Error updating contract status:', error);
+      // Handle the error as needed
+    }
   };
 
   const handleReject = () => {
@@ -52,6 +89,8 @@ const Contract = () => {
     if (action === 'accept') {
       setAccepted(true);
       setRejected(false);
+      // Navigate to the doctor's home page route
+      navigate('/doctor-home'); // Replace with your actual route
     } else if (action === 'reject') {
       setAccepted(false);
       setRejected(true);
@@ -79,51 +118,54 @@ const Contract = () => {
           </HStack>
           <Text>
             {/* Your contract text goes here */}
-          
+            Dear [Name of Clinic] Management,
 
-Dear [Name of Clinic] Management,
-
-This Contract ("Contract") is entered into on this [Date], by and between [Doctor's Full Name], hereinafter referred to as "Doctor," and [Name of Clinic], hereinafter referred to as the "Clinic."
+This Contract ("Contract") is entered into on this [Date].
 
 1. Engagement
-1.1 The Clinic hereby engages the Doctor as a licensed and qualified medical professional to provide medical services within the Clinic.
+1.1 The Clinic hereby engages the Doctor as a licensed and qualified.
 
 2. Term
-2.1 This Contract shall commence on [Start Date] and continue for an initial term of [Initial Term], and may be renewed or extended by mutual agreement of both parties.
+2.1 This Contract shall commence on [Start Date] and continue for .
 
 3. Duties and Responsibilities
 3.1 The Doctor agrees to:
-    - Provide medical services in accordance with applicable laws and regulations.
-    - Maintain proper records of patients' medical histories, treatment plans, and other relevant information.
-    - Attend to patients as required, ensuring high-quality medical care.
+    - Provide medical services in accordance with applicable laws.
+    - Maintain proper records of patients' medical histories, .
+    - Attend to patients as required, ensuring high-quality .
     - Comply with all relevant clinic policies, rules, and regulations.
 3.2 The Clinic agrees to:
-    - Provide necessary facilities, equipment, and staff for the Doctor to carry out their duties.
+    - Provide necessary facilities, equipment, and staff for .
     - Ensure a safe and hygienic working environment for the Doctor.
-    - Assist in the administrative aspects of the Doctor's practice within the Clinic.
+    - Assist in the administrative aspects of the Doctor.
 
 4. Compensation
-4.1 The Doctor will be compensated according to the agreed-upon terms and conditions, which include [Compensation Details].
+4.1 The Doctor will be compensated according to the agreed-upon terms.
 
 5. Confidentiality
-5.1 Both parties agree to maintain strict confidentiality regarding patient information, clinic operations, and any other confidential or proprietary information obtained during the term of this Contract.
+5.1 Both parties agree to maintain strict confidentiality .
 
 6. Termination
-6.1 Either party may terminate this Contract with written notice to the other party, subject to the terms and conditions outlined in this Contract.
+6.1 Either party may terminate this Contract with writ.
 
 7. Governing Law
-7.1 This Contract shall be governed by and construed in accordance with the laws of [State].
+7.1 This Contract shall be governed by and construed .
 
 8. Entire Agreement
-8.1 This Contract contains the entire agreement between the parties and supersedes all previous agreements and understandings, whether written or oral.
-
-IN WITNESS WHEREOF, the parties hereto have executed this Contract as of the date first above written.
+8.1 This Contract contains the entire agreement betwee.
+, the parties hereto have executed this Contract as of the .
 
 [Doctor's Full Name]                       [Name of Clinic]
-Printed Name: doctor       Printed Name: pill stack
+Printed Name: doctor       Printed Name: {username}
             {/* ... (contract text) */}
           </Text>
-          <div style={{ position: 'absolute', top: '850px', right: '8px' }}>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '12px',
+              right: '8px',
+            }}
+          >
             {/* Use inline CSS to position the buttons at the top-right corner */}
             <Button
               colorScheme={accepted ? 'green' : 'gray'}
@@ -160,7 +202,6 @@ Printed Name: doctor       Printed Name: pill stack
         </Modal>
       </VStack>
     </Container>
-
   );
 };
 
@@ -173,5 +214,4 @@ function DoctorContract() {
     </ChakraProvider>
   );
 }
-
 export default DoctorContract;

@@ -96,7 +96,7 @@ export const Home = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
-        navigate("/login");
+        navigate("/");
       }
       const { data } = await axios.post(
         "http://localhost:8000",
@@ -109,7 +109,7 @@ export const Home = () => {
         ? toast(`Hello ${user}`, {
             position: "top-right",
           })
-        : (removeCookie("token"), navigate("/login"));
+        : (removeCookie("token"), navigate("/"));
     };
     verifyCookie();
 
@@ -268,7 +268,7 @@ export const Home = () => {
   
   const Logout = () => {
     removeCookie("token");
-    navigate("/signup");
+    navigate("/");
   };
 
 
@@ -308,7 +308,7 @@ export const Home = () => {
           <Box style={{ margin: "0 10px", flex: 1 }}>
             <PatientShortcuts openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
             setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal}
-            navigate={navigate} username={username} style={{ height: "100%" }} />
+            navigate={navigate} username={username} name={patientData.Name} style={{ height: "100%" }} />
           </Box>
         </Flex>
 

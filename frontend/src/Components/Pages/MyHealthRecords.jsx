@@ -14,13 +14,13 @@ import {
 } from '@chakra-ui/react';
 
 const MyHealthRecords = () => {
-  const { Username } = useParams();
+  const { patientUsername, patientName } = useParams();
   const [healthRecords, setHealthRecords] = useState([]);
 
   useEffect(() => {
     const fetchHealthRecords = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/patient/viewMyHealthRecords/${Username}`, { withCredentials: true });
+        const response = await axios.get(`http://localhost:8000/patient/viewMyHealthRecords/${patientUsername}/${patientName}`, { withCredentials: true });
         if (response.status === 200) {
           setHealthRecords(response.data.healthRecords);
         } else {
@@ -32,12 +32,12 @@ const MyHealthRecords = () => {
     };
 
     fetchHealthRecords();
-  }, [Username]);
+  }, [patientUsername]);
 
   return (
     <Box p={4}>
       <Text fontSize="xl" fontWeight="bold">
-        Health Records for {Username}
+        Health Records for {patientUsername}
       </Text>
       <Table variant="simple" mt={4}>
         <Thead>

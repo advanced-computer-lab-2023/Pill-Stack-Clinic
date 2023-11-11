@@ -165,7 +165,8 @@ router.post("/payPack",userVerification,async (req,res,next)=>{
 
 router.post('/payPack/confirm',userVerification, async (req, res) => {
    const packageID=req.body.packageID;
-   console.log(packageID);
+   console.log("DAREEENNNN",packageID);
+   
    const pack= await packageModel.findById(packageID);
    if(!pack){
       res.status(404).send("Package Not Found");

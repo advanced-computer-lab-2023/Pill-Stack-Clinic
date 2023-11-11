@@ -124,7 +124,7 @@ const PrescriptionViewer = () => {
               <Td>{prescription.Medicine[0].MedicineID}</Td>
               <Td>{prescription.Medicine[0].Quantity}</Td>
               <Td>{prescription.Medicine[0].Instructions}</Td>
-              <Td>{prescription.Date}</Td>
+              <Td>{new Date(prescription.Date).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
               <Td>{prescription.DocUsername}</Td>
               <Td>{prescription.Status}</Td>
               <Td>

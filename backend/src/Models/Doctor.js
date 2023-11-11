@@ -77,14 +77,25 @@ const doctorSchema = new Schema({
         }
               })
     ],
-    HealthRecords: [
+    HealthRecords:[
       {
         PatientUsername: { type: String, required: true },
         RecordDetails: { type: String, required: true },
         RecordDate: { type: Date, required: true },
       },
-    ]
-
+    ],
+    idDocument: {
+      data: Buffer,
+      contentType: String,
+    },
+    medicalLicenseDocument: {
+      data: Buffer,
+      contentType: String,
+    },
+    medicalDegreeDocument: {
+      data: Buffer,
+      contentType: String,
+    }
 }, { timestamps: true });
 doctorSchema.pre('save', function(next) {
   const user = this;

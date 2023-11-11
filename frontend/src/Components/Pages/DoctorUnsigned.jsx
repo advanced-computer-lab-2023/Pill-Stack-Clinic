@@ -21,7 +21,7 @@ export const UnsignedDoctor = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
-        navigate("/login");
+        navigate("/");
       }
       const { data } = await axios.post("http://localhost:8000", {}, { withCredentials: true });
       const { status, user } = data;
@@ -30,7 +30,7 @@ export const UnsignedDoctor = () => {
         ? toast(`Hello ${user}`, {
             position: "top-right",
           })
-        : (removeCookie("token"), navigate("/login"));
+        : (removeCookie("token"), navigate("/"));
     };
     verifyCookie();
 
@@ -58,7 +58,7 @@ export const UnsignedDoctor = () => {
 
   const Logout = () => {
     removeCookie("token");
-    navigate("/signup");
+    navigate("/");
   };
 
   const handleChangePass = async () => {

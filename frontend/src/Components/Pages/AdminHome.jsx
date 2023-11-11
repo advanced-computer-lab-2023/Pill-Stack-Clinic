@@ -21,7 +21,7 @@ export const AdminHome = () => {
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
-        navigate("/login");
+        navigate("/");
       }
       const { data } = await axios.post("http://localhost:8000", {}, { withCredentials: true });
       const { status, user } = data;
@@ -30,7 +30,7 @@ export const AdminHome = () => {
         ? toast(`Hello ${user}`, {
             position: "top-right",
           })
-        : (removeCookie("token"), navigate("/login"));
+        : (removeCookie("token"), navigate("/"));
     };
     verifyCookie();
 
@@ -58,7 +58,7 @@ export const AdminHome = () => {
 
   const Logout = () => {
     removeCookie("token");
-    navigate("/signup");
+    navigate("/");
   };
 
   const handleChangePass = async () => {
@@ -89,12 +89,14 @@ export const AdminHome = () => {
           position: 'top-right',
           autoClose: 3000,
         });
+        onClose();
       } else {
         toast.error(response.data.message, {
           position: 'top-right',
           autoClose: 3000,
         });
       }
+
     } catch (error) {
       console.error('Error:', error.message);
       // Log the detailed error response for debugging

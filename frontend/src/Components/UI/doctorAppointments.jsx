@@ -81,6 +81,7 @@ export const ViewAppointments = () => {
         <Thead>
           <Tr>
             <Th>Patient Name</Th>
+            <Th>Status</Th>
             <Th>Appointment Date</Th>
           </Tr>
         </Thead>
@@ -95,7 +96,9 @@ export const ViewAppointments = () => {
             filteredAppointments.map((appointment, index) => (
               <Tr key={index}>
                 <Td>{appointment.PatientName}</Td>
-                <Td>{appointment.StartDate}</Td>
+                <Td>{appointment.Status}</Td>
+                <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
+                
               </Tr>
             ))
           ) : (

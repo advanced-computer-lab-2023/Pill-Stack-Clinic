@@ -3,6 +3,7 @@ const doctorModel = require("../Models/Doctor");
 const adminModel = require("../Models/Admin");
 const docModel = require("../Models/Doc_Request");
 const otpModel = require("../Models/Otp");
+const multer = require('multer');
 
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
@@ -48,50 +49,60 @@ const secPass = await bcrypt.hash(req.body.password, salt)
     console.error(error);
   }
 };
-//CREATED AS AN APPLICATION NOT AN ACCOUNT 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).fields([
+  { name: 'idDocument', maxCount: 1 },
+  { name: 'medicalLicenseDocument', maxCount: 1 },
+  { name: 'medicalDegreeDocument', maxCount: 1 },
+]);
+
 module.exports.DoctorRegister = async (req, res, next) => {
-  uploadGeneralFiles(req, res, async (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       return res.status(500).json({ error: 'Error uploading documents.' });
     }
-  try {
-    const existingUserinPatient = await userModel.findOne({ Username:req.body.username });
-    const existingUserinDoctor = await doctorModel.findOne({ Username:req.body.username });
-    const existingUserinAdmin = await adminModel.findOne({ Username:req.body.username });
 
+    try {
+      const existingUserinPatient = await userModel.findOne({ Username: req.body.Username });
+      const existingUserinDoctor = await doctorModel.findOne({ Username: req.body.Username });
+      const existingUserinAdmin = await adminModel.findOne({ Username: req.body.Username });
 
-    if (existingUserinPatient || existingUserinDoctor || existingUserinAdmin) {
-      return res.json({ message: "User already exists" });
+      if (existingUserinPatient || existingUserinDoctor || existingUserinAdmin) {
+        return res.json({ message: 'User already exists' });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const secPass = req.body.Password ? await bcrypt.hash(req.body.Password, salt) : undefined;
+
+      const user = await docModel.create({
+        Username: req.body.Username,
+        Name: req.body.Name,
+        Email: req.body.Email,
+        Password: secPass, // Provide the Password value
+        DateOfBirth: req.body.DateOfBirth,
+        HourlyRate: req.body.HourlyRate,
+        Affiliation: req.body.Affiliation,
+        EducationalBackground: req.body.EducationalBackground,
+        idDocument: req.files && req.files['idDocument'] ? req.files['idDocument'][0].buffer.toString('base64') : undefined,
+        medicalLicenseDocument: req.files && req.files['medicalLicenseDocument'] ? req.files['medicalLicenseDocument'][0].buffer.toString('base64') : undefined,
+        medicalDegreeDocument: req.files && req.files['medicalDegreeDocument'] ? req.files['medicalDegreeDocument'][0].buffer.toString('base64') : undefined,
+      });
+
+      const token = createSecretToken(user._id);
+      res.cookie('token', token, {
+        withCredentials: true,
+        httpOnly: false,
+      });
+
+      res.status(201).json({ message: 'Doctor registered successfully', success: true, user });
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    const salt = await bcrypt.genSalt(10);
-const secPass = await bcrypt.hash(req.body.password, salt) 
-    const user = await docModel.create({    
-      Username: req.body.username, 
-       Name: req.body.name, 
-       Email:req.body.email, 
-       Password:secPass,
-       DateOfBirth: req.body.dob,
-       HourlyRate: req.body.hourly_rate,
-       Affiliation: req.body.affiliation,
-       EducationalBackground: req.body.educational_background,
-       idDocument:req.body.idDocument,
-       medicalLicenseDocument:req.body.medicalLicenseDocument,
-       medicalDegreeDocument:req.body.medicalDegreeDocument });
+  });
+};
 
-       
-    const token = createSecretToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
-    res
-      .status(201)
-      .json({ message: "Doctor registered successfully", success: true, user });
-    next();
-  } catch (error) {
-    console.error(error);
-  }
-})};
 module.exports.addAdmin = async (req, res, next) => {
   try {
     console.log(req.body);
