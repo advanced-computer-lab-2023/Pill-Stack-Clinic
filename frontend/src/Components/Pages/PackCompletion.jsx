@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 export default function Completion() {
   // Use the useParams hook to access the route parameters
   const { username, packID} = useParams();
-
   useEffect(() => {
     // Perform a POST request to the backend here, if needed
     // You can use libraries like Axios or the built-in Fetch API

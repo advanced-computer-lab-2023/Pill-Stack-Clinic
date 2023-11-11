@@ -77,7 +77,7 @@ const doctorSchema = new Schema({
         }
               })
     ],
-    HealthRecords: [
+    HealthRecords:[
       {
         PatientUsername: { type: String, required: true },
         RecordDetails: { type: String, required: true },

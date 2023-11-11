@@ -92,14 +92,16 @@ const AppointmentSearchAndTable = () => {
           <Tr>
             <Th>Appointment Date</Th>
             <Th>Appointment Status</Th>
-            <Th>Actions</Th>
+            <Th>Doctor Name</Th>
           </Tr>
         </Thead>
         <Tbody>
           {filteredAppointments.map((appointment, index) => (
             <Tr key={index}>
-              <Td>{appointment.StartDate}</Td>
+              <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
               <Td>{appointment.Status}</Td>
+              <Td>{appointment.DoctorName}</Td>
+             
               <Td>
                 {/* Add actions as needed */}
               </Td>

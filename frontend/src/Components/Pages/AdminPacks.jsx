@@ -63,11 +63,13 @@ function AdminPacks() {
             family_dis: pFamDiscount
         };
 
-        const response = await axios.post("http://localhost:8000/admin/packages", packageData, {
+    const response = await axios.post("http://localhost:8000/admin/packages", packageData, {
             withCredentials: true,
+        }).catch((err) => {
+            toast.error("err.response.data.message");
         });
         onClose();
-        window.location.reload();
+    
     }
 
 
@@ -131,7 +133,6 @@ function AdminPacks() {
             </ModalContent>
         </Modal>
     </Box>
-    
   );
 }
 

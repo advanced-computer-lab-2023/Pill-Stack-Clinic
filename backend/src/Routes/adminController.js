@@ -140,7 +140,7 @@ res.send(Pack);
 }
 const createPackage = async (req, res) => {
   console.log("Received request body:", req.body);
-
+ try{
     const dupPack = await packageModel.findOne({Package_Name:req.body.packagename});
     const package = new packageModel({
        Package_Name: req.body.packagename, 
@@ -152,19 +152,21 @@ const createPackage = async (req, res) => {
        if(dupPack){
         return res.status(400).send("package already exist").end();
     }
-    
     package.save(function(err){
        if (err) {
-          throw err;
+        throw err;
        }
        else{
         console.log('INSERTED!');
        }
-       
- 
    });
    const Pack = await packageModel.find({});
+  
    res.send(Pack);
+  }
+  catch{
+    res.status(400).send("Invalid inputs");
+  }
 }
 const viewPack=async(req,res)=>{
     const {id}=req.params

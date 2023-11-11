@@ -50,7 +50,7 @@ const DoctorList = () => {
   const filteredDoctors = doctors.filter((doctor) => {
     const nameMatch = doctor.name.toLowerCase().includes(searchName.toLowerCase());
     const specialityMatch =
-      searchSpeciality === '' || doctor.speciality.toLowerCase().includes(searchSpeciality.toLowerCase());
+      searchSpeciality === '' || doctor.speciality && doctor.speciality.toLowerCase().includes(searchSpeciality.toLowerCase());
 
     // Filter doctors by date and time range
     const dateMatch =
@@ -172,6 +172,8 @@ const DoctorList = () => {
               <Td>{doctor.name}</Td>
               <Td>{doctor.speciality}</Td>
               <Td>{doctor.price}</Td>
+             
+
             </Tr>
           ))}
         </Tbody>

@@ -38,7 +38,9 @@ const Package = () =>{
             Seterror(true);
         }
         else{
-            const proc= await axios.post("http://localhost:8000/patient/subscribeWallet",{username:username,packageID:packageID},{withCredentials:true});
+            const proc= await axios.post("http://localhost:8000/patient/subscribeWallet",
+            {username:username,packageID:packageID}
+            ,{withCredentials:true});
             const message=proc.data;
             console.log(message);
              if(message==="Subscribed succsefully"){
@@ -52,6 +54,7 @@ const Package = () =>{
 }
 const GoToStripe =async(packageID)=>{
     console.log(username);
+    console.log(packageID);
     const proc=await axios.post("http://localhost:8000/patient/checkSubscribed",{username:username},{withCredentials:true});
     const message=proc.data;
     console.log(message);
