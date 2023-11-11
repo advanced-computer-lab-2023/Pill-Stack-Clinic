@@ -84,6 +84,7 @@ export const ViewAvailability = () => {
         if(response.data.message==='Availability added successfully'){
             setIsModalOpen(false);
             setIsSucess(true);
+            setAppointments([...appointments, response.data.data]);
             setIsError(false);
         }else{
             setIsError(true);
