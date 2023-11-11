@@ -19,15 +19,19 @@ import {
     AlertIcon,
     AlertTitle,
     AlertDescription,
+    Text,
+    Flex
   } from '@chakra-ui/react';
 
 import axios from 'axios';
+import { MdClear } from 'react-icons/md';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export const ViewAvailability = () => {
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -39,6 +43,8 @@ export const ViewAvailability = () => {
     startTime: '',
     endTime: '',
   });
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
 
 
   useEffect(() => {
@@ -59,14 +65,20 @@ export const ViewAvailability = () => {
   }, []);
 
   useEffect(() => {
-    // Filter appointments based on selectedStatus and selectedDate
     const filtered = appointments.filter((appointment) => {
-    
-      const dateMatches = selectedDate === '' || appointment.StartDate.includes(selectedDate);
+      const dateMatches =
+        (selectedStartDate === null || new Date(appointment.StartDate) >= selectedStartDate) &&
+        (selectedEndDate === null || new Date(appointment.StartDate) <= selectedEndDate);
+
       return dateMatches;
     });
     setFilteredAppointments(filtered);
-  }, [ selectedDate, appointments]);
+  }, [ selectedStartDate, selectedEndDate, appointments]);
+
+  const handleClear = () => {
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+  };
   const openModal = async () => {
     setIsModalOpen(true);
     setIsSucess(false);
@@ -107,16 +119,50 @@ export const ViewAvailability = () => {
       </Alert>
     )}
       <FormControl mb={4}>
-  
-        <Input
-          type="date"
-          placeholder="Filter by Date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
+      
+
+        <Flex alignItems="center" mb={2}>
+          <Text mr={2} fontSize="sm">
+            Filter by Date:
+          </Text>
+
+          <DatePicker
+            selected={selectedStartDate}
+            onChange={(date) => setSelectedStartDate(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="Start Date & Time"
+            size="sm"
+          />
+
+          <Text mx={2} fontSize="sm">
+            to
+          </Text>
+
+          <DatePicker
+            selected={selectedEndDate}
+            onChange={(date) => setSelectedEndDate(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="End Date & Time"
+            size="sm"
+          />
+        </Flex>
+
+        <Button
+          colorScheme="teal"
+          onClick={handleClear}
           size="sm"
           fontSize="sm"
-          mb={2}
-        />
+          leftIcon={<MdClear />}
+          mt={2}
+        >
+          Clear Filters
+        </Button>
       </FormControl>
       <Button colorScheme="teal" onClick={() => openModal()}>
 
