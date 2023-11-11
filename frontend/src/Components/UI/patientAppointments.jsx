@@ -8,27 +8,33 @@ import {
   Th,
   Td,
   Select,
-  Input,
   Button,
   FormControl,
+  Flex,
+  Spacer,
+  Input,
+  Text,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { MdClear } from 'react-icons/md';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const AppointmentSearchAndTable = () => {
   const [appointments, setAppointments] = useState([]);
-  const [filteredAppointments, setFilteredAppointments] = useState(appointments); // Initialize with all appointments
+  const [filteredAppointments, setFilteredAppointments] = useState(appointments);
   const [selectedStatus, setSelectedStatus] = useState('All');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
 
   useEffect(() => {
     async function fetchAppointments() {
       try {
-        // Fetch all appointments
-        const response = await axios.post("http://localhost:8000/patient/allApp", {}, {
-          withCredentials: true
+        const response = await axios.post('http://localhost:8000/patient/allApp', {}, {
+          withCredentials: true,
         });
         setAppointments(response.data);
-        setFilteredAppointments(response.data); // Initialize filteredAppointments with all appointments
+        setFilteredAppointments(response.data);
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
@@ -37,53 +43,86 @@ const AppointmentSearchAndTable = () => {
   }, []);
 
   useEffect(() => {
-    // Filter appointments based on selectedStatus and selectedDate
     const filtered = appointments.filter((appointment) => {
       const statusMatches = selectedStatus === 'All' || appointment.Status === selectedStatus;
       const dateMatches =
-        selectedDate === '' || appointment.StartDate.includes(selectedDate);
+        (selectedStartDate === null || new Date(appointment.StartDate) >= selectedStartDate) &&
+        (selectedEndDate === null || new Date(appointment.StartDate) <= selectedEndDate);
+
       return statusMatches && dateMatches;
     });
     setFilteredAppointments(filtered);
-  }, [selectedStatus, selectedDate, appointments]);
-
-
-  
+  }, [selectedStatus, selectedStartDate, selectedEndDate, appointments]);
 
   const handleClear = () => {
-    // Clear the date and reset the filter
-    setSelectedDate('');
+    setSelectedStatus('All');
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
   };
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md" bg="white" color="black">
       <FormControl mb={4}>
-        <Select
-          placeholder="Filter by Status"
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-          size="sm" // Smaller size
-          fontSize="sm" // Smaller font size
-        >
-          <option value="All">All</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-          <option value="rescheduled">Rescheduled</option>
-          {/* Add other status options as needed */}
-        </Select>
-        <Input
-          type="date"
-          placeholder="Filter by Date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          size="sm" // Smaller size
-          fontSize="sm" // Smaller font size
-          mb={2}
-        />
+        <Flex alignItems="center" mb={2}>
+          <Text mr={2} fontSize="sm">
+            Filter by Status:
+          </Text>
+          <Select
+            placeholder="Select Status"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            size="sm"
+            fontSize="sm"
+          >
+            <option value="All">All</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="rescheduled">Rescheduled</option>
+          </Select>
+        </Flex>
 
-        <Button colorScheme="teal" onClick={handleClear} size="sm" fontSize="sm">
-          Clear
+        <Flex alignItems="center" mb={2}>
+          <Text mr={2} fontSize="sm">
+            Filter by Date:
+          </Text>
+
+          <DatePicker
+            selected={selectedStartDate}
+            onChange={(date) => setSelectedStartDate(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="Start Date & Time"
+            size="sm"
+          />
+
+          <Text mx={2} fontSize="sm">
+            to
+          </Text>
+
+          <DatePicker
+            selected={selectedEndDate}
+            onChange={(date) => setSelectedEndDate(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="End Date & Time"
+            size="sm"
+          />
+        </Flex>
+
+        <Button
+          colorScheme="teal"
+          onClick={handleClear}
+          size="sm"
+          fontSize="sm"
+          leftIcon={<MdClear />}
+          mt={2}
+        >
+          Clear Filters
         </Button>
       </FormControl>
 
@@ -98,13 +137,10 @@ const AppointmentSearchAndTable = () => {
         <Tbody>
           {filteredAppointments.map((appointment, index) => (
             <Tr key={index}>
-              <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
+              <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
               <Td>{appointment.Status}</Td>
               <Td>{appointment.DoctorName}</Td>
-             
-              <Td>
-                {/* Add actions as needed */}
-              </Td>
+              <Td>{/* Add actions as needed */}</Td>
             </Tr>
           ))}
         </Tbody>
