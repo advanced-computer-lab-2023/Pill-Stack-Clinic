@@ -308,7 +308,7 @@ export const Home = () => {
           <Box style={{ margin: "0 10px", flex: 1 }}>
             <PatientShortcuts openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
             setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal}
-            navigate={navigate} username={username} style={{ height: "100%" }} />
+            navigate={navigate} username={username} name={patientData.Name} style={{ height: "100%" }} />
           </Box>
         </Flex>
 
