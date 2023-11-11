@@ -99,9 +99,10 @@ const addFamilyMem = async (req, res) => {
 }
 const searchDoctors = async (req, res) => {
    try {
-       const { name, speciality, date, time  } = req.body;
+       const { name, speciality, startDate, endDate  } = req.body;
        let query = {};
-
+       console.log(startDate);
+       console.log(endDate);
 
        if (name) {
          query["Name"] = { $regex: new RegExp(`.*${name}.*`, 'i') };
@@ -111,11 +112,31 @@ const searchDoctors = async (req, res) => {
            query["Speciality"] = { $regex: new RegExp(speciality, 'i') };
        }
 
-      if (date) {
-         const dateFormatted = new Date(`${date}T${time}:00.000Z`);
-         query["Availability.StartDate"] =  dateFormatted ;
+      // if (date) {
+      //    const dateFormatted = new Date(`${date}T${time}:00.000Z`);
+      //    query["Availability.StartDate"] =  dateFormatted ;
+      // }
+      var doctors = await doctorModel.find(query);
+
+      if(startDate){
+      let newDoc=[];
+       doctors.forEach((doctor)=>{
+         let newAvailability=[]
+         console.log(doctor.Name)
+         doctor.Availability.forEach((availability)=>{
+            const appStartDate=new Date(availability.StartDate);
+            const formattedAppointmentStartDate = appStartDate.toISOString().split('T')[0];
+            if(formattedAppointmentStartDate>=startDate && formattedAppointmentStartDate<=endDate){
+               newAvailability.push(availability);
+            }
+         })
+         doctor.Availability=newAvailability;
+         if(newAvailability.length>0){
+            newDoc.push(doctor);
+         }
+       })
+       doctors=newDoc;
       }
-       const doctors = await doctorModel.find(query);
        res.status(200).json(doctors);
    } catch (error) {
        console.error('Error searching doctors:', error);
@@ -476,8 +497,6 @@ const doctor=req.body.prepDr;
 //gets all appointments for all docs
 const viewAllAvailableAppointments = async (req, res) => {
    try {
-
- 
      const selectedDoctor = await doctorModel.find({});
      var app=[];
 

@@ -33,6 +33,8 @@ export const BookAppointments = () => {
   const [searchName, setSearchName] = useState('');
   const [speciality, setSpeciality] = useState('');
   const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
   const [time, setTime] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState(doctors);
   const [appointmentsNotFound, setAppointmentsNotFound] = useState(false);
@@ -85,9 +87,7 @@ export const BookAppointments = () => {
   };
   const handleSearch = async () => {
     const response = await axios.post(
-      "http://localhost:8000/patient/searchDoctors",{name:searchName,speciality:speciality,
-      date:startDate,
-      time:time
+      "http://localhost:8000/patient/searchDoctors",{name:searchName,speciality:speciality,startDate:startDate,endDate:endDate
     },
       { withCredentials: true }
     );
@@ -95,8 +95,8 @@ export const BookAppointments = () => {
     setAppointmentsNotFound(filteredAppointments.length === 0);
     
   };
+
   const getAmount= async (selectedPatientValue) => {
-    console.log('in getAMount')
     const response = await axios.post(
       "http://localhost:8000/patient/getAmount",{doctor:selectedDoctorUsername},
       { withCredentials: true }
@@ -266,7 +266,6 @@ export const BookAppointments = () => {
         <FormControl>
             <FormLabel>Select Speciality</FormLabel>
             <Select
-              placeholder="All Specialities"
               value={speciality}
               onChange={(e) => setSpeciality(e.target.value)}
             >
@@ -289,14 +288,15 @@ export const BookAppointments = () => {
               onChange={(e) => setStartDate(e.target.value)}
             />
           </FormControl>
-          <FormControl>
-  <FormLabel>Time</FormLabel>
-  <Input
-    type="time"
-    value={time}
-    onChange={(e) => setTime(e.target.value)}
-  />
-</FormControl>
+
+<FormControl>
+            <FormLabel>End Date</FormLabel>
+            <Input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </FormControl>
        
         </Flex>
         <HStack spacing={4} mt={4}>
