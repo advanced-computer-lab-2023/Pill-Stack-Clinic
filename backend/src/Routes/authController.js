@@ -4,6 +4,8 @@ const adminModel = require("../Models/Admin");
 const docModel = require("../Models/Doc_Request");
 const otpModel = require("../Models/Otp");
 const multer = require('multer');
+const storage = multer.memoryStorage();
+module.exports.upload = multer({ storage: storage });
 
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
