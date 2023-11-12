@@ -79,9 +79,10 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout }) => {
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
-          <Button onClick={onLogout} as={'a'} fontSize={'md'} fontWeight={400} variant={'link'}>
+          <Button onClick={onLogout} as='a' fontSize='md' fontWeight={400} variant='link' _hover={{ cursor: 'pointer', textDecoration: 'underline' }}>
             Log Out
-          </Button>
+            </Button>
+
           <Menu>
   
           <MenuButton

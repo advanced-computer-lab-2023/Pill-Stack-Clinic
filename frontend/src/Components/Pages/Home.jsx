@@ -113,21 +113,24 @@ export const Home = () => {
     };
     verifyCookie();
 
-    // Fetch the patient's data
-    const getPatientData = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/patient/profile", {
-          withCredentials: true,
-        });
-        setPatientData(response.data);
-      } catch (error) {
-        console.error("Error fetching patient data:", error);
-      }
-    };
     
     
     getPatientData();
   }, [cookies, navigate, removeCookie]);
+
+
+  // Fetch the patient's data
+  const getPatientData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/patient/profile", {
+        withCredentials: true,
+      });
+      setPatientData(response.data);
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+    }
+  };
+
 
 
   const cancelSubscription = async () => {
@@ -242,6 +245,7 @@ export const Home = () => {
           toast.success('Added Successfuly', {
             position: 'top-right',
           });
+          await getPatientData();
           closeAddFamilyModal(); // Close the modal on success
         } else {
           toast.error('Failed to add family member. Please try again.', {
