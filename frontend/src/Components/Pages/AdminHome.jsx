@@ -112,10 +112,10 @@ export const AdminHome = () => {
 
   return (
     <>
-      <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} />
+      <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} onLogout={Logout} />
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
         <h4>
-          Welcome Docc {adminData[0]?.Email} <span>{username}</span>
+          Welcome Admin {adminData[0]?.Email} <span>{username}</span>
         </h4>
         <Flex>
           <Box style={{ margin: "0 10px", flex: 1 }}>
@@ -131,8 +131,6 @@ export const AdminHome = () => {
             <AdminShortcuts style={{ height: "100%" }} />
           </Box>
         </Flex>
-
-        <button onClick={Logout}>LOGOUT</button>
 
         {/* <DrawerExample isOpen={true} /> Set isOpen prop to true */}
         <Modal

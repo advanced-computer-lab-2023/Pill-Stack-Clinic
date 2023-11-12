@@ -279,6 +279,7 @@ export const Home = () => {
     <WithSubnavigation
     username={patientData.Name}
     onOpenModal={onOpen}
+    onLogout={Logout}
     />
 
  
@@ -312,7 +313,7 @@ export const Home = () => {
           </Box>
         </Flex>
 
-        <button onClick={Logout}>LOGOUT</button>
+        
         <Modal
   isOpen={isSecondModalOpen}
   onClose={onSecondModalClose}

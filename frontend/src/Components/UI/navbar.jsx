@@ -35,7 +35,7 @@ import {
   Image
 } from '@chakra-ui/react'
 
-const WithSubnavigation = ({ username, onOpenModal }) => {
+const WithSubnavigation = ({ username, onOpenModal, onLogout }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -79,7 +79,7 @@ const WithSubnavigation = ({ username, onOpenModal }) => {
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
-          <Button as={'a'} fontSize={'md'} fontWeight={400} variant={'link'} href={'/'}>
+          <Button onClick={onLogout} as={'a'} fontSize={'md'} fontWeight={400} variant={'link'}>
             Log Out
           </Button>
           <Menu>

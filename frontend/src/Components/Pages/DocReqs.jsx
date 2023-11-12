@@ -98,7 +98,7 @@ function DocReqs() {
 
   return (
     <>
-        <Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
+        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
             <Text fontSize={'3xl'} color={'white'} > Doctor Requests </Text>
         </Box>
         <Center>

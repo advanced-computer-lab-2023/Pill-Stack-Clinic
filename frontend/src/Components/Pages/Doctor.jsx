@@ -110,7 +110,7 @@ export const Doctor = () => {
 
   return (
     <>
-      <WithSubnavigation username={doctorData.Name} onOpenModal={onOpen} />
+      <WithSubnavigation username={doctorData.Name} onOpenModal={onOpen} onLogout={Logout} />
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
         <h4>
           Welcome Docc {doctorData[0]?.Email} <span>{username}</span>
@@ -136,7 +136,7 @@ export const Doctor = () => {
           </Box>
         </Flex>
 
-        <button onClick={Logout}>LOGOUT</button>
+        
 
         {/* <DrawerExample isOpen={true} /> Set isOpen prop to true */}
         <Modal

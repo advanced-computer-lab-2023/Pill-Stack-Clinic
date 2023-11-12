@@ -76,7 +76,7 @@ function AdminPacks() {
   return (
     <Box >
         {console.log(packs)}    
-        <Box bg={'#4bbbf3'} p={5} boxShadow='2xl'>
+        <Box bg={"linear-gradient(90deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl'>
             <Text fontSize={'3xl'} color={'white'} >Manage Packages</Text>
         </Box>
         <Box m={10} mt={20} bg='#f5f5f5'>
