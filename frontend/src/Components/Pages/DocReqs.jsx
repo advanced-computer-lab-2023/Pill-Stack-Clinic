@@ -1,5 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import '../UI/button.css'
+import { Buffer } from 'buffer';
 import {
     Box,
     Text,
@@ -40,6 +43,11 @@ function DocReqs() {
     const [reqs, setReqs] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [viewReq, setViewReq] = useState({});
+    const [available,setAvailable]=useState(false);
+    const [ID,SetID]=useState(false);
+    const [Degree,SetDegree]=useState(false);
+    const [License,SetLicense]=useState(false);
+    const navigate = useNavigate();
 
     // use effect to fetch data from backend
 
@@ -49,9 +57,14 @@ function DocReqs() {
             const { data } = await axios.get("http://localhost:8000/admin/applications", {
                 withCredentials: true,
             });
+            setTimeout(() => {
+              setAvailable(true);
+            }, 5000);
+            
+           setReqs(data);
+            
             // sort by date
             data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            setReqs(data);
             } catch (error) {
             console.log(error);
             }
@@ -60,7 +73,12 @@ function DocReqs() {
     }, [reqs]);
 
     const onClose = () => setIsOpen(false);
-
+    const back =()=>  navigate(-1);
+    const handleClose= ()=> {
+      SetDegree(false);
+      SetLicense(false);
+      SetID(false);
+    }
     
     const handleAccept = async () => {
       try {
@@ -95,11 +113,28 @@ function DocReqs() {
         console.log(error);
       }
     };
+    const handleView1 =async ()=>{
+  
+      SetID(true);
+      SetDegree(false);
+      SetLicense(false);
+    };
+    const handleView2 =async ()=>{
+      SetID(false);
+      SetDegree(true);
+      SetLicense(false);
+    };
+    const handleView3 =async ()=>{
+      SetID(false);
+      SetDegree(false);
+      SetLicense(true);
+    };
 
   return (
     <>
         <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
             <Text fontSize={'3xl'} color={'white'} > Doctor Requests </Text>
+            <button className="btn" onClick={back}>back</button>
         </Box>
         <Center>
         <TableContainer w={'90%'}>
@@ -146,7 +181,30 @@ function DocReqs() {
             </Table>
         </TableContainer>
         </Center>
-
+        <Center>
+        <div position='Center'>
+           <Box alignContent='Left' width= '750px' height= '1000px' padding= '10' overflow= 'hidden'>
+             {available &&ID&& <Button float='right' onClick={handleClose}>close</Button>}
+             {available && ID && viewReq.idDocument.contentType=="application/pdf" &&<iframe width='100%' height='100%'
+              src={`data:${viewReq.idDocument.contentType};base64, ${Buffer.from(viewReq.idDocument.data).toString('base64')}`}  />}
+             {available && ID  && viewReq.idDocument.contentType!="application/pdf"  &&<img width='100%' height='100%'
+              src={`data:${viewReq.idDocument.contentType};base64, ${Buffer.from(viewReq.idDocument.data).toString('base64')}`}  />}
+              {available && Degree&& <Button float='right' onClick={handleClose}>close</Button>}
+             {available && Degree && viewReq.medicalLicenseDocument.contentType=="application/pdf" &&<iframe width='100%' height='100%'
+              src={`data:${viewReq.medicalLicenseDocument.contentType};base64, ${Buffer.from(viewReq.medicalLicenseDocument.data).toString('base64')}`}  />}
+             {available && Degree && viewReq.medicalLicenseDocument.contentType!="application/pdf" &&<img width='100%' height='100%'
+              src={`data:${viewReq.medicalLicenseDocument.contentType};base64, ${Buffer.from(viewReq.medicalLicenseDocument.data).toString('base64')}`}  />}
+              {available && License&& <Button float='right' onClick={handleClose}>close</Button>}
+             {available && License && viewReq.medicalDegreeDocument.contentType=="application/pdf" &&<iframe width='100%' height='100%'
+              src={`data:${viewReq.medicalDegreeDocument.contentType};base64, ${Buffer.from(viewReq.medicalDegreeDocument.data).toString('base64')}`}  />}
+             {available && License &&viewReq.medicalDegreeDocument.contentType!="application/pdf" &&<img width='100%' height='100%'
+              src={`data:${viewReq.medicalDegreeDocument.contentType};base64, ${Buffer.from(viewReq.medicalDegreeDocument.data).toString('base64')}`}  />}
+         </Box>
+         <br></br>
+         
+       </div>
+       <br></br>
+        </Center>
         <Drawer onClose={onClose} isOpen={isOpen} size={'sm'}>
         <DrawerOverlay />
         <DrawerContent>
@@ -229,6 +287,9 @@ function DocReqs() {
             </AbsoluteCenter>
             </Box>
             <Text fontSize='3xl'>  <Center> {viewReq.EducationalBackground} </Center></Text>
+             <Button onClick={handleView1}>View ID Doc</Button>
+            <Button onClick={handleView2}>View Degree</Button>
+            <Button onClick={handleView3}>View License</Button>
       </Stack>
             </Flex>
             

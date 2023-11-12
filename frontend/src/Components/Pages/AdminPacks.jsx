@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import PackageCard from '../UI/PackageCard';
+import '../UI/button.css'
 import {
     Box,
     Button,
@@ -26,7 +27,9 @@ import {
 function AdminPacks() {
     const [packs, setPacks] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const [count,Setcount]=useState(0);
+    const navigate = useNavigate();
+    const back =()=>  navigate(-1);
 
     useEffect(() => {
         const getPacks = async () => {
@@ -35,7 +38,10 @@ function AdminPacks() {
             });
             setPacks(data);
         };
-        getPacks();
+        setTimeout(() => {
+            toast.success("added Succesfully");
+         }, 5000);
+         getPacks();
     }, [packs]);
 
     const handleModal = () => {
@@ -49,7 +55,32 @@ function AdminPacks() {
         const pPharmDiscount = document.getElementById('pPharmDiscount').value;
         const pSessionDiscount = document.getElementById('pSessionDiscount').value;
         console.log(pName, pPrice, pFamDiscount, pPharmDiscount, pSessionDiscount);
-
+        let test=true;
+        if(pName==''){
+            test=false;
+        }
+        if(pPrice<0){
+            test=false;
+            toast.error("Price can not be negative");
+        }
+        else
+        if(pFamDiscount>100 || pFamDiscount<0){
+            test=false;
+            toast.error("Family Discount must be between [0,100]");
+           
+        }
+        else
+        if(pPharmDiscount>100 || pPharmDiscount<0){
+            test=false;
+            toast.error("Session Discount must be between [0,100]");
+            
+        }else
+        if(pSessionDiscount>100 || pSessionDiscount<0){
+            test=false;
+            toast.error("Pharmacy Discount must be between [0,100]");
+        }
+        
+        if(test){
         const packageData = {
             //       Package_Name: req.body.packagename, 
     //    Price: req.body.price, 
@@ -62,6 +93,7 @@ function AdminPacks() {
             pharmacy_dis: pPharmDiscount,
             family_dis: pFamDiscount
         };
+    
 
     const response = await axios.post("http://localhost:8000/admin/packages", packageData, {
             withCredentials: true,
@@ -69,7 +101,9 @@ function AdminPacks() {
             toast.error("err.response.data.message");
         });
         onClose();
-    
+        toast.success("Package added");
+        Setcount(count+1);
+        }
     }
 
 
@@ -78,6 +112,7 @@ function AdminPacks() {
         {console.log(packs)}    
         <Box bg={"linear-gradient(90deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl'>
             <Text fontSize={'3xl'} color={'white'} >Manage Packages</Text>
+            <button className="btn" onClick={back}>back</button>
         </Box>
         <Box m={10} mt={20} bg='#f5f5f5'>
             {
@@ -85,7 +120,7 @@ function AdminPacks() {
                 // <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={5} rounded={5} flexDirection={'column'}>
                     <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(300px, 0.9fr))' p={15}>
                     {packs.map((pack) => (
-                        <PackageCard key={pack.id} pack={pack} />
+                        <PackageCard key={pack.id} pack={pack} count={count}/>
                     ))}
                     </SimpleGrid>
                 // </Box>
@@ -110,19 +145,19 @@ function AdminPacks() {
                 <Text fontSize={'3xl'} color={'black'} textAlign={'center'}>
                     Price:
                 </Text>
-                <Input placeholder="Package Price" id={'pPrice'}/>
+                <Input type='Number' placeholder="Package Price" id={'pPrice'}/>
                 <Text fontSize={'3xl'} color={'black'} textAlign={'center'}>
                     Family Discount:
                 </Text>
-                <Input placeholder="Family Discount"  id={'pFamDiscount'}/>
+                <Input type='Number' placeholder="Family Discount"  id={'pFamDiscount'}/>
                 <Text fontSize={'3xl'} color={'black'} textAlign={'center'}>
                     Pharmacy Discount:
                 </Text>
-                <Input placeholder="Pharmacy Discount" id={'pPharmDiscount'}/>
+                <Input type='Number' placeholder="Pharmacy Discount" id={'pPharmDiscount'}/>
                 <Text fontSize={'3xl'} color={'black'} textAlign={'center'}>
                     Session Discount:
                 </Text>
-                <Input placeholder="Session Discount" id={'pSessionDiscount'} />
+                <Input type='Number' placeholder="Session Discount" id={'pSessionDiscount'} />
             </ModalBody>
             <ModalFooter>
                 <Button colorScheme="blue" mr={3}

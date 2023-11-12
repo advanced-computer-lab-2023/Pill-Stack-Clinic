@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import '../UI/button.css'
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Table,
@@ -35,6 +37,8 @@ export const ViewAvailability = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
+  const back =()=>  navigate(-1);
 
   const [isSuccess, setIsSucess] = useState(false);
 
@@ -110,142 +114,142 @@ export const ViewAvailability = () => {
   }
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-         {isSuccess && (
-      <Alert status="success">
-        <AlertIcon />
-        <AlertTitle>Confirmation</AlertTitle>
-        <AlertDescription>Slot added successfully</AlertDescription>
-      </Alert>
-    )}
-      <FormControl mb={4}>
-      
-
-        <Flex alignItems="center" mb={2}>
-          <Text mr={2} fontSize="sm">
-            Filter by Date:
-          </Text>
-
-          <DatePicker
-            selected={selectedStartDate}
-            onChange={(date) => setSelectedStartDate(date)}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="MMMM d, yyyy h:mm aa"
-            placeholderText="Start Date & Time"
-            size="sm"
-          />
-
-          <Text mx={2} fontSize="sm">
-            to
-          </Text>
-
-          <DatePicker
-            selected={selectedEndDate}
-            onChange={(date) => setSelectedEndDate(date)}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="MMMM d, yyyy h:mm aa"
-            placeholderText="End Date & Time"
-            size="sm"
-          />
-        </Flex>
-
-        <Button
-          colorScheme="teal"
-          onClick={handleClear}
-          size="sm"
-          fontSize="sm"
-          leftIcon={<MdClear />}
-          mt={2}
-        >
-          Clear Filters
-        </Button>
-      </FormControl>
-      <Button colorScheme="teal" onClick={() => openModal()}>
-
-       Add Slot
-      </Button>
-      <Table variant="striped"shadow="md">
-        <Thead>
-          <Tr>
-            <Th>Appointment start time </Th>
-            <Th>Appointment end time</Th>
-
-          </Tr>
-        </Thead>
-        <Tbody>
-          {loading ? (
-            <Tr>
-              <Td colSpan={2} textAlign="center">
-                <Spinner size="lg" />
-              </Td>
-            </Tr>
-          ) : filteredAppointments.length > 0 ? (
-            filteredAppointments.map((appointment, index) => (
-              <Tr key={index}>
-          <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-          <Td>{new Date(appointment.EndDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-              </Tr>
-            ))
-          ) : (
-            <Tr>
-              <Td colSpan={2} textAlign="center">No appointments found.</Td>
-            </Tr>
-          )}
-        </Tbody>
-      </Table>
-      <Modal isOpen={isModalOpen} onClose={() => {setIsModalOpen(false); setIsError(false);
-    setNewAppointment({
-        Date: '',
-        startTime: '',
-        endTime: '',
-      });
-    
-    }}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>Select Slot Time</ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-    {isError &&(<Alert status='error'>
-  <AlertIcon />
-  <AlertTitle>Error</AlertTitle>
-  <AlertDescription>{errorMsg} </AlertDescription>
-</Alert>)}
-           <label>Date:</label>
-
-           <Input
-              type="date"
-              value={newAppointment.Date}
-              onChange={(e) => setNewAppointment({ ...newAppointment, Date: e.target.value })}
-            />
-            <label>Start time</label>
-            <Input
-              type='time'
-              value={newAppointment.startTime}
-              onChange={(e) => setNewAppointment({ ...newAppointment, startTime: e.target.value })}
-            />
-            <label>End time</label>
-            <Input
-              type='time'
-              value={newAppointment.endTime}
-              onChange={(e) => setNewAppointment({ ...newAppointment, endTime: e.target.value })}
-            />
-
-    
-      
-    </ModalBody>
-    <ModalFooter>
-      <Button colorScheme="teal" onClick={()=>handleAdd()}>
-        Add
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
+    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>My Available Slots</Text>
+      <button className="btn" onClick={back}>back</button>
     </Box>
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+        {isSuccess && (
+          <Alert status="success">
+            <AlertIcon />
+            <AlertTitle>Confirmation</AlertTitle>
+            <AlertDescription>Slot added successfully</AlertDescription>
+          </Alert>
+        )}
+        <FormControl mb={4}>
+
+
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">
+              Filter by Date:
+            </Text>
+
+            <DatePicker
+              selected={selectedStartDate}
+              onChange={(date) => setSelectedStartDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Start Date & Time"
+              size="sm" />
+
+            <Text mx={2} fontSize="sm">
+              to
+            </Text>
+
+            <DatePicker
+              selected={selectedEndDate}
+              onChange={(date) => setSelectedEndDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="End Date & Time"
+              size="sm" />
+          </Flex>
+
+          <Button
+            colorScheme="teal"
+            onClick={handleClear}
+            size="sm"
+            fontSize="sm"
+            leftIcon={<MdClear />}
+            mt={2}
+          >
+            Clear Filters
+          </Button>
+        </FormControl>
+        <Button colorScheme="teal" onClick={() => openModal()}>
+
+          Add Slot
+        </Button>
+        <Table variant="striped" shadow="md">
+          <Thead>
+            <Tr>
+              <Th>Appointment start time </Th>
+              <Th>Appointment end time</Th>
+
+            </Tr>
+          </Thead>
+          <Tbody>
+            {loading ? (
+              <Tr>
+                <Td colSpan={2} textAlign="center">
+                  <Spinner size="lg" />
+                </Td>
+              </Tr>
+            ) : filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment, index) => (
+                <Tr key={index}>
+                  <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                  <Td>{new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={2} textAlign="center">No appointments found.</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+        <Modal isOpen={isModalOpen} onClose={() => {
+          setIsModalOpen(false); setIsError(false);
+          setNewAppointment({
+            Date: '',
+            startTime: '',
+            endTime: '',
+          });
+
+        } }>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Select Slot Time</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {isError && (<Alert status='error'>
+                <AlertIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{errorMsg} </AlertDescription>
+              </Alert>)}
+              <label>Date:</label>
+
+              <Input
+                type="date"
+                value={newAppointment.Date}
+                onChange={(e) => setNewAppointment({ ...newAppointment, Date: e.target.value })} />
+              <label>Start time</label>
+              <Input
+                type='time'
+                value={newAppointment.startTime}
+                onChange={(e) => setNewAppointment({ ...newAppointment, startTime: e.target.value })} />
+              <label>End time</label>
+              <Input
+                type='time'
+                value={newAppointment.endTime}
+                onChange={(e) => setNewAppointment({ ...newAppointment, endTime: e.target.value })} />
+
+
+
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" onClick={() => handleAdd()}>
+                Add
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box></>
   );
 };
 

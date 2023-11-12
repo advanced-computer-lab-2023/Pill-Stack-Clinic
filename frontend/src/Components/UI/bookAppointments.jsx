@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-
+import '../UI/button.css'
 import {
+  Text,
   Box,
   Table,
   Thead,
@@ -34,7 +35,7 @@ export const BookAppointments = () => {
   const [speciality, setSpeciality] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-
+  const back =()=>  navigate(-1);
   const [time, setTime] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState(doctors);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -234,192 +235,195 @@ export const BookAppointments = () => {
   
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-       {confirmationMessage && (
-      <Alert status="success">
-        <AlertIcon />
-        <AlertTitle>Confirmation</AlertTitle>
-        <AlertDescription>{confirmationMessage}</AlertDescription>
-      </Alert>
-    )}
-     {errorMessage && (
-      <Alert status="error">
-        <AlertIcon />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{errorMessage}</AlertDescription>
-      </Alert>
-    )}
-    
-      <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-        <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
-        <FormControl>
-            <FormLabel>Search by Name or Speciality</FormLabel>
-            <Input
-              placeholder="Enter name or speciality"
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-            />
-          </FormControl>
-        <FormControl>
-            <FormLabel>Select Speciality</FormLabel>
-            <Select
-              value={speciality}
-              onChange={(e) => setSpeciality(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Neurology">Neurology</option>
-              <option value="Internal medicine">Internal medicine</option>
-              <option value="Death">Death</option>
-              <option value="Plastic Surgery">Plastic Surgery</option>
-              <option value="Nervous System">Nervous System</option>
-              <option value="ENT">ENT</option>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Start Date</FormLabel>
-            <Input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </FormControl>
-
-<FormControl>
-            <FormLabel>End Date</FormLabel>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </FormControl>
-       
-        </Flex>
-        <HStack spacing={4} mt={4}>
-          <Button colorScheme="teal" type="submit">
-            Search
-          </Button>
-          <Button colorScheme="teal" onClick={handleViewAllAppointments}>
-            View All Appointments
-          </Button>
-        </HStack>
-      </form>
-
-     
-
-      <Table variant="simple" mt={4}>
-        <Thead>
-          <Tr>
-          <Th>Doctor Name</Th>
-          <Th>Speciality</Th>
-            <Th>Appointment Start Time</Th>
-            <Th>Appointment End Time</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-  {filteredAppointments.length > 0 ? (
-    filteredAppointments.map((doctor, index) => (
-      doctor.Availability.map((appointment, appIndex) => (
-        <Tr key={index + '-' + appIndex}>
-          <Td>{doctor.Name}</Td>
-          <Td>{doctor.Speciality}</Td>
-          <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-          <Td>{new Date(appointment.EndDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-          <Td>
-          <Button colorScheme="teal" onClick={() => openModal(doctor.Username, appointment._id)}>
-
-              Book
-            </Button>
-          </Td>
-        </Tr>
-      ))
-    ))
-  ) : (
-    <Tr>
-      <Td colSpan="5">No appointments found matching the criteria.</Td>
-    </Tr>
-  )}
-</Tbody>
-
-      </Table>
-      <Modal isOpen={isModalOpen} onClose={() => {setIsModalOpen(false);
-       setSelectedPatient('');
-       setSelectedPayment('');
-       setAmount('');
-       setIsError(false);
-      }}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>Select Payment Option</ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-    {isError &&(<Alert status='error'>
-  <AlertIcon />
-  <AlertTitle>Missing information</AlertTitle>
-  <AlertDescription>Please select a patient and a payment method.</AlertDescription>
-</Alert>)}
-{selectedPatient  && (
-    <Alert status='info'>
-      <AlertIcon />
-      <AlertTitle>Session Amount</AlertTitle>
-      <AlertDescription>{amount}</AlertDescription>
-    </Alert>
-  )}
-     
-      <FormControl>
-        <FormLabel>Select patient</FormLabel>
-        <Select
-    value={selectedPatient}
-    onChange={(e) => {setSelectedPatient(e.target.value);
-
-      getAmount(e.target.value); 
-    }
-  }
-  >
-    <option value="">Select</option>
-
-    <option value="accountOwner">Myself</option>
-
-    {isLoadingFamilyMembers ? (
-      <option>Loading family members...</option>
-    ) : (
-      
-      familyMembers.map((familyMember) => (
-        <option key={familyMember} value={familyMember}>
-          {familyMember}
-        </option>
-      ))
-    )}
-  </Select>
-      </FormControl>
-      <FormControl>
-        <FormLabel>Select Payment Method</FormLabel>
-        <Select
-          value={selectedPayment}
-          onChange={(e) => {setSelectedPayment(e.target.value);
-            
-            }}
-          
-        >
-          <option value="">Select payment</option>
-          <option value="wallet">Wallet</option>
-          <option value="credit">Credit</option>
-          {/* Add more options as needed */}
-        </Select>
-      </FormControl>
-      
-    </ModalBody>
-    <ModalFooter>
-      <Button colorScheme="teal" onClick={()=>handlePay(selectedDoctorUsername, selectedAppointmentId)}>
-        Pay
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
-
+    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>Book Appointment</Text>
+      <button className="btn" onClick={back}>back</button>
     </Box>
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+        {confirmationMessage && (
+          <Alert status="success">
+            <AlertIcon />
+            <AlertTitle>Confirmation</AlertTitle>
+            <AlertDescription>{confirmationMessage}</AlertDescription>
+          </Alert>
+        )}
+        {errorMessage && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        )}
+
+        <form onSubmit={(e) => { e.preventDefault(); handleSearch(); } }>
+          <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
+            <FormControl>
+              <FormLabel>Search by Name or Speciality</FormLabel>
+              <Input
+                placeholder="Enter name or speciality"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)} />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Select Speciality</FormLabel>
+              <Select
+                value={speciality}
+                onChange={(e) => setSpeciality(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Internal medicine">Internal medicine</option>
+                <option value="Death">Death</option>
+                <option value="Plastic Surgery">Plastic Surgery</option>
+                <option value="Nervous System">Nervous System</option>
+                <option value="ENT">ENT</option>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Start Date</FormLabel>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)} />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>End Date</FormLabel>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)} />
+            </FormControl>
+
+          </Flex>
+          <HStack spacing={4} mt={4}>
+            <Button colorScheme="teal" type="submit">
+              Search
+            </Button>
+            <Button colorScheme="teal" onClick={handleViewAllAppointments}>
+              View All Appointments
+            </Button>
+          </HStack>
+        </form>
+
+
+
+        <Table variant="simple" mt={4}>
+          <Thead>
+            <Tr>
+              <Th>Doctor Name</Th>
+              <Th>Speciality</Th>
+              <Th>Appointment Start Time</Th>
+              <Th>Appointment End Time</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((doctor, index) => (
+                doctor.Availability.map((appointment, appIndex) => (
+                  <Tr key={index + '-' + appIndex}>
+                    <Td>{doctor.Name}</Td>
+                    <Td>{doctor.Speciality}</Td>
+                    <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                    <Td>{new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                    <Td>
+                      <Button colorScheme="teal" onClick={() => openModal(doctor.Username, appointment._id)}>
+
+                        Book
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan="5">No appointments found matching the criteria.</Td>
+              </Tr>
+            )}
+          </Tbody>
+
+        </Table>
+        <Modal isOpen={isModalOpen} onClose={() => {
+          setIsModalOpen(false);
+          setSelectedPatient('');
+          setSelectedPayment('');
+          setAmount('');
+          setIsError(false);
+        } }>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Select Payment Option</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {isError && (<Alert status='error'>
+                <AlertIcon />
+                <AlertTitle>Missing information</AlertTitle>
+                <AlertDescription>Please select a patient and a payment method.</AlertDescription>
+              </Alert>)}
+              {selectedPatient && (
+                <Alert status='info'>
+                  <AlertIcon />
+                  <AlertTitle>Session Amount</AlertTitle>
+                  <AlertDescription>{amount}</AlertDescription>
+                </Alert>
+              )}
+
+              <FormControl>
+                <FormLabel>Select patient</FormLabel>
+                <Select
+                  value={selectedPatient}
+                  onChange={(e) => {
+                    setSelectedPatient(e.target.value);
+
+                    getAmount(e.target.value);
+                  } }
+                >
+                  <option value="">Select</option>
+
+                  <option value="accountOwner">Myself</option>
+
+                  {isLoadingFamilyMembers ? (
+                    <option>Loading family members...</option>
+                  ) : (
+
+                    familyMembers.map((familyMember) => (
+                      <option key={familyMember} value={familyMember}>
+                        {familyMember}
+                      </option>
+                    ))
+                  )}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Select Payment Method</FormLabel>
+                <Select
+                  value={selectedPayment}
+                  onChange={(e) => {
+                    setSelectedPayment(e.target.value);
+
+                  } }
+
+                >
+                  <option value="">Select payment</option>
+                  <option value="wallet">Wallet</option>
+                  <option value="credit">Credit</option>
+                  {/* Add more options as needed */}
+                </Select>
+              </FormControl>
+
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" onClick={() => handlePay(selectedDoctorUsername, selectedAppointmentId)}>
+                Pay
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+      </Box></>
         
   );
 };

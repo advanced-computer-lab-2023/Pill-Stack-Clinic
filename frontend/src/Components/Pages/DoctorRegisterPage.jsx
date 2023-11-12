@@ -36,6 +36,7 @@ const DoctorRegisterPage = () => {
       setFormData(formData => ({ ...formData, [name]: value }));
     }
   };
+  const back =()=>  navigate(-1);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +87,7 @@ const DoctorRegisterPage = () => {
  
   return (
     <Box p={4}>
+              <Button onClick={back}>back</Button>
       <VStack spacing={4} as="form" onSubmit={onSubmit} width="100%" maxWidth="500px" margin="auto">
         {/* Form Controls */}
         {/* ... other form controls ... */}

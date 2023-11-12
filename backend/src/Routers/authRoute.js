@@ -1,4 +1,4 @@
-const {  Login,PatientRegister ,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP} = require('../Routes/authController')
+const {  Login,PatientRegister ,upload,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP} = require('../Routes/authController')
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 const router = require('express').Router()
@@ -16,10 +16,7 @@ router.post('/Patientregister',PatientRegister);
 //   .post(DoctorRegister);
 
 
-const multer = require('multer');
-const storage = multer.diskStorage({
-});
-const upload = multer({ storage: storage });
+
 router.route('/doc_register')
   .post(upload.fields([
     { name: 'idDocument', maxCount: 1 },

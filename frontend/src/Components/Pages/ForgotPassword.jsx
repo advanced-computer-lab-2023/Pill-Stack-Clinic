@@ -7,7 +7,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-
+  const back =()=>  navigate(-1);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -42,6 +42,8 @@ function ForgotPassword() {
           <Button colorScheme="teal" type="submit">
             Send Reset Email
           </Button>
+          <br></br>
+          <Button onClick={back}>back</Button>
         </form>
         <Text mt={4} color={message.includes('successfully') ? 'green.500' : 'red.500'}>
           {message}

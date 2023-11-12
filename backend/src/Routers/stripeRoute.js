@@ -159,7 +159,7 @@ router.post("/payPack",userVerification,async (req,res,next)=>{
 
 
 router.post('/payPack/confirm',userVerification, async (req, res) => {
-   const packageID=req.body.packageID;
+   const packageID=req.body.packID;
    console.log("DAREEENNNN",packageID);
    
    const pack= await packageModel.findById(packageID);
@@ -168,7 +168,7 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    }
    const username=req.body.username;
    const user=await userModel.findOne({Username:username});
-   console.log(user);
+   console.log(username);
    if(!user){
       res.status(404).send("User Not Found");
    }

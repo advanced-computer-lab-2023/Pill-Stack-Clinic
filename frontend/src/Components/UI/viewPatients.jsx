@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../UI/button.css'
+import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import {
   Table,
@@ -59,6 +61,8 @@ const DoctorPatientsTable = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const navigate = useNavigate();
+  const back =()=>  navigate(-1);
 
   useEffect(() => {
     async function fetchPatients() {
@@ -156,198 +160,196 @@ const DoctorPatientsTable = () => {
   };
 
   return (
-    <Container maxW="container.xl">
-      <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-        {confirmationMessage && (
-          <Alert status="success">
-            <AlertIcon />
-            <AlertTitle>Confirmation</AlertTitle>
-            <AlertDescription>{confirmationMessage}</AlertDescription>
-          </Alert>
-        )}
-        <h1>My Patients</h1>
-        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="All">All</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="completed">completed</option>
-          <option value="cancelled">cancelled</option>
-          <option value="rescheduled">rescheduled</option>
-        </Select>
-        <Input
-          type="text"
-          placeholder="Search by Patient Name"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <Text fontSize="md" mb="2">Filter by Date Range:</Text>
-        <Flex justifyContent="space-between" mb="4">
-          <FormControl>
-            <FormLabel>Start Date</FormLabel>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              placeholderText="Select Start Date"
-              dateFormat="MMMM d, yyyy"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>End Date</FormLabel>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              placeholderText="Select End Date"
-              dateFormat="MMMM d, yyyy"
-            />
-          </FormControl>
-        </Flex>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Patient Name</Th>
-              <Th>Status</Th>
-              <Th>Start Date</Th>
-              <Th> </Th>
-              <Th> </Th>
-              <Th> </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {filteredPatients.map((patient, index) => (
-              <Tr key={index}>
-                <Td>{patient.PatientName}</Td>
-                <Td>{patient.Status}</Td>
-                <Td>{new Date(patient.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
-                <Td>
-                  <Popover>
-                    <PopoverTrigger>
-                      <Button
-                        size="sm"
-                        colorScheme="teal"
-                        onClick={() => openPatientDetails(patient)}
-                      >
-                        View Details
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Patient Details</PopoverHeader>
-                      <PopoverBody>
-                        <p>Patient username: {patient.PatientUsername}</p>
-                        <p>Patient Name: {patient.PatientName}</p>
-                        <p>Status: {patient.Status}</p>
-                        <p>Start Date: {patient.StartDate}</p>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Td>
-                <Td>
-                  <Popover>
-                    <PopoverTrigger>
-                      <Button
-                        size="sm"
-                        colorScheme="teal"
-                        onClick={() => openPatientDetails(patient)}
-                      >
-                        Add Health Record
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Health Record</PopoverHeader>
-                      <PopoverBody>
-                        <Input
-                          type="text"
-                          placeholder='Input Record Here'
-                          value={newRecordInput}
-                          onChange={(e) => setNewRecordInput(e.target.value)}
-                        />
-                        <Button
-                          marginTop="10px"
-                          size="sm"
-                          alignSelf="end"
-                          onClick={() => addHealthRecord(patient)}
-                        >
-                          Save
-                        </Button>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Td>
-                <Td>
-                  <Button
-                    size="sm"
-                    colorScheme="teal"
-                    onClick={() => openModal(patient)}
-                  >
-                    Schedule a follow up
-                  </Button>
-                </Td>
-                <Td>
-                  <Link to={`/my-health-records/${patient.PatientUsername}/${patient.PatientName}`}>
-                    <Button size="sm" colorScheme="teal">
-                      View Health Records
-                    </Button>
-                  </Link>
-                </Td>
+    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>My Patients</Text>
+      <button className="btn" onClick={back}>back</button>
+    </Box><Container maxW="container.xl">
+        <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+          {confirmationMessage && (
+            <Alert status="success">
+              <AlertIcon />
+              <AlertTitle>Confirmation</AlertTitle>
+              <AlertDescription>{confirmationMessage}</AlertDescription>
+            </Alert>
+          )}
+          <h1>My Patients</h1>
+          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="All">All</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">completed</option>
+            <option value="cancelled">cancelled</option>
+            <option value="rescheduled">rescheduled</option>
+          </Select>
+          <Input
+            type="text"
+            placeholder="Search by Patient Name"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)} />
+          <Text fontSize="md" mb="2">Filter by Date Range:</Text>
+          <Flex justifyContent="space-between" mb="4">
+            <FormControl>
+              <FormLabel>Start Date</FormLabel>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Select Start Date"
+                dateFormat="MMMM d, yyyy" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>End Date</FormLabel>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Select End Date"
+                dateFormat="MMMM d, yyyy" />
+            </FormControl>
+          </Flex>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Patient Name</Th>
+                <Th>Status</Th>
+                <Th>Start Date</Th>
+                <Th> </Th>
+                <Th> </Th>
+                <Th> </Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-        <Modal isOpen={isModalOpen} onClose={() => {
-          setIsModalOpen(false);
-          setFollowUpPatient('');
-          setIsError(false);
-          setErrorMessage('');
-        }}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Select Appointment</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              {isError && (<Alert status='error'>
-                <AlertIcon />
-                <AlertTitle>Missing input</AlertTitle>
-                <AlertDescription>{errorMessage}</AlertDescription>
-              </Alert>)}
-              <FormControl>
-                <FormLabel>Select appointment</FormLabel>
-                <Select
-                  value={appointment}
-                  onChange={(e) => {
-                    setAppointment(e.target.value);
-                  }
-                  }
-                >
-                  <option value="">Select</option>
-                  {isLoadingAvailability ? (
-                    <option>Loading Appointments..</option>
-                  ) : (
-                    availability.map((appointment) => (
-                      <option key={appointment._id} value={appointment._id}>
-                        {new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })} {new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}
-                      </option>
-                    ))
-                  )}
-                </Select>
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="teal" onClick={() => scheduleFollowUp()}>
-                Schedule
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Box>
-    </Container>
+            </Thead>
+            <Tbody>
+              {filteredPatients.map((patient, index) => (
+                <Tr key={index}>
+                  <Td>{patient.PatientName}</Td>
+                  <Td>{patient.Status}</Td>
+                  <Td>{new Date(patient.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                  <Td>
+                    <Popover>
+                      <PopoverTrigger>
+                        <Button
+                          size="sm"
+                          colorScheme="teal"
+                          onClick={() => openPatientDetails(patient)}
+                        >
+                          View Details
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverHeader>Patient Details</PopoverHeader>
+                        <PopoverBody>
+                          <p>Patient username: {patient.PatientUsername}</p>
+                          <p>Patient Name: {patient.PatientName}</p>
+                          <p>Status: {patient.Status}</p>
+                          <p>Start Date: {patient.StartDate}</p>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Td>
+                  <Td>
+                    <Popover>
+                      <PopoverTrigger>
+                        <Button
+                          size="sm"
+                          colorScheme="teal"
+                          onClick={() => openPatientDetails(patient)}
+                        >
+                          Add Health Record
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverHeader>Health Record</PopoverHeader>
+                        <PopoverBody>
+                          <Input
+                            type="text"
+                            placeholder='Input Record Here'
+                            value={newRecordInput}
+                            onChange={(e) => setNewRecordInput(e.target.value)} />
+                          <Button
+                            marginTop="10px"
+                            size="sm"
+                            alignSelf="end"
+                            onClick={() => addHealthRecord(patient)}
+                          >
+                            Save
+                          </Button>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Td>
+                  <Td>
+                    <Button
+                      size="sm"
+                      colorScheme="teal"
+                      onClick={() => openModal(patient)}
+                    >
+                      Schedule a follow up
+                    </Button>
+                  </Td>
+                  <Td>
+                    <Link to={`/my-health-records/${patient.PatientUsername}/${patient.PatientName}`}>
+                      <Button size="sm" colorScheme="teal">
+                        View Health Records
+                      </Button>
+                    </Link>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+          <Modal isOpen={isModalOpen} onClose={() => {
+            setIsModalOpen(false);
+            setFollowUpPatient('');
+            setIsError(false);
+            setErrorMessage('');
+          } }>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Select Appointment</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {isError && (<Alert status='error'>
+                  <AlertIcon />
+                  <AlertTitle>Missing input</AlertTitle>
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>)}
+                <FormControl>
+                  <FormLabel>Select appointment</FormLabel>
+                  <Select
+                    value={appointment}
+                    onChange={(e) => {
+                      setAppointment(e.target.value);
+                    } }
+                  >
+                    <option value="">Select</option>
+                    {isLoadingAvailability ? (
+                      <option>Loading Appointments..</option>
+                    ) : (
+                      availability.map((appointment) => (
+                        <option key={appointment._id} value={appointment._id}>
+                          {new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })} {new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}
+                        </option>
+                      ))
+                    )}
+                  </Select>
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="teal" onClick={() => scheduleFollowUp()}>
+                  Schedule
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
+      </Container></>
   );
 };
 

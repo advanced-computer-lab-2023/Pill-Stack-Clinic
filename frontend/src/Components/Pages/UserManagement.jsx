@@ -1,5 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from "react";
+import '../UI/button.css'
+import { useNavigate } from "react-router-dom";
 import {
     Box,
     Button,
@@ -47,6 +49,8 @@ function UserManagement() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [mail, setMail] = useState("");
+    const navigate = useNavigate();
+    const back =()=>  navigate(-1);
   
     // const [filtered , setFiltered] = useState([users]) 
     // const [filter, setFilter] = useState(['admin', 'doctor' ,'patient']);
@@ -148,6 +152,7 @@ function UserManagement() {
     <>
         <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
             <Text fontSize={'3xl'} color={'white'} >Manage Users</Text>
+            <button className="btn" onClick={back}>back</button>
         </Box>
         <Box  display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
             {/* <HStack m={10}>

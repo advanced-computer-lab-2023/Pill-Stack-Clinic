@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import '../UI/button.css'
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Table,
@@ -27,6 +29,8 @@ export const ViewAppointments = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const navigate = useNavigate();
+  const back =()=>  navigate(-1);
   useEffect(() => {
     // Fetch all appointments when the component mounts
     async function fetchAppointments() {
@@ -63,104 +67,106 @@ export const ViewAppointments = () => {
 
 
   return (
+    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>Appointments</Text>
+      <button className="btn" onClick={back}>back</button>
+    </Box>
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <FormControl mb={4}>
-        <Flex alignItems="center" mb={2}>
-          <Text mr={2} fontSize="sm">
-            Filter by Status:
-          </Text>
-          <Select
-            placeholder="Select Status"
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+        <FormControl mb={4}>
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">
+              Filter by Status:
+            </Text>
+            <Select
+              placeholder="Select Status"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              size="sm"
+              fontSize="sm"
+            >
+              <option value="All">All</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="rescheduled">Rescheduled</option>
+            </Select>
+          </Flex>
+
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">
+              Filter by Date:
+            </Text>
+
+            <DatePicker
+              selected={selectedStartDate}
+              onChange={(date) => setSelectedStartDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Start Date & Time"
+              size="sm" />
+
+            <Text mx={2} fontSize="sm">
+              to
+            </Text>
+
+            <DatePicker
+              selected={selectedEndDate}
+              onChange={(date) => setSelectedEndDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="End Date & Time"
+              size="sm" />
+          </Flex>
+
+          <Button
+            colorScheme="teal"
+            onClick={handleClear}
             size="sm"
             fontSize="sm"
+            leftIcon={<MdClear />}
+            mt={2}
           >
-            <option value="All">All</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="rescheduled">Rescheduled</option>
-          </Select>
-        </Flex>
-
-        <Flex alignItems="center" mb={2}>
-          <Text mr={2} fontSize="sm">
-            Filter by Date:
-          </Text>
-
-          <DatePicker
-            selected={selectedStartDate}
-            onChange={(date) => setSelectedStartDate(date)}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="MMMM d, yyyy h:mm aa"
-            placeholderText="Start Date & Time"
-            size="sm"
-          />
-
-          <Text mx={2} fontSize="sm">
-            to
-          </Text>
-
-          <DatePicker
-            selected={selectedEndDate}
-            onChange={(date) => setSelectedEndDate(date)}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="MMMM d, yyyy h:mm aa"
-            placeholderText="End Date & Time"
-            size="sm"
-          />
-        </Flex>
-
-        <Button
-          colorScheme="teal"
-          onClick={handleClear}
-          size="sm"
-          fontSize="sm"
-          leftIcon={<MdClear />}
-          mt={2}
-        >
-          Clear Filters
-        </Button>
-      </FormControl>
+            Clear Filters
+          </Button>
+        </FormControl>
 
 
-      <Table variant="striped"shadow="md">
-        <Thead>
-          <Tr>
-            <Th>Patient Name</Th>
-            <Th>Status</Th>
-            <Th>Appointment Date</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {loading ? (
+        <Table variant="striped" shadow="md">
+          <Thead>
             <Tr>
-              <Td colSpan={2} textAlign="center">
-                <Spinner size="lg" />
-              </Td>
+              <Th>Patient Name</Th>
+              <Th>Status</Th>
+              <Th>Appointment Date</Th>
             </Tr>
-          ) : filteredAppointments.length > 0 ? (
-            filteredAppointments.map((appointment, index) => (
-              <Tr key={index}>
-                <Td>{appointment.PatientName}</Td>
-                <Td>{appointment.Status}</Td>
-                <Td>{new Date(appointment.StartDate).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-                
+          </Thead>
+          <Tbody>
+            {loading ? (
+              <Tr>
+                <Td colSpan={2} textAlign="center">
+                  <Spinner size="lg" />
+                </Td>
               </Tr>
-            ))
-          ) : (
-            <Tr>
-              <Td colSpan={2} textAlign="center">No appointments found.</Td>
-            </Tr>
-          )}
-        </Tbody>
-      </Table>
-    </Box>
+            ) : filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment, index) => (
+                <Tr key={index}>
+                  <Td>{appointment.PatientName}</Td>
+                  <Td>{appointment.Status}</Td>
+                  <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={2} textAlign="center">No appointments found.</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </Box></>
   );
 };
 

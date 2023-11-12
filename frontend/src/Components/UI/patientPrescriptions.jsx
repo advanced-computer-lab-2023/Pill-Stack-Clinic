@@ -21,6 +21,8 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import '../UI/button.css'
 
 const PrescriptionViewer = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -31,7 +33,8 @@ const PrescriptionViewer = () => {
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedPrescription, setSelectedPrescription] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const navigate = useNavigate();
+  const back =()=>  navigate(-1);
   useEffect(() => {
     async function fetchPrescriptions() {
       try {
@@ -81,98 +84,100 @@ const PrescriptionViewer = () => {
   };
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <h1>Prescriptions</h1>
-      <Box mb={4}>
-        <Text mb="2">Filter by Date Time Range:</Text>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb="4">
-          <Input
-            type="datetime-local"
-            placeholder="Start Date"
-            value={filterStartDate}
-            onChange={(e) => setFilterStartDate(e.target.value)}
-          />
-          <Text fontWeight="bold" mx="2">to</Text>
-          <Input
-            type="datetime-local"
-            placeholder="End Date"
-            value={filterEndDate}
-            onChange={(e) => setFilterEndDate(e.target.value)}
-          />
-        </Box>
-        <Select
-          placeholder="Filter by Doctor"
-          value={filterDoctor}
-          onChange={(e) => setFilterDoctor(e.target.value)}
-        >
-          <option value="">All Doctors</option>
-          <option value="Nada">Nada</option>
-          <option value="Mariam">Mariam</option>
-          <option value="Dareen">Dareen</option>
-        </Select>
-        <Select
-          placeholder="Filter by Status"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="Filled">Filled</option>
-          <option value="Unfilled">Unfilled</option>
-        </Select>
-      </Box>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Medicine ID</Th>
-            <Th>Quantity</Th>
-            <Th>Instructions</Th>
-            <Th>Date</Th>
-            <Th>Doctor Username</Th>
-            <Th>Status</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredPrescriptions.map((prescription, index) => (
-            <Tr key={index}>
-              <Td>{prescription.Medicine[0].MedicineID}</Td>
-              <Td>{prescription.Medicine[0].Quantity}</Td>
-              <Td>{prescription.Medicine[0].Instructions}</Td>
-              <Td>{new Date(prescription.Date).toLocaleString('en-US',{ timeZone: 'UTC'})}</Td>
-              <Td>{prescription.DocUsername}</Td>
-              <Td>{prescription.Status}</Td>
-              <Td>
-                <Tooltip label="View Details" hasArrow placement="top">
-                  <Button colorScheme="teal" onClick={() => openModal(prescription)}>
-                    Details
-                  </Button>
-                </Tooltip>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Prescription Details</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <p>Medicine ID: {selectedPrescription?.Medicine[0].MedicineID}</p>
-            <p>Quantity: {selectedPrescription?.Medicine[0].Quantity}</p>
-            <p>Instructions: {selectedPrescription?.Medicine[0].Instructions}</p>
-            <p>Date: {selectedPrescription?.Date}</p>
-            <p>Doctor Username: {selectedPrescription?.DocUsername}</p>
-            <p>Status: {selectedPrescription?.Status}</p>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="teal" onClick={closeModal}>
-              Close Details
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>Prescription</Text>
+      <button className="btn" onClick={back}>back</button>
     </Box>
+    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+        <h1>Prescriptions</h1>
+        <Box mb={4}>
+          <Text mb="2">Filter by Date Time Range:</Text>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb="4">
+            <Input
+              type="datetime-local"
+              placeholder="Start Date"
+              value={filterStartDate}
+              onChange={(e) => setFilterStartDate(e.target.value)} />
+            <Text fontWeight="bold" mx="2">to</Text>
+            <Input
+              type="datetime-local"
+              placeholder="End Date"
+              value={filterEndDate}
+              onChange={(e) => setFilterEndDate(e.target.value)} />
+          </Box>
+          <Select
+            placeholder="Filter by Doctor"
+            value={filterDoctor}
+            onChange={(e) => setFilterDoctor(e.target.value)}
+          >
+            <option value="">All Doctors</option>
+            <option value="Nada">Nada</option>
+            <option value="Mariam">Mariam</option>
+            <option value="Dareen">Dareen</option>
+          </Select>
+          <Select
+            placeholder="Filter by Status"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="Filled">Filled</option>
+            <option value="Unfilled">Unfilled</option>
+          </Select>
+        </Box>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Medicine ID</Th>
+              <Th>Quantity</Th>
+              <Th>Instructions</Th>
+              <Th>Date</Th>
+              <Th>Doctor Username</Th>
+              <Th>Status</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {filteredPrescriptions.map((prescription, index) => (
+              <Tr key={index}>
+                <Td>{prescription.Medicine[0].MedicineID}</Td>
+                <Td>{prescription.Medicine[0].Quantity}</Td>
+                <Td>{prescription.Medicine[0].Instructions}</Td>
+                <Td>{new Date(prescription.Date).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                <Td>{prescription.DocUsername}</Td>
+                <Td>{prescription.Status}</Td>
+                <Td>
+                  <Tooltip label="View Details" hasArrow placement="top">
+                    <Button colorScheme="teal" onClick={() => openModal(prescription)}>
+                      Details
+                    </Button>
+                  </Tooltip>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+        <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Prescription Details</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <p>Medicine ID: {selectedPrescription?.Medicine[0].MedicineID}</p>
+              <p>Quantity: {selectedPrescription?.Medicine[0].Quantity}</p>
+              <p>Instructions: {selectedPrescription?.Medicine[0].Instructions}</p>
+              <p>Date: {selectedPrescription?.Date}</p>
+              <p>Doctor Username: {selectedPrescription?.DocUsername}</p>
+              <p>Status: {selectedPrescription?.Status}</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" onClick={closeModal}>
+                Close Details
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box></>
   );
 };
 

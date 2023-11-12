@@ -25,7 +25,7 @@ const PatientRegisterForm = () => {
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  const back =()=>  navigate(-1);
   const onSubmit = async e => {
     e.preventDefault();
     try {
@@ -108,6 +108,9 @@ const PatientRegisterForm = () => {
         </FormControl>
 
         <Button mt={4} colorScheme="teal" type="submit">Register</Button>
+        <br></br>
+        <br></br>
+        <Button onClick={back}>back</Button>
       </form>
     </Box>
   );

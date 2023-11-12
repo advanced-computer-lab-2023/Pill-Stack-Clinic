@@ -24,12 +24,16 @@ import { Box,
  } from '@chakra-ui/react'
 import { useEffect } from "react";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-function PackageCard( {pack}) {
+function PackageCard( {pack,count}) {
     
     const { Package_Name, Price, Family_Discount,Pharmacy_Discount , Session_Discount } = pack;
+    
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    let message='A';
+    const Navigate=useNavigate();
     
     const handleEdit = () => {
         const ID = pack._id;
@@ -37,6 +41,29 @@ function PackageCard( {pack}) {
         const Family_Discount = document.getElementById('Family_Discount').value;
         const Pharmacy_Discount = document.getElementById('Pharmacy_Discount').value;
         const Session_Discount = document.getElementById('Session_Discount').value;
+        let test=true;
+        
+        if(Price<0){
+            test=false;
+            toast.error("Price can not be negative");
+            message="Price can not be negative";
+        }
+        if(Family_Discount>100 || Family_Discount<0){
+            test=false;
+            toast.error("Family Discount must be between [0,100]");
+            message="Family Discount must be between [0,100]";
+        }
+        if(Session_Discount>100 || Session_Discount<0){
+            test=false;
+            toast.error("Session Discount must be between [0,100]");
+            message="Session Discount must be between [0,100]";
+        }
+        if(Pharmacy_Discount>100 || Pharmacy_Discount<0){
+            test=false;
+            toast.error("Pharmacy Discount must be between [0,100]");
+            message="Pharmacy Discount must be between [0,100]";
+        }
+        if(test){
         try {
             axios.post("http://localhost:8000/admin/editPack/"+ ID, {
                 Price,
@@ -53,6 +80,8 @@ function PackageCard( {pack}) {
         onClose();
 
     }
+}
+
     const openModal = () => {
         onOpen()
     }
@@ -135,28 +164,28 @@ function PackageCard( {pack}) {
                 <Flex p={5} w='100%'>
                     <Box display='flex' alignItems='center'>
                     <Text display='inline-block' width='150px' mr={2}>Price:</Text>
-                    <Input placeholder='Price' id='Price' />
+                    <Input type='Number' placeholder='Price' id='Price' />
                     <Text display='inline-block' as='sub' ml={2}>Current(${Price})</Text>
                     </Box>
                 </Flex>
                 <Flex p={5} w='100%'>
                     <Box display='flex' alignItems='center'>
                     <Text display='inline-block' width='150px' mr={2}>Family Discount:</Text>
-                    <Input placeholder='Family Discount' id='Family_Discount' />
+                    <Input type='Number' placeholder='Family Discount' id='Family_Discount' />
                     <Text display='inline-block' as='sub' ml={2}>Current(${Family_Discount})</Text>
                     </Box>
                 </Flex>
                 <Flex p={5} w='100%'>
                     <Box display='flex' alignItems='center'>
                     <Text display='inline-block' width='150px' mr={2}>Pharmacy Discount:</Text>
-                    <Input placeholder='Pharmacy Discount' id='Pharmacy_Discount' />
+                    <Input type='Number' placeholder='Pharmacy Discount' id='Pharmacy_Discount' />
                     <Text display='inline-block' as='sub' ml={2}>Current(${Pharmacy_Discount})</Text>
                     </Box>
                 </Flex>
                 <Flex p={5} w='100%'>
                     <Box display='flex' alignItems='center'>
                     <Text display='inline-block' width='150px' mr={2}>Session Discount:</Text>
-                    <Input placeholder='Session Discount' id='Session_Discount' />
+                    <Input type='Number' placeholder='Session Discount' id='Session_Discount' />
                     <Text display='inline-block' as='sub' ml={2}>Current(${Session_Discount})</Text>
                     </Box>
                 </Flex>

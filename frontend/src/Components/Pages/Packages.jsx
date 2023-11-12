@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import '../UI/button.css'
 import {
     Box,
     Button,
@@ -23,6 +24,7 @@ const Package = () =>{
     const { username } = useParams();
     const [error,Seterror]=useState(false);
     const [errorMessage,SeterrorMessage]=useState('');
+    const back =()=>  navigate(-1);
     useEffect(() => {
         const getPacks = async () => {
             const { data } = await axios.get("http://localhost:8000/patient/packages", {
@@ -70,9 +72,10 @@ const GoToStripe =async(packageID)=>{
     <Box >
         
         {console.log(packs)}    
-        <Box bg={'#4bbbf3'} p={5} boxShadow='2xl'>
-            <Text fontSize={'3xl'} color={'white'} >Available Packages</Text>
-        </Box>
+        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Text fontSize={'3xl'} color={'white'}>Available Packages</Text>
+      <button className="btn" onClick={back}>back</button>
+    </Box>
         <Box m={10} mt={20} bg='#f5f5f5'>
             {
                 packs &&

@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 import { loadStripe } from "@stripe/stripe-js";
 import {Elements} from "@stripe/react-stripe-js"
 import CheckoutForm from "../UI/PaymentPack";
+import { useNavigate } from "react-router-dom";
+import '../UI/button.css'
+import {Box,Text} from '@chakra-ui/react';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -15,7 +18,8 @@ export default function PayPack() {
     
     const[stripePromise,setStripePromise]=useState(null);
     const [clientSecret, setClientSecret] = useState("");
-
+    const navigate = useNavigate();
+    const back =()=>  navigate(-1);
     useEffect(() => {
         // Fetch publishableKey using Axios
         axios.get("http://localhost:8000/stripe/config")
@@ -48,7 +52,10 @@ export default function PayPack() {
   
 
       return (
-        <>
+        <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+        <Text fontSize={'3xl'} color={'white'}>Pay Credit Card</Text>
+        <button className="btn" onClick={back}>back</button>
+      </Box>
           <h1>React Stripe and the Payment Element</h1>
           {clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
