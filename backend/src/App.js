@@ -11,7 +11,7 @@ const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin,removeUser} = require("./Routes/adminController");
 const cors = require('cors');
 var cookies = require("cookie-parser");
-
+const fs = require('fs');
 
 
 
@@ -48,7 +48,24 @@ const patient = require("./Routers/patientRoute");
 const auth = require("./Routers/authRoute");
 const stripeRoute = require("./Routers/stripeRoute");
 
+app.get('/serve-file', (req, res) => {
+  const filePath = req.query.filePath;
 
+  if (!filePath) {
+    res.status(400).send('File path is missing.');
+    return;
+  }
+
+  // Read the file and send it as the response
+  const fileStream = fs.createReadStream(filePath);
+
+  // Set the appropriate headers for inline display
+  res.setHeader('Content-disposition', 'inline; filename=' + path.basename(filePath));
+  res.setHeader('Content-type', 'application/pdf'); // Adjust the content type based on the file type
+
+  // Pipe the file stream to the response
+  fileStream.pipe(res);
+});
 
 // #Importing the userController
 // configurations

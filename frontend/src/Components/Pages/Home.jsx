@@ -6,6 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
+import { saveAs } from 'file-saver';
 import { Box, Flex, Modal,
   ModalOverlay,
   ModalContent,
@@ -186,13 +187,50 @@ export const Home = () => {
       });
     }
   };
+
+  const viewDocument = async (filePath) => {
+    try {
+      // Replace this URL with the endpoint that serves the file
+      const fileEndpoint = `http://localhost:8000/serve-file?filePath=${encodeURIComponent(filePath)}`;
+  
+      // Fetch the file
+      const response = await fetch(fileEndpoint);
+  
+      if (!response.ok) {
+        // Handle the case where the file couldn't be fetched
+        throw new Error('Failed to fetch the document.');
+      }
+  
+      // Get the blob representing the file data
+      const fileBlob = await response.blob();
+  
+      // Determine the file extension from the file path
+      const fileExtension = filePath.split('.').pop().toLowerCase();
+  
+      // Set the content type based on the file extension
+      let contentType = 'application/octet-stream'; // Default to binary data
+  
+      if (fileExtension === 'pdf') {
+        contentType = 'application/pdf';
+      } else if (['jpeg', 'jpg', 'png'].includes(fileExtension)) {
+        contentType = `image/${fileExtension}`;
+      }
+  
+      // Use FileSaver.js to trigger the download
+      saveAs(fileBlob, `document.${fileExtension}`, { type: contentType });
+    } catch (error) {
+      console.error('Error opening the document:', error);
+      // Handle error, e.g., show an error toast
+      toast.error('Failed to open the document. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+  
+
   
   
-
-
-
-
-
   const cancelSubscription = async (index) => {
     try {
       const packageID = patientData.healthPackage[index]._id;
@@ -547,29 +585,37 @@ export const Home = () => {
 
       {/* Display existing files in a table */}
       <Stack mt={6} spacing={4}>
-        <Table variant="striped" colorScheme="teal" size="md">
-          <Thead>
-            <Tr>
-              <Th>File Name</Th>
-              <Th>File Path</Th>
-              <Th>Action</Th> {/* Add Action header for the Remove button */}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {patientData?.medicalHistory?.map((file, index) => (
-              <Tr key={index}>
-                <Td>{file.name}</Td>
-                <Td>{file.path}</Td>
-                <Td>
-                  <Button colorScheme="red" size="sm" onClick={() => removeDocument(file._id)}>
-                    Remove
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Stack>
+  <Table variant="striped" colorScheme="teal" size="md">
+    <Thead>
+      <Tr>
+        <Th>File Name</Th>
+        <Th>File Path</Th>
+        <Th>Action</Th> {/* Add Action header for the Remove button */}
+        <Th>Action</Th> {/* Add Action header for the View button */}
+      </Tr>
+    </Thead>
+    <Tbody>
+      {patientData?.medicalHistory?.map((file, index) => (
+        <Tr key={index}>
+          <Td>{file.name}</Td>
+          <Td>{file.path}</Td>
+          <Td>
+            <Button colorScheme="red" size="sm" onClick={() => removeDocument(file._id)}>
+              Remove
+            </Button>
+          </Td>
+          <Td>
+            {/* Add a View button that triggers a function to handle viewing the document */}
+            <Button colorScheme="teal" size="sm" onClick={() => viewDocument(file.path)}>
+              View
+            </Button>
+          </Td>
+        </Tr>
+      ))}
+    </Tbody>
+  </Table>
+</Stack>
+
     </ModalBody>
 
     <ModalFooter>
