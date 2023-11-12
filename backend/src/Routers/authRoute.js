@@ -11,9 +11,22 @@ router.post('/login', Login);
 // .post(PatientRegister);
 router.post('/Patientregister',PatientRegister);
 
+// router.route('/doc_register')
+//   .get((req, res) => { res.render('doc_register')})
+//   .post(DoctorRegister);
+
+
+const multer = require('multer');
+const storage = multer.diskStorage({
+});
+const upload = multer({ storage: storage });
 router.route('/doc_register')
-  .get((req, res) => { res.render('doc_register')})
-  .post(DoctorRegister);
+  .post(upload.fields([
+    { name: 'idDocument', maxCount: 1 },
+    { name: 'medicalLicenseDocument', maxCount: 1 },
+    { name: 'medicalDegreeDocument', maxCount: 1 },
+  ]), DoctorRegister);
+
 
 router.route('/administration')
   .get((req,res) => {res.render('administration')})
