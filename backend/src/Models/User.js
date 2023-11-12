@@ -2,6 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
+
+const medicalDocumentSchema = new mongoose.Schema({
+  name: String,
+  path: String,
+});
+
+
 const userSchema = new Schema({
   Username: {
     type: String,
@@ -136,6 +143,7 @@ const userSchema = new Schema({
       }
     })
   ],
+  medicalHistory: [medicalDocumentSchema],
   healthPackage:
     [
       new Schema({

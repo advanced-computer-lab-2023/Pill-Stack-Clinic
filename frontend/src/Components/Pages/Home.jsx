@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+
 import { ToastContainer, toast } from "react-toastify";
 import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
@@ -131,26 +132,94 @@ export const Home = () => {
     }
   };
 
-
-
-  const cancelSubscription = async () => {
+  const uploadDocument = async (file) => {
     try {
+      const formData = new FormData();
+      formData.append('document', file);
+  
+      await axios.post('http://localhost:8000/patient/upload-document', formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      // Call getPatientData after a successful document upload
+      await getPatientData();
+  
+      // Handle success, e.g., show a success toast
+      toast.success('Document uploaded successfully', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      // Handle error, e.g., show an error toast
+      toast.error('Failed to upload document. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const removeDocument = async (documentId) => {
+    try {
+      // Replace the following line with the actual endpoint for removing a document
+      await axios.delete(`http://localhost:8000/patient/remove-document/${documentId}`, {
+        withCredentials: true,
+      });
+  
+      // Call getPatientData after a successful document removal
+      await getPatientData();
+  
+      // Handle success, e.g., show a success toast
+      toast.success('Document removed successfully', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error('Error removing document:', error);
+      // Handle error, e.g., show an error toast
+      toast.error('Failed to remove document. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+  
+  
+
+
+
+
+
+  const cancelSubscription = async (index) => {
+    try {
+      const packageID = patientData.healthPackage[index]._id;
+  
       const response = await axios.post(
         'http://localhost:8000/patient/cancelSubs',
         {
           userId: patientData._id,
-          packageID: patientData.healthPackage[0]._id,
+          packageID: packageID,
         },
         { withCredentials: true }
       );
   
       // Handle the response as needed
       console.log(response.data);
+  
+      // Update the state with the canceled status
+      setPatientData((prevData) => {
+        const updatedData = { ...prevData };
+        updatedData.healthPackage[index].status = 'canceled'; // Assuming there's a status field
+        return updatedData;
+      });
+  
       toast.success('Cancelled successfully!', {
         position: 'top-right',
         autoClose: 3000,
       });
-      console.log("mfrood cancelled");
     } catch (error) {
       console.error('Error cancelling subscription:', error.message);
       toast.error('Failed to cancel subscription. Please try again.', {
@@ -159,6 +228,8 @@ export const Home = () => {
       });
     }
   };
+  
+  
 
   const handleChangePass = async () => {
     const oldPassword = document.querySelector('#oldPassword').value;
@@ -470,19 +541,37 @@ export const Home = () => {
     <ModalHeader>Upload Medical Document</ModalHeader>
     <ModalCloseButton />
     <ModalBody pb={9}>
-    <Center>
-    <Button
-  w="150px"
-  h="50px"
-  m={3}
-  colorScheme="green"
-  _hover={{ transform: "scale(1.05)" }}
-  onClick={openUploadDocModal} 
->
-  Upload Doc
-</Button>
-  </Center>
+      <Center>
+        <Input type="file" onChange={(e) => uploadDocument(e.target.files[0])} />
+      </Center>
+
+      {/* Display existing files in a table */}
+      <Stack mt={6} spacing={4}>
+        <Table variant="striped" colorScheme="teal" size="md">
+          <Thead>
+            <Tr>
+              <Th>File Name</Th>
+              <Th>File Path</Th>
+              <Th>Action</Th> {/* Add Action header for the Remove button */}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {patientData?.medicalHistory?.map((file, index) => (
+              <Tr key={index}>
+                <Td>{file.name}</Td>
+                <Td>{file.path}</Td>
+                <Td>
+                  <Button colorScheme="red" size="sm" onClick={() => removeDocument(file._id)}>
+                    Remove
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Stack>
     </ModalBody>
+
     <ModalFooter>
       <Button colorScheme="blue" mr={3}>
         Save
@@ -491,6 +580,7 @@ export const Home = () => {
     </ModalFooter>
   </ModalContent>
 </Modal>
+
 
 
 <Modal isOpen={isAddFamModalOpen} onClose={closeAddFamilyModal} size={'xl'} >

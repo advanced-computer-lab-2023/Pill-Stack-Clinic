@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const upload = require('../multerConfig'); 
 let router = express.Router();
 const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,checkSubscribed,
@@ -10,18 +11,6 @@ const {viewALLAppointments,searchDoctors,
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
-// Create a storage engine for multer to handle file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/medical-history/'); // Define the destination folder
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      cb(null, file.fieldname + '-' + uniqueSuffix);
-    },
-  });
-  
-  const upload = multer({ storage });
 
 
 // any username for now until login functionality is implemented 

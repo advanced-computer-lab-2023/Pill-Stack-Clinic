@@ -7,22 +7,6 @@ const path = require('path');
 const fs = require('fs');
 
 
-// Function to upload a medical history document
-const uploadMedicalDocument = async (req, res) => {
-   try {
-     const user = req.user;
-     const { originalname, path } = req.file;
- 
-     // Save document information to the user's medicalHistory
-     user.medicalHistory.push({ documentTitle: originalname, documentPath: path });
-     await user.save();
- 
-     res.status(201).json({ message: 'Document uploaded successfully' });
-   } catch (error) {
-     console.error('Error uploading medical document:', error);
-     res.status(500).json({ message: 'Internal server error' });
-   }
- };
  
  // Function to remove a medical history document
  const removeMedicalDocument = async (req, res) => {
@@ -34,7 +18,7 @@ const uploadMedicalDocument = async (req, res) => {
      const document = user.medicalHistory.id(documentId);
      if (document) {
        // Remove the file from the server
-       fs.unlinkSync(document.documentPath);
+       fs.unlinkSync(/* update with the correct path */ document.path);
        document.remove();
        await user.save();
        res.status(200).json({ message: 'Document removed successfully' });
@@ -46,7 +30,6 @@ const uploadMedicalDocument = async (req, res) => {
      res.status(500).json({ message: 'Internal server error' });
    }
  };
-
  const viewProfile= async(req,res)=>{
    const username = req.user.Username;
    const profile = await userModel.findOne({Username:username});
@@ -97,6 +80,24 @@ const addFamilyMem = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
    }
 }
+
+const uploadMedicalDocument = async (req, res) => {
+   try {
+     const user = req.user;
+     const { originalname, path } = req.file;
+ 
+     // Save document information to the user's medicalHistory
+     user.medicalHistory.push({ name: originalname, path: path });
+     await user.save();
+ 
+     res.status(201).json({ message: 'Document uploaded successfully' });
+   } catch (error) {
+     console.error('Error uploading medical document:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+
+
 const searchDoctors = async (req, res) => {
    try {
        const { name, speciality, startDate, endDate  } = req.body;
