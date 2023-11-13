@@ -456,7 +456,7 @@ export const Home = () => {
           </Tr>
         </Thead>
         <Tbody>
-        {patientData?.healthPackage && patientData.healthPackage.map((packageitem, index) => (
+          {patientData?.healthPackage && patientData.healthPackage.map((packageitem, index) => (
             <Tr key={index} className={packageitem.Owner ? 'owner-package' : ''}>
               <Td>{packageitem.Package_Name}</Td>
               <Td>{packageitem.Price}</Td>
@@ -472,6 +472,7 @@ export const Home = () => {
                   <Button
                     colorScheme="red"
                     onClick={() => cancelSubscription(index)}
+                    isDisabled={packageitem.Status === 'Cancelled'}
                   >
                     Cancel
                   </Button>
@@ -490,6 +491,7 @@ export const Home = () => {
     </ModalFooter>
   </ModalContent>
 </Modal>
+
 
 
 <Modal
