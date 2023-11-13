@@ -253,6 +253,7 @@ export const Home = () => {
         updatedData.healthPackage[index].status = 'canceled'; // Assuming there's a status field
         return updatedData;
       });
+      await getPatientData();
   
       toast.success('Cancelled successfully!', {
         position: 'top-right',
