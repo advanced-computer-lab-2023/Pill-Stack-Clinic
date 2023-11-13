@@ -24,7 +24,7 @@ router.post('/allApp',userVerification,viewALLAppointments);
 router.post('/searchName',userVerification,PostByName);
 router.post('/search',userVerification,searchAppointments);
 router.get('/myPatients',userVerification, viewMyPatients);
-router.get('/myPatients/viewPatient', selectPatient);
+router.post('/myPatients/viewPatient', selectPatient);
 router.post('/profile/edit/:id', editProfileInfo);
 router.get('/viewDoctorWallet',userVerification, viewDoctorWallet);
 router.get('/doctor-appointments/:username', viewUpcomPastAppointments);

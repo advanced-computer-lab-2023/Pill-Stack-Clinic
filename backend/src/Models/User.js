@@ -130,19 +130,6 @@ const userSchema = new Schema({
         enum: ['Filled', 'Unfilled']
       }    })
   ],
-  MedicalHistory: [
-    new Schema({
-      documentTitle: String,
-      documentPath: String,
-      Disease: String,
-      Description: String,
-      StartDate: Date,
-      Status: {
-        type: String,
-        enum: ['active', 'inactive'],
-      }
-    })
-  ],
   medicalHistory: [medicalDocumentSchema],
   healthPackage:
     [
