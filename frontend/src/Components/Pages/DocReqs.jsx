@@ -287,6 +287,14 @@ function DocReqs() {
             </AbsoluteCenter>
             </Box>
             <Text fontSize='3xl'>  <Center> {viewReq.EducationalBackground} </Center></Text>
+            
+            <Box position='relative' >
+            <Divider />
+            <AbsoluteCenter bg='white' px='4'>
+                Speciality
+            </AbsoluteCenter>
+            </Box>
+            <Text fontSize={'3xl'}> <Center> {viewReq.Speciality} </Center> </Text>
              <Button onClick={handleView1}>View ID Doc</Button>
             <Button onClick={handleView2}>View Degree</Button>
             <Button onClick={handleView3}>View License</Button>

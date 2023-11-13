@@ -84,6 +84,7 @@ const secPass = await bcrypt.hash(req.body.Password, salt)
         HourlyRate: req.body.HourlyRate,
         Affiliation: req.body.Affiliation,
         EducationalBackground: req.body.EducationalBackground ,
+        Speciality: req.body.Speciality,
        idDocument: {
         data: idDocument.buffer,
         contentType: idDocument.mimetype,

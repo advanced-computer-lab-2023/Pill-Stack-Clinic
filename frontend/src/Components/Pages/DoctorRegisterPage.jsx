@@ -23,6 +23,7 @@ const DoctorRegisterPage = () => {
     HourlyRate: '',
     Affiliation: '',
     EducationalBackground: '',
+    Speciality:'',
     idDocument: null,
     medicalLicenseDocument: null,
     medicalDegreeDocument: null
@@ -129,6 +130,11 @@ const DoctorRegisterPage = () => {
       <FormControl isRequired>
         <FormLabel>Educational Background</FormLabel>
         <Input type="text" name="EducationalBackground" value={formData.EducationalBackground} onChange={onChange} />
+      </FormControl>
+
+      <FormControl isRequired>
+        <FormLabel>Speciality</FormLabel>
+        <Input type="text" name="Speciality" value={formData.Speciality} onChange={onChange} />
       </FormControl>
 
       <FormControl isRequired>
