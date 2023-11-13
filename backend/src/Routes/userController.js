@@ -702,10 +702,11 @@ const subscribePackageCash=async(req,res)=>{
    // if(user.healthPackage.length!=0){
    //    res.send("User Already Subscribed to a Package");
    // }
-   // if(user.WalletBalance<pack.Price){
-   //    res.send("No Enough Balance");
-   // }
-   //else{
+   if(user.WalletBalance<pack.Price){
+      res.send("No Enough Balance");
+      return;
+   }
+   else{
       for(let i=0;i<user.healthPackage.length;i++){
          if(user.healthPackage[i].Owner==true){
          user.healthPackage[i].remove();
@@ -725,7 +726,7 @@ const subscribePackageCash=async(req,res)=>{
    });
    user.healthPackage.push(userPack);
    await user.save();
-   // user.WalletBalance=user.WalletBalance-pack.Price;
+   user.WalletBalance=user.WalletBalance-pack.Price;
    if(user.familyMembers.length==0){
       console.log("No family members");
    }
@@ -760,6 +761,7 @@ const subscribePackageCash=async(req,res)=>{
          await linkedFam.save();
    }
    }
+}
    res.send("Subscribed succsefully");
    SortPackByOwner(user);
    await user.save();
