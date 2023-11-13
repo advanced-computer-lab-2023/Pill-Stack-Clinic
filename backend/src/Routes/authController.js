@@ -171,17 +171,14 @@ module.exports.Login = async (req, res, next) => {
      
         }else{
           loggedIn=admin;
-          console.log(loggedIn.Password);
 
           role='admin';
         }
       }
-      console.log(role);
       const auth = await bcrypt.compare(password,loggedIn.Password)
       if (!auth) {
         return res.json({message:'Incorrect password or email' }) 
       }
-      console.log(loggedIn);
        const token = createSecretToken(loggedIn._id,role);
        res.cookie("token", token, {
          withCredentials: true,

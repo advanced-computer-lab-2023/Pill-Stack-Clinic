@@ -3,6 +3,8 @@ import axios from 'axios';
 import '../UI/button.css'
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { saveAs } from 'file-saver';
+import { ToastContainer, toast } from "react-toastify";
 import {
   Table,
   Thead,
@@ -26,6 +28,7 @@ import {
   FormControl,
   FormLabel,
   Flex,
+  Stack
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -45,6 +48,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 const DoctorPatientsTable = () => {
   const [patients, setPatients] = useState([]);
   const [statusFilter, setStatusFilter] = useState('All');
@@ -61,6 +65,8 @@ const DoctorPatientsTable = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isUploadDocModalOpen, setIsUploadDocModalOpen] = useState(false);
+  const [patientData, setPatientData] = useState([]);
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
 
@@ -92,8 +98,12 @@ const DoctorPatientsTable = () => {
     return statusMatches && nameMatches && dateMatches;
   });
 
-  const openPatientDetails = (patient) => {
-    setSelectedPatient(patient);
+  const openPatientDetails = async (patient) => {
+    const response = await axios.post('http://localhost:8000/doctor/myPatients/viewPatient',{username:patient.PatientUsername}, {
+      withCredentials: true, // Include credentials if necessary
+    });
+
+    setSelectedPatient(response.data);
   };
 
   const closePatientDetails = () => {
@@ -158,6 +168,56 @@ const DoctorPatientsTable = () => {
       alert('Failed to add health record. Please try again.');
     }
   };
+  const openUploadDocModal = (patient) => {
+    setPatientData(patient);
+    setIsUploadDocModalOpen(true);
+  };
+
+  const closeUploadDocModal = () => {
+    setIsUploadDocModalOpen(false);
+  };
+
+  const viewDocument = async (filePath) => {
+    try {
+      // Replace this URL with the endpoint that serves the file
+      const fileEndpoint = `http://localhost:8000/serve-file?filePath=${encodeURIComponent(filePath)}`;
+  
+      // Fetch the file
+      const response = await fetch(fileEndpoint);
+  
+      if (!response.ok) {
+        // Handle the case where the file couldn't be fetched
+        throw new Error('Failed to fetch the document.');
+      }
+  
+      // Get the blob representing the file data
+      const fileBlob = await response.blob();
+  
+      // Determine the file extension from the file path
+      const fileExtension = filePath.split('.').pop().toLowerCase();
+  
+      // Set the content type based on the file extension
+      let contentType = 'application/octet-stream'; // Default to binary data
+  
+      if (fileExtension === 'pdf') {
+        contentType = 'application/pdf';
+      } else if (['jpeg', 'jpg', 'png'].includes(fileExtension)) {
+        contentType = `image/${fileExtension}`;
+      }
+  
+      // Use FileSaver.js to trigger the download
+      saveAs(fileBlob, `document.${fileExtension}`, { type: contentType });
+    } catch (error) {
+      console.error('Error opening the document:', error);
+      // Handle error, e.g., show an error toast
+      toast.error('Failed to open the document. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+  
+
 
   return (
     <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
@@ -216,6 +276,7 @@ const DoctorPatientsTable = () => {
                 <Th>Patient Name</Th>
                 <Th>Status</Th>
                 <Th>Start Date</Th>
+                <Th>End Date </Th>
                 <Th> </Th>
                 <Th> </Th>
                 <Th> </Th>
@@ -227,6 +288,8 @@ const DoctorPatientsTable = () => {
                   <Td>{patient.PatientName}</Td>
                   <Td>{patient.Status}</Td>
                   <Td>{new Date(patient.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                  <Td>{new Date(patient.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+
                   <Td>
                     <Popover>
                       <PopoverTrigger>
@@ -242,12 +305,20 @@ const DoctorPatientsTable = () => {
                         <PopoverArrow />
                         <PopoverCloseButton />
                         <PopoverHeader>Patient Details</PopoverHeader>
-                        <PopoverBody>
-                          <p>Patient username: {patient.PatientUsername}</p>
-                          <p>Patient Name: {patient.PatientName}</p>
-                          <p>Status: {patient.Status}</p>
-                          <p>Start Date: {patient.StartDate}</p>
-                        </PopoverBody>
+                        {selectedPatient!==null && ( <PopoverBody>
+                        <p>Patient username: {selectedPatient.Username}</p>
+                        <p>Email: {selectedPatient.Email}</p>
+                        <p>DOB: {new Date(selectedPatient.DateOfBirth).toLocaleDateString('en-US')}</p>
+                        <p>Phone number: {selectedPatient.MobileNumber}</p>
+                        <span
+                        style={{ color: 'teal', cursor: 'pointer' }}
+                        onClick={() => openUploadDocModal(selectedPatient)}
+                        >
+                        View Medical History
+                       </span>
+
+                      </PopoverBody>)}
+                         
                       </PopoverContent>
                     </Popover>
                   </Td>
@@ -348,6 +419,52 @@ const DoctorPatientsTable = () => {
               </ModalFooter>
             </ModalContent>
           </Modal>
+          <Modal
+    isOpen={isUploadDocModalOpen}
+    onClose={closeUploadDocModal}
+  
+    size="2xl"
+  >
+    <ModalOverlay />
+    <ModalContent h="700px">
+      <ModalHeader>Upload Medical Document</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody pb={9}>
+       
+  
+        {/* Display existing files in a table */}
+        <Stack mt={6} spacing={4}>
+    <Table variant="striped" colorScheme="teal" size="md">
+      <Thead>
+        <Tr>
+          <Th>File Name</Th>
+          <Th>File Path</Th>
+          <Th>Action</Th> {/* Add Action header for the View button */}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {patientData?.medicalHistory?.map((file, index) => (
+          <Tr key={index}>
+            <Td>{file.name}</Td>
+            <Td>{file.path}</Td>
+            <Td>
+              {/* Add a View button that triggers a function to handle viewing the document */}
+              <Button colorScheme="teal" size="sm" onClick={() => viewDocument(file.path)}>
+                View
+              </Button>
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </Stack>
+  
+      </ModalBody>
+      <ModalFooter>
+      <Button onClick={closeUploadDocModal}>Cancel</Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
         </Box>
       </Container></>
   );
