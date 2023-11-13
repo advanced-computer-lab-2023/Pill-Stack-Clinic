@@ -208,7 +208,7 @@ _hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
       <Box fontSize="16px" mb="10px">HealthRecords</Box>
     
     <Center>
-      <a  onClick={() => navigate(`/my-health-records/${username}`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <a  onClick={() => navigate(`/my-health-records/${username}/${name}`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <EditIcon boxSize={5} />
        
       </a>
