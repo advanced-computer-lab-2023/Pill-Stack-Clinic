@@ -158,7 +158,14 @@ const getUsers = async (req, res) => {
 
    const profile = await userModel.findOne({ Username: username });
    const BookedAppointments = profile.BookedAppointments;
-   res.status(200).json(BookedAppointments);
+   const currDate=new Date();
+   for (const app of BookedAppointments) {
+     if(app.StartDate<currDate){
+      app.Status='completed';
+     }
+    }
+    profile.save();
+   res.status(200).json(profile.BookedAppointments);
  
  
   }
@@ -167,7 +174,14 @@ const getUsers = async (req, res) => {
    const username = req.user.Username;
    const profile = await userModel.findOne({ Username: username });
    const familyAppointments = profile.FamilyBookedAppointments;
-   res.status(200).json(familyAppointments);
+   const currDate=new Date();
+   for (const app of familyAppointments) {
+     if(app.StartDate<currDate){
+      app.Status='completed';
+     }
+    }
+    profile.save();
+   res.status(200).json(profile.FamilyBookedAppointments);
  
  
   }
@@ -509,10 +523,17 @@ const viewAllAvailableAppointments = async (req, res) => {
    try {
      const selectedDoctor = await doctorModel.find({});
      var app=[];
-
+     const currDate=new Date();
      selectedDoctor.forEach(doctor => {
-      if(doctor.Availability.length!==0)
+      if(doctor.Availability.length!==0){
+      for (const app of doctor.Availability) {
+         if(app.StartDate<currDate){
+           doctor.Availability.remove(app);
+         }
+        }
+        doctor.save();
       app.push(doctor.Availability);
+      }
      });
    
      res.status(200).json(selectedDoctor);

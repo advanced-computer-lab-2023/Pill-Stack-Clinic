@@ -178,7 +178,14 @@ const updateContractStatus=async(req,res)=>{
   const username = req.user.Username;
   const profile = await doctorModel.findOne({ Username: username });
   const BookedAppointments = profile.BookedAppointments;
-  res.send(BookedAppointments);
+  const currDate=new Date();
+  for (const app of BookedAppointments) {
+    if(app.StartDate<currDate){
+     app.Status='completed';
+    }
+   }
+   profile.save();
+  res.send(profile.BookedAppointments);
 
 
  }
@@ -615,7 +622,14 @@ const deleteContract = async (req, res) => {
     const username = req.user.Username;
     const profile = await doctorModel.findOne({ Username: username });
     const Availability = profile.Availability;
-    res.send(Availability);
+    const currDate=new Date();
+    for (const app of Availability) {
+      if(app.StartDate<currDate){
+       Availability.remove(app);
+      }
+     }
+     profile.save();
+    res.send(profile.Availability);
   }
   
   
