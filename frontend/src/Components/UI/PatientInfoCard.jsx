@@ -4,7 +4,7 @@ import { Heading, Stack, StackDivider, Box, Text } from '@chakra-ui/react';
 import './Styles/DoctorInfoCard.css';
 
 function PatientInfoCard(props) {
-  const { title, username, name, email, DateOfBirth, Gender,MobileNumber,EmergencyContact_Name,EmergencyContact_MobileNumber,WalletBalance } = props;
+  const { title, username, name, email, DateOfBirth, Gender,MobileNumber,EmergencyContact_Name,EmergencyContact_MobileNumber,WalletBalance, DeliveryAddress } = props;
 
   return (
     <Card>
@@ -85,6 +85,14 @@ function PatientInfoCard(props) {
             </Heading>
             <Text pt='2' fontSize='sm'>
               {WalletBalance}
+            </Text>
+          </Box>
+          <Box>
+            <Heading size='xs' textTransform='uppercase'>
+              My Delivery Address:
+            </Heading>
+            <Text pt='2' fontSize='sm'>
+              {DeliveryAddress}
             </Text>
           </Box>
         </Stack>

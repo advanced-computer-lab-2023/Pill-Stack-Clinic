@@ -2,6 +2,8 @@ const userModel = require("../Models/User");
 const doctorModel = require("../Models/Doctor");
 const adminModel = require("../Models/Admin");
 const docModel = require("../Models/Doc_Request");
+const pharmaReqModel = require('../Models/Pharmacist_Request.js');
+const pharmaModel = require('../Models/Pharmacist.js');
 const otpModel = require("../Models/Otp");
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -21,9 +23,10 @@ module.exports.PatientRegister = async (req, res, next) => {
     const existingUserinPatient = await userModel.findOne({ Username:req.body.username });
     const existingUserinDoctor = await doctorModel.findOne({ Username:req.body.username });
     const existingUserinAdmin = await adminModel.findOne({ Username:req.body.username });
+    const existingUserinPharma = await pharmaModel.findOne({ Username:req.body.username });
 
 
-    if (existingUserinPatient || existingUserinDoctor || existingUserinAdmin) {
+    if (existingUserinPatient || existingUserinDoctor || existingUserinPharma|| existingUserinAdmin) {
       return res.json({ message: "User already exists" });
     }
     const salt = await bcrypt.genSalt(10);
@@ -57,6 +60,8 @@ module.exports.DoctorRegister = async (req, res, next) => {
     const existingUserinPatient = await userModel.findOne({ Username: req.body.Username });
     const existingUserinDoctor = await doctorModel.findOne({ Username: req.body.Username });
     const existingUserinAdmin = await adminModel.findOne({ Username: req.body.Username });
+    const existingUserinPharma = await pharmaModel.findOne({ Username:req.body.username });
+
     // Handle file uploads
     
     const idDocument = await req.files.idDocument ? req.files.idDocument[0] : null;
@@ -70,7 +75,7 @@ module.exports.DoctorRegister = async (req, res, next) => {
     }
 
 
-    if (existingUserinPatient || existingUserinDoctor || existingUserinAdmin) {
+    if (existingUserinPatient || existingUserinDoctor || existingUserinPharma || existingUserinAdmin) {
       return res.json({ message: 'User already exists' });
     }
     const salt = await bcrypt.genSalt(10);
@@ -110,6 +115,63 @@ const secPass = await bcrypt.hash(req.body.Password, salt)
     console.error(error);
   }
 };
+//CREATED AS AN APPLICATION NOT AN ACCOUNT 
+module.exports.pharmaRegister = async (req, res, next) => {
+  try {
+    const existingUserinPatient = await userModel.findOne({ Username: req.body.Username });
+    const existingUserinDoctor = await doctorModel.findOne({ Username: req.body.Username });
+    const existingUserinAdmin = await adminModel.findOne({ Username: req.body.Username });
+    const existingUserinPharma = await pharmaModel.findOne({ Username:req.body.username });
+    // Handle file uploads
+    const IDDocument = req.files.IDDocument ? req.files.IDDocument[0] : null;
+    const pharmacyDegreeDocument = req.files.pharmacyDegreeDocument ? req.files.pharmacyDegreeDocument[0] : null;
+    const workingLicenseDocument = req.files.workingLicenseDocument ? req.files.workingLicenseDocument[0] : null;
+    console.log(IDDocument);
+
+    if (!IDDocument || !pharmacyDegreeDocument || !workingLicenseDocument) {
+      return res.status(400).send({ message: 'Please upload all required documents.' });
+    }
+
+
+    if (existingUserinPatient || existingUserinDoctor || existingUserinPharma || existingUserinAdmin) {
+      return res.json({ message: "User already exists" });
+    }
+    const salt = await bcrypt.genSalt(10);
+const secPass = await bcrypt.hash(req.body.password, salt) 
+    const user = await pharmaReqModel.create({    
+      Username: req.body.username, 
+       Name: req.body.name, 
+       Email:req.body.email, 
+       Password:secPass,
+       DateOfBirth: req.body.dob,
+       HourlyRate: req.body.hourly_rate,
+       Affiliation: req.body.affiliation,
+       EducationalBackground: req.body.educational_background  ,
+       IDDocument: {
+        data: IDDocument.buffer,
+        contentType: IDDocument.mimetype,
+      },
+      pharmacyDegreeDocument: {
+        data: pharmacyDegreeDocument.buffer,
+        contentType: pharmacyDegreeDocument.mimetype,
+      },
+      workingLicenseDocument: {
+        data: workingLicenseDocument.buffer,
+        contentType: workingLicenseDocument.mimetype,
+      }, });
+    const token = createSecretToken(user._id);
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+    res
+      .status(201)
+      .json({ message: "Doctor registered successfully", success: true, user });
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 module.exports.addAdmin = async (req, res, next) => {
   try {
@@ -117,9 +179,10 @@ module.exports.addAdmin = async (req, res, next) => {
     const existingUserinPatient = await userModel.findOne({ Username:req.body.username });
     const existingUserinDoctor = await doctorModel.findOne({ Username:req.body.username });
     const existingUserinAdmin = await adminModel.findOne({ Username:req.body.username });
+    const existingUserinPharma = await pharmaModel.findOne({ Username:req.body.username });
 
 
-    if (existingUserinPatient || existingUserinDoctor || existingUserinAdmin) {
+    if (existingUserinPatient || existingUserinDoctor || existingUserinPharma|| existingUserinAdmin) {
       return res.json({ message: "User already exists" });
     }
     const salt = await bcrypt.genSalt(10);
@@ -149,8 +212,9 @@ module.exports.Login = async (req, res, next) => {
       const user = await userModel.findOne({ Username:username });
       const doctor= await doctorModel.findOne({ Username:username });
       const admin = await adminModel.findOne({ Username:username });
+      const pharma= await pharmaModel.findOne({ Username:username });
 
-      if(!user && !doctor && !admin){
+      if(!user && !doctor && !admin && !pharma ){
 
         return res.json({message:'Incorrect password or email' }) 
       }
@@ -170,9 +234,14 @@ module.exports.Login = async (req, res, next) => {
           }
      
         }else{
+          if(pharma){
+            loggedIn=pharma;
+            role='pharmacist';
+          }else{
           loggedIn=admin;
 
           role='admin';
+          }
         }
       }
       const auth = await bcrypt.compare(password,loggedIn.Password)
@@ -213,6 +282,9 @@ module.exports.Login = async (req, res, next) => {
           if(data.role==='admin'){
              user = await adminModel.findById(data.id);
             }
+            if(data.role==='pharmacist'){
+              user = await pharmaModel.findById(data.id);
+             }
         
 
         if (user) {
@@ -243,6 +315,7 @@ console.log(username);
   const username=req.user.Username;
   const user = await userModel.findOne({ Username:username });
   const doctor= await doctorModel.findOne({ Username:username });
+  const pharma= await pharmaModel.findOne({ Username:username });
   const admin = await adminModel.findOne({ Username:username });
   var loggedIn=null;
   var role=null;
@@ -258,8 +331,13 @@ console.log(username);
         role='doctorContractUnSigned';
       }
     }else{
+      if(pharma){
+        loggedIn=pharma;
+        role='pharmacist';
+      }else{
       loggedIn=admin;
       role='admin';
+      }
     }
   }
       const auth = await bcrypt.compare(oldPassword,loggedIn.Password)
@@ -290,6 +368,7 @@ console.log(username);
   const email=req.body.email;
   const user = await userModel.findOne({ Email:email });
   const doctor= await doctorModel.findOne({ Email:email });
+  const pharma= await pharmaModel.findOne({ Email:email });
   const admin = await adminModel.findOne({ Email:email });
   var loggedIn=null;
   if(user){
@@ -298,7 +377,11 @@ console.log(username);
     if(doctor){
       loggedIn=doctor;
     }else{
+      if(pharma){
+        loggedIn=pharma;
+      }else{
       loggedIn=admin;
+      }
     }
   }
   if(loggedIn===null){
@@ -335,6 +418,7 @@ console.log(username);
   }
   const user = await userModel.findOne({ Email:email});
   const doctor= await doctorModel.findOne({Email:email });
+  const pharma= await pharmaModel.findOne({Email:email });
   const admin = await adminModel.findOne({ Email:email });
   var loggedIn=null;
   var role=null;
@@ -350,8 +434,13 @@ console.log(username);
         role='doctorContractUnSigned' 
       }
     }else{
+      if(pharma){
+        loggedIn=pharma;
+        role='pharmacist';
+      }else{
       loggedIn=admin;
       role='admin';
+      }
     }
   }
      
@@ -402,6 +491,7 @@ module.exports.ResetPass = async (req, res) => {
 
     const user = await userModel.findOne({ Email: email });
     const doctor = await doctorModel.findOne({ Email: email });
+    const pharma= await pharmaModel.findOne({Email:email });
     const admin = await adminModel.findOne({ Email: email });
 
     let loggedIn = null;
@@ -415,8 +505,13 @@ module.exports.ResetPass = async (req, res) => {
         loggedIn = doctor;
         role = doctor.ContractStatus ? 'doctorContractSigned' : 'doctorContractUnSigned';
       } else {
+        if (pharma) {
+          loggedIn = pharma;
+          role='pharmacist';
+        }else{
         loggedIn = admin;
         role = 'admin';
+        }
       }
     }
 

@@ -1,4 +1,4 @@
-const {  Login,PatientRegister ,upload,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP} = require('../Routes/authController')
+const {  Login,PatientRegister ,upload,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP,pharmaRegister} = require('../Routes/authController')
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 const router = require('express').Router()
@@ -23,6 +23,13 @@ router.route('/doc_register')
     { name: 'medicalLicenseDocument', maxCount: 1 },
     { name: 'medicalDegreeDocument', maxCount: 1 },
   ]), DoctorRegister);
+  
+router.route('/pharma_register')
+.post(upload.fields([
+  { name: 'IDDocument', maxCount: 1 },
+  { name: 'pharmacyDegreeDocument', maxCount: 1 },
+  { name: 'workingLicenseDocument', maxCount: 1 },
+]), pharmaRegister);
 
 
 router.route('/administration')

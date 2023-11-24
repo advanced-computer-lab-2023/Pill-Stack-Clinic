@@ -1,6 +1,8 @@
 const userModel = require("../Models/User");
 const doctorModel = require('../Models/Doctor.js');
 const adminModel = require('../Models/Admin.js');
+const pharmaModel = require('../Models/Pharmacist.js');
+
 
 
 require("dotenv").config();
@@ -26,6 +28,9 @@ module.exports.userVerification = (req, res,next) => {
           if(data.role==='admin'){
              user = await adminModel.findById(data.id);
             }
+            if(data.role==='pharmacist'){
+              user = await pharmaModel.findById(data.id);
+             }
         
 
       if (user) {

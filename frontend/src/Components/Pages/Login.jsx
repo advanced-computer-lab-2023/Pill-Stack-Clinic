@@ -55,6 +55,8 @@ export const Login = () => {
               navigate('/admin-home');
             }else if(role === 'doctorContractUnSigned'){
               navigate('/Unsigned-doctor-home');
+            }else if (role === 'pharmacist') { 
+              navigate('/pharma-home');
             }
           }, 1000);
         } else {

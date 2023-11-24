@@ -24,7 +24,7 @@ import {
 
 
 function PatientShortcuts(props) {
-  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username,name, setTab, setInputs } = props;
+  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username,name, setTab, setInputs,openAddDeliveryModal } = props;
   
   
   return (
@@ -215,6 +215,22 @@ _hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' onClick={openAddDeliveryModal}
+_hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
+  <LinkOverlay onClick={openAddDeliveryModal}></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">AddDeliveryAddress</Box>
+    
+    <Center>
+      <a onClick={openAddDeliveryModal} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <AddIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+
 
 
 

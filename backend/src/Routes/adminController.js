@@ -4,6 +4,8 @@ const doctorModel = require('../Models/Doctor.js');
 const packageModel=require('../Models/Packages.js');
 const patientModel=require('../Models/User.js');
 const pharmaReqModel = require('../Models/Pharmacist_Request.js');
+const medModel = require('../Models/Medicine.js');
+
 const { default: mongoose } = require('mongoose');
 
 const viewDocApp= async (req, res) => {
@@ -317,11 +319,35 @@ const pharmaApplications= async (req, res) => {
 }
 
 
+// Pharmacy add ons
+async function getAvailableMedicines(req, res) {
+  try {
+    // Use Mongoose to find medicines with quantity > 0
+    const availableMedicines = await medModel.find({ Quantity: { $gt: 0 } });
+    res.send( availableMedicines );
+  } catch (error) {
+    console.error('Error fetching available medicines:', error);
+    throw error;
+  }
+}
+async function getMedicinalUse (req,res) {
+  console.log('getting med use');
+  const result=await  medModel.aggregate([
+     { $unwind: '$MedicinalUse' }, // Unwind the array
+     { $group: { _id: '$MedicinalUse' } }, // Group by MedicinalUse
+   ]);
+   const uniqueMedicinalUses = result.map((use) => use._id);
+   console.log(uniqueMedicinalUses);
+   res.send( uniqueMedicinalUses);
+ 
+
+ }
+
+
 module.exports = {
     viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewProfile,
     viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest,
-
-    pharmaApplications
+    pharmaApplications,getAvailableMedicines,getMedicinalUse
   };
 
 

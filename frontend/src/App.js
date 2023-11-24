@@ -31,8 +31,12 @@ import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
-
-// pharmacy
+///Pharmacy add ons
+import{MedicineList} from "./Components/UI/MedicineList";
+import {Cart} from "./Components/Pages/Cart";
+import  CompletionMed from "./Components/Pages/CompletionMedPayment.jsx";
+import  CreditPayment from "./Components/Pages/CreditPaymentMed.jsx";
+import OrderDetails from './Components/UI/orderDetails';
 import PharmacistReqs from "./Components/Pages/PharmacistReqs";
 
 
@@ -76,6 +80,11 @@ function App() {
 
         {/* pharmacy */}
         <Route path="/admin-home/pharmaRequests" element={<PharmacistReqs />} />
+        <Route path="/medicine" element={<MedicineList />} />
+        <Route path="/cart" element={<Cart/>} />
+        <Route path="/home/creditPayment/:address" element={<CreditPayment />} />
+        <Route path="/Medcompletion/:address/:intentid" element={<CompletionMed />} />
+        <Route path="/orderdetails" element={<OrderDetails/>} />
 
       </Routes>
     </div>

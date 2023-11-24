@@ -181,6 +181,10 @@ const userSchema = new Schema({
          relation: String, // Relation (wife, husband, child, etc.)
       })
    ],
+   
+      DeliveryAddress:[{
+        type:String
+      }] 
   
   
 }, { timestamps: true });

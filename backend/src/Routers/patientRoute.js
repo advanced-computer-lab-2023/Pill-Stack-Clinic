@@ -7,7 +7,9 @@ const {viewALLAppointments,searchDoctors,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
     viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,viewProfile,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
-    removeMedicalDocument,getAmount,viewAllAvailableAppointments,viewFamilyAppointments,viewMyHealthRecords} = require('../Routes/userController.js');
+    removeMedicalDocument,getAmount,viewAllAvailableAppointments,
+    viewFamilyAppointments,viewMyHealthRecords,getAddresses,
+    orderDetails,addDeliveryAddress} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -46,4 +48,9 @@ router.post('/cancelSubs',cancelSubscription);
 router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
 router.get('/viewMyHealthRecords/:Username/:Patientname',userVerification,viewMyHealthRecords)
 router.post('/checkSubscribed',checkSubscribed);
+////Pharmacy add ons 
+router.get('/Address',userVerification,getAddresses)
+router.get('/orderDetails',userVerification,orderDetails)
+router.post('/addDeliveryAddress/:username',addDeliveryAddress)
+
 module.exports = router;
