@@ -1,7 +1,9 @@
 const express = require('express');
 let router = express.Router();
 const {userVerification } = require('../Middleware/AuthMiddleware')
-const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack,removeUser,viewProfile, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest} = require('../Routes/adminController.js');
+const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack,removeUser,viewProfile, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest,
+    pharmaApplications
+} = require('../Routes/adminController.js');
 
 router.get("/", async(req,res) => {res.render('admin_home')});
 router.get("/applications",viewAllApp);
@@ -22,6 +24,10 @@ router.get('/allUsers' , getAllUsers )
 router.route('/removeUser')
 .get((req,res) => {res.render('removeUser')})
 .post(removeUser);
+
+// pharmacy
+router.get("/pharmaApplications",pharmaApplications);
+
 
 module.exports = router;
 

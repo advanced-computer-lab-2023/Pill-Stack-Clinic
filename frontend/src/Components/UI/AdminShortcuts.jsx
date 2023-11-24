@@ -76,10 +76,26 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
   <LinkOverlay href="admin-home/admin-requests"></LinkOverlay>
   <AbsoluteCenter>
     
-      <Box fontSize="16px" mb="10px">Requests</Box>
+      <Box fontSize="16px" mb="10px">Doctors' Requests</Box>
     
     <Center>
       <a href="admin-home/admin-requests" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <ViewIcon boxSize={5} />
+       
+      </a>
+    </Center>
+  </AbsoluteCenter>
+</LinkBox>
+
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="admin-home/admin-requests"
+_hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
+  <LinkOverlay href="admin-home/admin-requests"></LinkOverlay>
+  <AbsoluteCenter>
+    
+      <Box fontSize="16px" mb="10px">Pharmacists' Requests</Box>
+    
+    <Center>
+      <a href="admin-home/pharmaRequests" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
       </a>

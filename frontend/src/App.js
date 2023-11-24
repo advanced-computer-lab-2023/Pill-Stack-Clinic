@@ -32,6 +32,10 @@ import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
 
+// pharmacy
+import PharmacistReqs from "./Components/Pages/PharmacistReqs";
+
+
 
 function App() {
   
@@ -68,6 +72,11 @@ function App() {
         <Route path="/my-health-records/:patientUsername" element={<MyHealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
+        
+
+        {/* pharmacy */}
+        <Route path="/admin-home/pharmaRequests" element={<PharmacistReqs />} />
+
       </Routes>
     </div>
   );

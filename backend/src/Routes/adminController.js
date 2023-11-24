@@ -3,6 +3,7 @@ const docModel = require('../Models/Doc_Request.js');
 const doctorModel = require('../Models/Doctor.js');
 const packageModel=require('../Models/Packages.js');
 const patientModel=require('../Models/User.js');
+const pharmaReqModel = require('../Models/Pharmacist_Request.js');
 const { default: mongoose } = require('mongoose');
 
 const viewDocApp= async (req, res) => {
@@ -310,11 +311,18 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const pharmaApplications= async (req, res) => {
+  const applications = await pharmaReqModel.find({});
+  res.send(applications);
+}
+
 
 module.exports = {
     viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewProfile,
-    viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest
-};
+    viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest,
+
+    pharmaApplications
+  };
 
 
 
