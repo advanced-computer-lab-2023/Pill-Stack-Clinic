@@ -6,6 +6,8 @@ const packageModel=require('../Models/Packages.js');
 const orderModel=require('../Models/Order.js');
 const path = require('path');
 const fs = require('fs');
+const sendEmail = require("../Utilities/SendEmail");
+
 
 
  
@@ -674,6 +676,8 @@ const viewAvailDoctorAppointments = async (req, res) => {
       });
       familyMember.BookedAppointments.push(userApp);
       familyMember.save();
+     
+      
    
    
     }
@@ -683,6 +687,13 @@ const viewAvailDoctorAppointments = async (req, res) => {
    doctor.save();
    user.WalletBalance=wallet-amount;
    user.save();
+   const formattedDate = Appointment.StartDate.toLocaleDateString();
+   const formattedTimeStart = Appointment.StartDate.toLocaleTimeString();
+   const formattedTimeEnd = Appointment.EndDateDate.toLocaleTimeString();
+// Construct the email text with the formatted appointment details
+   const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+   await sendEmail(user.Email, "New Appointment ",emailText );
+   await sendEmail(doctor.Email,"New Appointment",emailText)
    res.send("Appointment booked successfully");
    }
 

@@ -4,6 +4,8 @@ const {  userVerification } = require('../Middleware/AuthMiddleware');
 const userModel = require("../Models/User");
 const doctorModel = require("../Models/Doctor");
 const packageModel = require("../Models/Packages");
+const sendEmail = require("../Utilities/SendEmail");
+
 const stripe = require('stripe')(process.env.SECRETKEY);
 router.post("/pay",userVerification,async (req,res,next)=>{
     const appointmentId=req.body.appid; //from doctor's available appointment;
@@ -126,6 +128,13 @@ const docBalance=doctor.WalletBalance+(0.9*amount);
 doctor.WalletBalance=docBalance;
 doctor.save();
 user.save();
+const formattedDate = Appointment.StartDate.toLocaleDateString();
+const formattedTimeStart = Appointment.StartDate.toLocaleTimeString();
+const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString();
+// Construct the email text with the formatted appointment details
+const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+await sendEmail(user.Email, "New Appointment ",emailText );
+await sendEmail(doctor.Email,"New Appointment",emailText)
  }
 res.json({ success: true });
 
