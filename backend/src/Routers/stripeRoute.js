@@ -126,12 +126,14 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
 doctor.Availability.remove({_id:appointmentId});
 const docBalance=doctor.WalletBalance+(0.9*amount);
 doctor.WalletBalance=docBalance;
-doctor.save();
-user.save();
 const formattedDate = Appointment.StartDate.toLocaleDateString();
 const formattedTimeStart = Appointment.StartDate.toLocaleTimeString();
 const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString();
-// Construct the email text with the formatted appointment details
+const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+doctor.Notifications.push(notification);
+user.Notifications.push(notification);
+doctor.save();
+user.save();
 const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
 await sendEmail(user.Email, "New Appointment ",emailText );
 await sendEmail(doctor.Email,"New Appointment",emailText)

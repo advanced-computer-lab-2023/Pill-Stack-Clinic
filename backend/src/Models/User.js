@@ -185,6 +185,9 @@ const userSchema = new Schema({
       DeliveryAddress:[{
         type:String
       }] 
+      , Notifications:[{
+        type:String
+      }]
   
   
 }, { timestamps: true });

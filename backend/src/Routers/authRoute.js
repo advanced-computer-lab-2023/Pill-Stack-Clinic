@@ -1,4 +1,4 @@
-const {  Login,PatientRegister ,upload,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP,pharmaRegister} = require('../Routes/authController')
+const {  Login,PatientRegister ,upload,DoctorRegister,addAdmin, currentUser,Logout,ChangePassword,SendOTP,ResetPassword,ResetPass,CheckOTP,pharmaRegister, DeleteNotif} = require('../Routes/authController')
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 const router = require('express').Router()
@@ -43,6 +43,8 @@ router.post('/sendOTP',SendOTP);
 router.post('/resetPassword',ResetPassword);
 router.post('/resetPass',ResetPass);
 router.post('/checkOTP',CheckOTP);
+router.post('/deleteNotif',userVerification,DeleteNotif);
+
 
 
 

@@ -117,7 +117,7 @@ export const Home = () => {
         {},
         { withCredentials: true }
       );
-      const { status, user } = data;
+      const { status, user} = data;
       setUsername(user);
       return status
         ? toast(`Hello ${user}`, {
@@ -452,6 +452,7 @@ export const Home = () => {
     username={patientData.Name}
     onOpenModal={onOpen}
     onLogout={Logout}
+    notifications={patientData.Notifications}
     />
 
  

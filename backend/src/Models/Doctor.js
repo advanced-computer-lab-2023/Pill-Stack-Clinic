@@ -95,7 +95,11 @@ const doctorSchema = new Schema({
     medicalDegreeDocument: {
       data: Buffer,
       contentType: String,
-    }
+    },
+    Notifications:[{
+      type:String
+    }]
+
 }, { timestamps: true });
 doctorSchema.pre('save', function(next) {
   const user = this;

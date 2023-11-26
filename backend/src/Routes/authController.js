@@ -255,6 +255,8 @@ module.exports.Login = async (req, res, next) => {
        });
        
        res.status(201).json({ message: "User logged in successfully", success: true,role: role  });
+       // add notification for login
+
      //  next()
     } catch (error) {
       console.error(error);
@@ -285,6 +287,8 @@ module.exports.Login = async (req, res, next) => {
             if(data.role==='pharmacist'){
               user = await pharmaModel.findById(data.id);
              }
+            
+           
         
 
         if (user) {
@@ -532,3 +536,30 @@ module.exports.ResetPass = async (req, res) => {
     return res.status(500).json({ message: 'An error occurred during password reset' });
   }
 };
+module.exports.DeleteNotif = async (req, res) => {
+  const userId=req.user._id;
+  const notif=req.body.notif;
+  let user;
+  try{
+    user = await userModel.findById(userId);
+    if(!user){
+      user = await doctorModel.findById(userId);
+      if(!user){
+        user = await pharmaModel.findById(userId);
+        if(!user){
+          user = await adminModel.findById(userId);
+        }
+      }
+    }
+    const notifications=user.Notifications;
+    const updatedNotifications = notifications.filter(
+      (notification) => notification !== notif
+    );
+
+    user.Notifications=updatedNotifications;
+    user.save();
+  }catch (error){
+    res.status(500);
+  }
+}
+

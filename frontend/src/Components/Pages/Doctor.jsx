@@ -110,7 +110,11 @@ export const Doctor = () => {
 
   return (
     <>
-      <WithSubnavigation username={doctorData.Name} onOpenModal={onOpen} onLogout={Logout} />
+      <WithSubnavigation username={doctorData.Name} 
+      onOpenModal={onOpen} 
+      onLogout={Logout}
+      notifications={doctorData.Notifications}
+      />
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
         <h4>
           Welcome Docc {doctorData[0]?.Email} <span>{username}</span>
