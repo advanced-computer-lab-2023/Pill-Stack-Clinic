@@ -94,8 +94,8 @@ span a {
 
 */
 .home_page {
-  height: 100vh;
-  width: 100vw;
+  /* height: 100vh; */
+  /* width: 100vw; */
   background: #000;
   color: white;
   display: flex;

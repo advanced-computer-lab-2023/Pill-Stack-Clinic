@@ -28,7 +28,7 @@ function AdminShortcuts(props) {
       <LinkOverlay href="admin-home/admin-packs"></LinkOverlay>
       <AbsoluteCenter>
         
-          <Box fontSize="16px" mb="10px">ManageUsers</Box>
+          <Box fontSize="16px" mb="10px">ManagePacks</Box>
         
         <Center>
           <a href="admin-home/admin-packs" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -92,7 +92,7 @@ function AdminShortcuts(props) {
       <LinkOverlay href="admin-home/admin-requests"></LinkOverlay>
       <AbsoluteCenter>
         
-          <Box fontSize="16px" mb="10px">Pharmacists' Requests</Box>
+          <Box fontSize="16px" mb="10px">Med Control</Box>
         
         <Center>
           <a href="/medicineControl" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
