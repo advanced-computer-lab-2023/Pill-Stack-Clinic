@@ -38,6 +38,8 @@ import  CompletionMed from "./Components/Pages/CompletionMedPayment.jsx";
 import  CreditPayment from "./Components/Pages/CreditPaymentMed.jsx";
 import OrderDetails from './Components/UI/orderDetails';
 import PharmacistReqs from "./Components/Pages/PharmacistReqs";
+import{MedicineListControl} from "./Components/UI/MedicineListAdminPharma";
+
 
 
 
@@ -85,6 +87,8 @@ function App() {
         <Route path="/home/creditPayment/:address" element={<CreditPayment />} />
         <Route path="/Medcompletion/:address/:intentid" element={<CompletionMed />} />
         <Route path="/orderdetails" element={<OrderDetails/>} />
+        <Route path="/medicineControl" element={<MedicineListControl/>} />
+
 
       </Routes>
     </div>

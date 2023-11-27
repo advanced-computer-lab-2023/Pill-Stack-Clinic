@@ -2,7 +2,7 @@ const express = require('express');
 let router = express.Router();
 const {userVerification } = require('../Middleware/AuthMiddleware')
 const {viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewPack2,deletePack,removeUser,viewProfile, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest,
-    pharmaApplications,getAvailableMedicines,getMedicinalUse
+    pharmaApplications,getAvailableMedicines,getMedicinalUse, acceptRegRequestPharma, rejectRegRequestPharma
 } = require('../Routes/adminController.js');
 
 router.get("/", async(req,res) => {res.render('admin_home')});
@@ -24,12 +24,14 @@ router.get('/allUsers' , getAllUsers )
 router.route('/removeUser')
 .get((req,res) => {res.render('removeUser')})
 .post(removeUser);
+
+
 ///Pharmacy add ons
 router.get('/availableMedicines',getAvailableMedicines);
 router.get('/MedicinalUse',getMedicinalUse);
-
-// pharmacy
 router.get("/pharmaApplications",pharmaApplications);
+router.post('/applications/accept-registerationPharma/:id',acceptRegRequestPharma);
+router.post('/applications/reject-registerationPharma/:id',rejectRegRequestPharma);
 
 
 module.exports = router;

@@ -5,6 +5,7 @@ const packageModel=require('../Models/Packages.js');
 const patientModel=require('../Models/User.js');
 const pharmaReqModel = require('../Models/Pharmacist_Request.js');
 const medModel = require('../Models/Medicine.js');
+const pharmacistModel = require('../Models/Pharmacist.js'); 
 
 const { default: mongoose } = require('mongoose');
 
@@ -272,6 +273,9 @@ const removeUser= async (req, res) => {
    case 'admin':
      UserModel = adminModel;
      break;
+    case 'pharmacist':
+      UserModel = pharmacistModel;
+      break;
    default:     
    console.error('Invalid user type:', userType);
    return res.status(400).send(`Invalid user type: ${userType}`);
@@ -297,15 +301,16 @@ const getAllUsers = async (req, res) => {
     const patients = await patientModel.find({});
     const doctors = await doctorModel.find({});
     const admins = await adminModel.find();
+    const pharmacists = await pharmacistModel.find();
 
     // Add the 'role' property to each user object
     const patientsWithRole = patients.map(patient => ({ ...patient._doc, role: 'patient' }));
     const doctorsWithRole = doctors.map(doctor => ({ ...doctor._doc, role: 'doctor' }));
     const adminsWithRole = admins.map(admin => ({ ...admin._doc, role: 'admin' }));
+    const pharmacistsWithRole = pharmacists.map(pharmacist => ({ ...pharmacist._doc, role: 'pharmacist' }));
 
     // Combine all user types into a single array
-    const allUsers = [...adminsWithRole, ...doctorsWithRole, ...patientsWithRole];
-    // console.log(allUsers);
+    const allUsers = [...adminsWithRole, ...doctorsWithRole, ...pharmacistsWithRole, ...patientsWithRole];
     res.send(allUsers);
   } catch (error) {
     console.error(error);
@@ -317,6 +322,52 @@ const pharmaApplications= async (req, res) => {
   const applications = await pharmaReqModel.find({});
   res.send(applications);
 }
+
+const acceptRegRequestPharma = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await pharmaReqModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+    
+    const newDoctor = new pharmacistModel({
+      Username: request.Username,
+      Name: request.Name,
+      Email: request.Email,
+      Password: request.Password,
+      DateOfBirth: request.DateOfBirth,
+      hourly_rate: request.HourlyRate,
+      affiliation: request.Affiliation,
+      education_background: request.EducationalBackground,
+    });
+    await newDoctor.save();
+    await pharmaReqModel.findByIdAndRemove(id);
+
+    res.json({ message: 'Request accepted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const rejectRegRequestPharma = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await pharmaReqModel.findById(id);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    await pharmaReqModel.findByIdAndRemove(id);
+
+    res.json({ message: 'Request rejected' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 
 // Pharmacy add ons
@@ -342,12 +393,21 @@ async function getMedicinalUse (req,res) {
  
 
  }
+ async function getAvailableMedicines(req, res) {
+  try {
+    const availableMedicines = await medModel.find({ Quantity: { $gt: 0 } });
+    res.send( availableMedicines );
+  } catch (error) {
+    console.error('Error fetching available medicines:', error);
+    throw error;
+  }
+}
 
 
 module.exports = {
     viewAllApp,viewDocApp,createPackage,viewAllPacks,viewPack,updatePack,viewProfile,
     viewPack2,deletePack,removeUser, getAllUsers, acceptRegRequest, rejectRegRequest, acceptPlatformRequest, rejectPlatformRequest,
-    pharmaApplications,getAvailableMedicines,getMedicinalUse
+    pharmaApplications,getAvailableMedicines,getMedicinalUse, acceptRegRequestPharma, rejectRegRequestPharma
   };
 
 

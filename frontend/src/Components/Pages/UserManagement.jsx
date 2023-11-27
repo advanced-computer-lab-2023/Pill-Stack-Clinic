@@ -38,7 +38,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserDoctor,
     faBedPulse,
-    faUserCog
+    faUserCog,
+    faUserNurse,
  } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -197,14 +198,22 @@ function UserManagement() {
                               bg=
                               {
                                   user.role === "admin" ?
-                                  '#eff30a28' : user.role === "patient" ? '#00f34928' : '#00a6f328'}
+                                  '#eff30a28' : 
+                                  user.role === "patient" ?
+                                   '#00f34928' : 
+                                  user.role === 'pharmacist'
+                                  ? '#17fff030'
+                                  : '#00a6f328'}
                               >
                                 <Td w={'20%'} >
                                 <Flex align="center"> 
                                     {
                                     user.role === "doctor" ? <FontAwesomeIcon icon={faUserDoctor} />
                                     : user.role === "patient" ? <FontAwesomeIcon icon={faBedPulse} />
-                                    : user.role === "admin" ? <FontAwesomeIcon icon={faUserCog} />: <></>
+                                    : user.role === "admin" ? <FontAwesomeIcon icon={faUserCog} />
+                                    : user.role === "pharmacist" ? <FontAwesomeIcon icon={faUserNurse} />
+                                    :<></>
+
                                     }
                                     <Text fontSize={'lg'} ml={5}>{user.Username}</Text> 
                                 </Flex>

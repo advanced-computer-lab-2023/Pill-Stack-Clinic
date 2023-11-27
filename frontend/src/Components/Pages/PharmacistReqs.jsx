@@ -39,9 +39,6 @@ import {
     ModalBody,
     ModalCloseButton,
 
-
-
-    
 } from "@chakra-ui/react";
 import axios from 'axios';
 import { Buffer } from 'buffer';
@@ -62,7 +59,7 @@ function PharmacistReqs() {
     useEffect(() => {
         const getReqs = async () => {
             try {
-            const { data } = await axios.get("http://localhost:8000/admin/applications", {
+            const { data } = await axios.get("http://localhost:8000/admin/pharmaApplications", {
                 withCredentials: true,
             });
             // sort by date
@@ -90,7 +87,7 @@ function PharmacistReqs() {
         // router.post('/applications/accept-registeration/:id',acceptRegRequest);
         
         await axios.post(
-          `http://localhost:8000/admin/applications/accept-registeration/${viewReq._id}`,
+          `http://localhost:8000/admin/applications/accept-registerationPharma/${viewReq._id}`,
           {},
           {
             withCredentials: true,
@@ -107,7 +104,7 @@ function PharmacistReqs() {
       try {  
         console.log(viewReq._id);      
         await axios.post(
-          `http://localhost:8000/admin/applications/reject-registeration/${viewReq._id}`,
+          `http://localhost:8000/admin/applications/reject-registerationPharma/${viewReq._id}`,
           {},
           {
             withCredentials: true,
