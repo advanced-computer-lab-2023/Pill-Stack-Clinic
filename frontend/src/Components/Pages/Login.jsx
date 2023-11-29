@@ -101,6 +101,8 @@ export const Login = () => {
           
           
           <Link to="/doctor-register">Register as Doctor</Link>
+          <Link to="/pharmacist-register">Register as a Pharmacist</Link>
+
 
         </Box>
         

@@ -42,6 +42,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 const port = process.env.PORT || "8000";
 const doctor = require("./Routers/doctorRoute");
+const pharmacist = require("./Routers/pharmacistRoute");
 const admin = require("./Routers/adminRoute");
 const patient = require("./Routers/patientRoute");
 const auth = require("./Routers/authRoute");
@@ -94,6 +95,7 @@ app.use("/patient", patient);
 app.use("/stripe", stripeRoute);
 app.use("/cart",cart);
 app.use("/order",order)
+app.use("/pharmacist",pharmacist)
 
 
 
