@@ -43,6 +43,9 @@ import PharmaHome from "./Components/Pages/PharmaHome";
 import{MedicineListControl} from "./Components/UI/MedicineListAdminPharma";
 import{MedicineListwithSales} from "./Components/UI/MedicineListWithSales";
 import {AddMedicine} from "./Components/UI/AddMed";
+import ManagePrescriptions from "./Components/Pages/ManagePrescriptions.jsx";
+
+
 
 
 
@@ -82,6 +85,8 @@ function App() {
         <Route path="/my-health-records/:patientUsername" element={<MyHealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
+        {/* /doctor/prescriptions/${patient._id} */}
+        <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
         
 
         {/* pharmacy */}

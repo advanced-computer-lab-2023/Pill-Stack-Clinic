@@ -2,6 +2,7 @@ const docModel = require('../Models/Doc_Request.js'); //Doctor Applications data
 const doctorModel = require('../Models/Doctor.js');// Database of doctors on the platform:accepted by admin 
 const userModel = require('../Models/User.js');// Database of users on the platform
 const Contract = require('../Models/contract.js');
+const medModel = require('../Models/Medicine.js');
 const { default: mongoose } = require('mongoose');
 const multer = require('multer');
 const path = require('path');
@@ -632,6 +633,60 @@ const deleteContract = async (req, res) => {
     res.send(profile.Availability);
   }
   
+  const getFullAccount = async (req, res) => {
+    try {
+      const user = req.params.username;
+      console.log(user);
+      const patient = await userModel.findOne({ Username: user });
+      if (!patient) {
+        return res.status(404).send({ error: 'User not found' });
+      }
+      res.send(patient);
+    } catch (error) {
+      res.status(500).send({ error: 'Internal server error' });
+    }
+  }
+
+  const addPrescription = async (req, res) => {
+    try {
+      const doctorId = req.user.id; 
+      const doctor = await doctorModel.findById(doctorId);
+      const docUsername = doctor.Username;
+
+      const patientUsername = req.params.username;
+      const patient = await userModel.findOne({ Username: patientUsername });
+
+      const { prescriptions } = req.body;
+      const date = new Date();
+
+      const meds = await Promise.all(prescriptions.map(async (prescription) => {
+        const { medName, quantity, instructions } = prescription;
+        console.log("name", medName);
+        console.log("quantity", quantity);
+        console.log("instructions", instructions);
+        const med = await medModel.findOne({ Name: medName });
+        if (!med) {
+          throw new Error('Medicine not found');
+        }
+        const medId = med._id;
+        return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions };
+      }));
+      console.log(meds);
+
+
+
+      patient.Prescriptions.push({ 
+        DocUsername: docUsername, 
+        PrecriptionDate: date,
+        Medicine: meds, 
+        Status: 'Unfilled' });
+
+      await patient.save();
+      res.send({ message: 'Prescription added successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
   
 
 
@@ -645,6 +700,6 @@ module.exports = {
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,
-    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus
-
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus, getFullAccount,
+    addPrescription
 };

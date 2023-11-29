@@ -49,7 +49,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useDisclosure } from "@chakra-ui/react";
-
+import Prescription from './Prescription';
 
 
 const DoctorPatientsTable = () => {
@@ -228,6 +228,22 @@ const DoctorPatientsTable = () => {
       });
     }
   };
+
+  const handleAddPrescription = () => {
+    // Add a new prescription to the patient's prescriptions array
+    const newPrescription = {
+      name: '',
+      dosage: '',
+      instructions: '',
+    };
+
+    const updatedPrescriptions = [...patientData.Prescriptions, newPrescription];
+
+    setPatientData({
+      ...patientData,
+      Prescriptions: updatedPrescriptions,
+    });
+  }
   
 
 
@@ -387,8 +403,9 @@ const DoctorPatientsTable = () => {
               <Td>
                 <Button size="sm" colorScheme="teal"
                   onClick={() => {
-                    setPatientData(patient);
-                    setIsOpenPrescriptions(true)
+                    // setPatientData(patient);
+                    // setIsOpenPrescriptions(true)
+                    navigate(`/doctor/prescriptions/${patient.PatientUsername}`);
                   }
                   }>
                   Manage Prescriptions
@@ -495,7 +512,23 @@ size="2xl"
           <ModalHeader> {patientData.PatientName}'s Prescriptions</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            ,,,
+            {
+              patientData.Prescriptions ?
+              patientData.Prescriptions.map((prescription, index) => (
+                <Prescription/>
+              ))
+              : 
+              <Box minH={'200px'}>
+                <Text>No current prescriptions found</Text>
+              </Box>
+            }
+            <Button
+              colorScheme='teal'
+              variant={'outline'}
+              onClick={() => handleAddPrescription()}
+            >
+              Add Prescription
+            </Button>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

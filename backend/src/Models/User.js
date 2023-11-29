@@ -121,6 +121,7 @@ const userSchema = new Schema({
       Medicine: [
         new Schema({
           MedicineID: String,
+          MedicineName: String,
           Quantity: Number,
           Instructions: String
         })
