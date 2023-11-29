@@ -861,6 +861,46 @@ const viewPackageSubscribtion=async(req,res)=>{
    }
 }
 
+const cancelAppointment = async (req, res) => {
+   try {
+     const appointmentId = req.body.appointmentId;
+     const username = req.user.Username;
+ 
+     const user = await userModel.findOne({ Username: username });
+     const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
+ 
+     if (!appointment) {
+       return res.status(404).json({ error: 'Appointment not found' });
+     }
+ 
+     const currentDate = new Date();
+     const startDate = new Date(appointment.StartDate);
+ 
+     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+       // Cancel normally
+       appointment.Status = 'cancelled';
+       console.log('Cancelled appointment with no refund');
+ 
+       // Send a response to the frontend with refund:false
+       res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
+     } else {
+       // Cancel with refund
+       appointment.Status = 'cancelled';
+       console.log('Cancelled appointment with refund!');
+ 
+       // Send a response to the frontend with refund:true
+       res.status(200).json({ message: 'Appointment cancelled successfully', refund: true });
+     }
+ 
+     await user.save();
+   } catch (error) {
+     console.error('Error cancelling appointment:', error);
+     res.status(500).json({ error: 'Internal Server Error' });
+   }
+ };
+ 
+
+
 const cancelSubscription=async(req,res)=>{
    const userID=req.body.userId;
    const packageID=req.body.packageID;
@@ -1127,7 +1167,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,viewProfile,
-   viewPrescribtion, viewPatientWallet,cancelSubscription,
+   viewPrescribtion, viewPatientWallet,cancelSubscription,cancelAppointment,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
