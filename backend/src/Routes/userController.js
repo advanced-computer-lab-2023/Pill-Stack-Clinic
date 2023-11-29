@@ -619,6 +619,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             PatientName:manualFamMember,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
@@ -629,6 +630,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             DoctorName:doctor.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          user.FamilyBookedAppointments.push(userApp);
@@ -639,6 +641,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             PatientName:req.user.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
@@ -648,6 +651,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             DoctorName:doctor.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          user.BookedAppointments.push(userApp);
@@ -663,6 +667,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
          PatientName:familyMember.Name,
          StartDate:Appointment.StartDate,
          EndDate:Appointment.EndDate,
+         Price:amount,
          Status:'upcoming',
       });
       doctor.BookedAppointments.push(docApp);
@@ -672,6 +677,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
          DoctorName:doctor.Name,
          StartDate:Appointment.StartDate,
          EndDate:Appointment.EndDate,
+         Price:amount,
          Status:'upcoming',
       });
       familyMember.BookedAppointments.push(userApp);
