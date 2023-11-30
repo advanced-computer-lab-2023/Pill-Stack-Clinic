@@ -822,15 +822,10 @@ const deleteContract = async (req, res) => {
 
 module.exports = {
     viewProfile,editView,editProfile,
-<<<<<<< Updated upstream
     viewMyPatients,convertToPDF,
     selectPatient,viewPatientPrescribtion,
     searchAppointments,viewALLAppointments,
-=======
-    viewMyPatients,
-    selectPatient,
     searchAppointments,viewALLAppointments,cancelAppointment,
->>>>>>> Stashed changes
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,

@@ -6,17 +6,13 @@ const {viewProfile,
     editView,
     editProfile,
     viewMyPatients, 
-<<<<<<< Updated upstream
     selectPatient,convertToPDF,
-    searchAppointments,viewALLAppointments,scheduleFollowUp,
-=======
-    selectPatient,
-    searchAppointments,viewALLAppointments,cancelAppointment,scheduleFollowUp,
->>>>>>> Stashed changes
+    searchAppointments,
+    viewALLAppointments,cancelAppointment,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
-       ,updateContractStatus,addPrescription } = require('../Routes/doctorController.js');
+    ,updateContractStatus,addPrescription } = require('../Routes/doctorController.js');
 
 
 
