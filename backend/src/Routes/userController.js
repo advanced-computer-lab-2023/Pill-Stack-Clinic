@@ -693,8 +693,8 @@ const viewAvailDoctorAppointments = async (req, res) => {
    const docBalance=doctor.WalletBalance+(0.9*amount);
    doctor.WalletBalance=docBalance;
    const formattedDate = Appointment.StartDate.toLocaleDateString();
-   const formattedTimeStart = Appointment.StartDate.toLocaleTimeString();
-   const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString();
+   const formattedTimeStart = Appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+   const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
    const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
    doctor.Notifications.push(notification);
    doctor.save();
@@ -883,11 +883,16 @@ const cancelAppointment = async (req, res) => {
        const currentDate = new Date();
        const startDate = new Date(appointment.StartDate);
        const Price = appointment.Price;
+       const formattedDate = appointment.StartDate.toLocaleDateString();
+       const formattedTimeStart = appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+       const formattedTimeEnd = appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+       let notification ;
 
        if (startDate - currentDate < 24 * 60 * 60 * 1000) {
            // Cancel normally
            appointment.Status = 'cancelled';
            console.log('Cancelled appointment with no refund');
+          notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
 
            // Send a response to the frontend with refund:false
            res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
@@ -896,11 +901,14 @@ const cancelAppointment = async (req, res) => {
            appointment.Status = 'cancelled';
            user.WalletBalance += Price; // Increment user balance with the appointment price
            console.log('Cancelled appointment with refund! Refunded amount:', Price);
+           notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
 
            // Send a response to the frontend with refund:true and the refunded amount
            res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
        }
-
+       user.Notifications.push(notification);
+       const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+       await sendEmail(user.Email, "Appointment Cancellation ",emailText );
        await user.save();
 
        // Update the corresponding appointment in the doctor's BookedAppointments
@@ -910,6 +918,8 @@ const cancelAppointment = async (req, res) => {
            const doctorAppointment = doctor.BookedAppointments.find((docApp) => docApp._id.toString() === appointmentId);
            if (doctorAppointment) {
                doctorAppointment.Status = 'cancelled';
+               doctor.Notifications.push(notification);
+               await sendEmail(doctor.Email,"New Appointment",emailText)
                await doctor.save();
            }
        }
@@ -936,7 +946,12 @@ const cancelFamAppointment = async (req, res) => {
      const currentDate = new Date();
      const startDate = new Date(familyAppointment.StartDate);
      const Price = familyAppointment.Price;
- 
+     const formattedDate = familyAppointment.StartDate.toLocaleDateString();
+     const formattedTimeStart = familyAppointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+     const formattedTimeEnd = familyAppointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+     const notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+     const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+
      if (startDate - currentDate < 24 * 60 * 60 * 1000) {
        // Cancel normally
        familyAppointment.Status = 'cancelled';
@@ -958,7 +973,8 @@ const cancelFamAppointment = async (req, res) => {
          refund: true,
        });
      }
- 
+     user.Notifications.push(notification);
+     await sendEmail(user.Email, "Appointment Cancellation ",emailText );
      await user.save();
  
      // Update the doctor's schema
@@ -971,6 +987,8 @@ const cancelFamAppointment = async (req, res) => {
      if (doctorAppointment) {
        // Update the status in the doctor's schema
        doctorAppointment.Status = 'cancelled';
+       doctor.Notifications.push(notification);
+       await sendEmail(doctor.Email,"New Appointment",emailText)
        await doctor.save();
      }
    } catch (error) {

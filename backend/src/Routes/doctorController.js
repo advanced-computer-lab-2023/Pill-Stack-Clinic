@@ -8,6 +8,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const sendEmail = require("../Utilities/SendEmail");
+
 
 
 
@@ -224,13 +226,20 @@ const updateContractStatus=async(req,res)=>{
           // Add the appointment price to user balance
           const appointmentPrice = appointment.Price || 0;
           user.WalletBalance += appointmentPrice;
-
+          const formattedDate = appointment.StartDate.toLocaleDateString();
+          const formattedTimeStart = appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+          const formattedTimeEnd = appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+          const notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+          const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+          user.Notifications.push(notification);
+          await sendEmail(user.Email, "Appointment Cancellation ",emailText );
           // Save changes to the patient
           await user.save();
 
           // Remove the cancelled appointment from BookedAppointments
           doctor.BookedAppointments = doctor.BookedAppointments.filter(app => app._id.toString() !== appointmentId);
-
+          doctor.Notifications.push(notification);
+          await sendEmail(doctor.Email,"New Appointment",emailText)
           // Save changes to the doctor
           await doctor.save();
 
