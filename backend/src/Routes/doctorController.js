@@ -660,16 +660,16 @@ const deleteContract = async (req, res) => {
       const date = new Date();
 
       const meds = await Promise.all(prescriptions.map(async (prescription) => {
-        const { medName, quantity, instructions } = prescription;
+        const { medName, quantity, instructions, dose } = prescription;
         console.log("name", medName);
         console.log("quantity", quantity);
         console.log("instructions", instructions);
         const med = await medModel.findOne({ Name: medName });
         if (!med) {
-          throw new Error('Medicine not found');
+          res.send('med not found')
         }
         const medId = med._id;
-        return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions };
+        return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions, Dose: dose };
       }));
       console.log(meds);
 

@@ -23,7 +23,8 @@ import { Box,
     NumberIncrementStepper,
     NumberDecrementStepper,
     Center,
-    Divider
+    Divider,
+    Grid
 
 
  } from '@chakra-ui/react';
@@ -36,6 +37,7 @@ const ManagePrescriptions = () => {
     const [inputList, setinputList]= useState([
         {medName:'',
          quantity:1,
+            dose:1,
          instructions:''
         }
     ]);
@@ -52,7 +54,7 @@ const ManagePrescriptions = () => {
     }, [up]);
 
     
-        const handleinputchange=(e, index)=>{
+        const handleInputChange=(e, index)=>{
             // const {name, value}= e.target;
             const { value, name, type } = e.target;
             const list= [...inputList];
@@ -60,21 +62,26 @@ const ManagePrescriptions = () => {
             // list[index][name]= value;
             setinputList(list);
         }
-        const handleNumChange = (value, index) => {
+        const handleQuanChange = (value, index) => {
             const list = [...inputList];
             list[index].quantity = value; // Update the quantity directly
             setinputList(list);
           }
+        const handleDoseChange = (value, index) => {
+            const list = [...inputList];
+            list[index].dose = value; // Update the quantity directly
+            setinputList(list);
+        }
           
 
-        const handleremove= index=>{
+        const handleRemove= index=>{
             const list=[...inputList];
             list.splice(index,1);
             setinputList(list);
             console.log(list);
         }
 
-        const handleaddclick=()=>{ 
+        const handleAddClick=()=>{ 
             setinputList([...inputList, { medName:'', quantity:'', instructions:''}]);
         }
 
@@ -89,6 +96,7 @@ const ManagePrescriptions = () => {
             onClose();
         }
 
+        
 
 
   return (
@@ -99,17 +107,19 @@ const ManagePrescriptions = () => {
                 fontSize={'4xl'}> Available Prescriptions
             </Text>
             <Button
+                colorScheme={'teal'}
+                variant={'solid'}
                 onClick={() => onOpen() }
             >
                 Add Prescription
             </Button>
             </Flex>
             <Divider my={5}/>
-            {/* <Center my={10}> */}
             <Flex my={7} justifyContent={'space-evenly'}>
             {
             //if prescriptions > 0 
-              patient.Prescriptions ?
+                patient.Prescriptions &&
+              patient.Prescriptions[0] ?
               patient.Prescriptions.map((prescription, index) => (
                 <>
                 {console.log("presss", prescription)}
@@ -122,7 +132,6 @@ const ManagePrescriptions = () => {
               </Box>
             }
             </Flex>
-            {/* </Center> */}
         </Box>
 
     <   Modal onClose={onClose} size={'2xl'} isOpen={isOpen}>
@@ -131,50 +140,37 @@ const ManagePrescriptions = () => {
             <ModalHeader>Prescription</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-            <FormLabel >Meds</FormLabel>
-
-             { 
-            inputList.map( (x,i)=>{
-              return(
-              <Box m={4}>
-                <FormControl my={5}>
-                <HStack>
-
-                  <Input 
-                  type="text"  
-                  name="medName" 
-                  class="form-control"  
-                  placeholder="Enter First Name" 
-                  value={x.medName} 
-                  onChange={ e=>handleinputchange(e,i)}
-                   />
-
-                  <Input 
-                  type="text"  
-                  name="instructions" 
-                  class="form-control"   
-                  placeholder="Enter Last Name" 
-                  value={x.instructions} 
-                  onChange={ e=>handleinputchange(e,i) }
-                  />
-
-                {/* <NumberInput defaultValue={1} min={1} 
-                name="quantity"
-                // value={x.quantity}
-                onChange={ e=>handleinputchange(e,i)}
-                >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput> */}
-                
-                <NumberInput
+  <Flex justifyContent={'space-between'} mx={5}>
+    <FormLabel>Med Name</FormLabel>
+    <FormLabel>Quantity</FormLabel>
+    <FormLabel>Dose</FormLabel>
+    <FormLabel>Instructions</FormLabel>
+  </Flex>
+  {inputList.map((x, i) => {
+    return (
+      <Grid
+        templateColumns="repeat(4, 1fr)"
+        gap={4}
+        alignItems="center"
+        key={i}
+        my={2}
+      >
+        <FormControl>
+          <Input
+            type="text"
+            name="medName"
+            class="form-control"
+            placeholder="Med Name"
+            value={x.medName}
+            onChange={(e) => handleInputChange(e, i)}
+          />
+        </FormControl>
+        <FormControl>
+        <NumberInput
                 defaultValue={1}
                 min={1}
-                value={x.quantity} // Ensure the value of the NumberInput reflects the quantity in the state
-                onChange={(value) => handleNumChange(value, i)} // Call handleInputChange with the updated value and index
+                value={x.quantity} 
+                onChange={(value) => handleQuanChange(value, i)} 
                 >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -182,24 +178,53 @@ const ManagePrescriptions = () => {
                     <NumberDecrementStepper />
                 </NumberInputStepper>
                 </NumberInput>
+        </FormControl>
+        <FormControl>
+        <NumberInput
+                defaultValue={1}
+                min={1}
+                value={x.dose} 
+                onChange={(value) => handleDoseChange(value, i)} 
+                >
+                <NumberInputField />
+                <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                </NumberInputStepper>
+                </NumberInput>
+        </FormControl>
+        <FormControl>
+          <Input
+            type="text"
+            name="instructions"
+            class="form-control"
+            placeholder="Instructions"
+            value={x.instructions}
+            onChange={(e) => handleInputChange(e, i)}
+          />
 
-                {
-                  inputList.length!==1 &&
-                  <Button colorScheme='red' variant={'outline'}  minW={'fit-content'}
-                   onClick={()=> handleremove(i)}>Remove</Button>
-                }
-                </HStack>
+        </FormControl>
+                  {inputList.length !== 1 && (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              minW="fit-content"
+              onClick={() => handleRemove(i)}
+            >
+              Remove
+            </Button>
+          )}
+        <div class="form-group col-md-2 mt-4">
+            {inputList.length - 1 === i && (
+            <Button onClick={handleAddClick}>Add More</Button>
+            )}
+        </div>
+      </Grid>
+    );
+  })}
 
-                </FormControl>
-               <div class="form-group col-md-2 mt-4">
-               { inputList.length-1===i &&
-               <Button onClick={ handleaddclick}>Add More</Button>
-               }
-               </div>
-            </Box>
-              );
-             } )} 
-            </ModalBody>
+</ModalBody>
+
             <ModalFooter>
                 <Button colorScheme="teal" mr={3}
                 onClick={ () => {

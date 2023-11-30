@@ -6,11 +6,12 @@ import { Box,
     Tag,
     TagLabel,
     TagRightIcon,
-    Flex
+    Flex,
+    IconButton,
+
   
- } from '@chakra-ui/react'
-
-
+ } from '@chakra-ui/react';
+import { EditIcon } from '@chakra-ui/icons';
 
 
 function Prescription(
@@ -59,26 +60,43 @@ function Prescription(
                   Quantity: {med.Quantity}
                 </Text>
                 <Text
+                    ml={1}
                     fontSize={'md'}
                     textAlign={'left'}
                 >
-                  , {med.Instructions}
+                  , {med.Dose} {' '}  {med.Instructions}
                 </Text>
+
                 </HStack>
                 <Divider />
                 </>
               ))
             }
 
-            {/* bottom right goctor name */}
+            <Flex mt={10} justifyContent={'space-between'} alignItems={'center'}>
+            {
+              data.Status === 'Unfilled' && 
+              <IconButton
+                isRound={true}
+                variant='solid'
+                colorScheme='teal'
+                aria-label='Done'
+                fontSize='20px'
+                icon={<EditIcon />}
+              />
+            }
+
+
             <Text
                 fontSize={'xl'}
                 textAlign={'right'}
-                mt={10}
+                // mt={10}
                 fontStyle={'italic'}
             >
               by: {data.DocUsername}
             </Text>
+
+            </Flex>
 
        </Box>
     </>
