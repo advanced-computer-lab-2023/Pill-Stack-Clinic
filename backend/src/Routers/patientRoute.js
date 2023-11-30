@@ -5,7 +5,7 @@ let router = express.Router();
 const {viewALLAppointments,searchDoctors,
     selectedDoctorDetails,viewAvailDoctorAppointments,checkSubscribed,
     searchAppointments,viewDoctors,viewFamilyMembers,viewPackageSubscribtion,
-    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,viewProfile,
+    viewPrescribtion,addFamilyMem,viewPrescriptions,viewAllPacks,subscribePackageCash,cancelSubscription,cancelAppointment,cancelFamAppointment,viewProfile,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
     removeMedicalDocument,getAmount,viewAllAvailableAppointments,
     viewFamilyAppointments,viewMyHealthRecords,getAddresses,convertToPDF,
@@ -45,6 +45,8 @@ router.get("/packages",viewAllPacks);
 router.post('/subscribeWallet',subscribePackageCash);
 router.get('/viewMyPackage',viewPackageSubscribtion);
 router.post('/cancelSubs',cancelSubscription);
+router.post('/cancelAppointments',userVerification,cancelAppointment);
+router.post('/cancelFamAppointments',userVerification,cancelFamAppointment);
 router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userVerification,linkPatientAsFamilyMember)
 router.get('/viewMyHealthRecords/:Username/:Patientname',userVerification,viewMyHealthRecords)
 router.post('/checkSubscribed',checkSubscribed);

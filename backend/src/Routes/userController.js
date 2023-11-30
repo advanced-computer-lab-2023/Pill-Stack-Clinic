@@ -621,6 +621,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             PatientName:manualFamMember,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
@@ -631,6 +632,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             DoctorName:doctor.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          user.FamilyBookedAppointments.push(userApp);
@@ -641,6 +643,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             PatientName:req.user.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
@@ -650,6 +653,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
             DoctorName:doctor.Name,
             StartDate:Appointment.StartDate,
             EndDate:Appointment.EndDate,
+            Price:amount,
             Status:'upcoming',
          });
          user.BookedAppointments.push(userApp);
@@ -665,6 +669,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
          PatientName:familyMember.Name,
          StartDate:Appointment.StartDate,
          EndDate:Appointment.EndDate,
+         Price:amount,
          Status:'upcoming',
       });
       doctor.BookedAppointments.push(docApp);
@@ -674,6 +679,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
          DoctorName:doctor.Name,
          StartDate:Appointment.StartDate,
          EndDate:Appointment.EndDate,
+         Price:amount,
          Status:'upcoming',
       });
       familyMember.BookedAppointments.push(userApp);
@@ -862,6 +868,97 @@ const viewPackageSubscribtion=async(req,res)=>{
       }
    }
 }
+const cancelAppointment = async (req, res) => {
+   try {
+     const appointmentId = req.body.appointmentId;
+     const username = req.user.Username;
+
+     const user = await userModel.findOne({ Username: username });
+     const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
+
+     if (!appointment) {
+       return res.status(404).json({ error: 'Appointment not found' });
+     }
+
+     const currentDate = new Date();
+     const startDate = new Date(appointment.StartDate);
+     const Price = appointment.Price;
+
+     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+       // Cancel normally
+       appointment.Status = 'cancelled';
+       console.log('Cancelled appointment with no refund');
+
+       // Send a response to the frontend with refund:false
+       res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
+     } else {
+       // Cancel with refund
+       appointment.Status = 'cancelled';
+       user.WalletBalance += Price; // Increment user balance with the appointment price
+       console.log('Cancelled appointment with refund! Refunded amount:', Price);
+
+       // Send a response to the frontend with refund:true and the refunded amount
+       res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
+     }
+
+     await user.save();
+   } catch (error) {
+     console.error('Error cancelling appointment:', error);
+     res.status(500).json({ error: 'Internal Server Error' });
+   }
+};
+
+
+const cancelFamAppointment = async (req, res) => {
+   try {
+     const appointmentId = req.body.appointmentId;
+     const username = req.user.Username;
+ 
+     const user = await userModel.findOne({ Username: username });
+     const familyAppointment = user.FamilyBookedAppointments.find(
+       (app) => app._id.toString() === appointmentId
+     );
+ 
+     if (!familyAppointment) {
+       return res.status(404).json({ error: 'Family Appointment not found' });
+     }
+ 
+     const currentDate = new Date();
+     const startDate = new Date(familyAppointment.StartDate);
+     const Price = familyAppointment.Price;
+ 
+     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+       // Cancel normally
+       familyAppointment.Status = 'cancelled';
+       console.log('Cancelled family appointment with no refund');
+ 
+       // Send a response to the frontend with refund:false
+       res
+         .status(200)
+         .json({ message: 'Family Appointment cancelled successfully', refund: false });
+     } else {
+       // Cancel with refund
+       familyAppointment.Status = 'cancelled';
+       user.WalletBalance += Price; // Increment user balance with the family appointment price
+       console.log('Cancelled family appointment with refund! Refunded amount:', Price);
+ 
+       // Send a response to the frontend with refund:true and the refunded amount
+       res.status(200).json({
+         message: `Family Appointment cancelled successfully. Refunded amount: ${Price}`,
+         refund: true,
+       });
+     }
+ 
+     await user.save();
+   } catch (error) {
+     console.error('Error cancelling family appointment:', error);
+     res.status(500).json({ error: 'Internal Server Error' });
+   }
+ };
+ 
+
+ 
+
 
 const cancelSubscription=async(req,res)=>{
    const userID=req.body.userId;
@@ -1171,7 +1268,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,viewProfile,
-   viewPrescribtion, viewPatientWallet,cancelSubscription,
+   viewPrescribtion, viewPatientWallet,cancelSubscription,cancelAppointment,cancelFamAppointment,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,

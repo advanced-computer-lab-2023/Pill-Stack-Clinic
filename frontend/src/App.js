@@ -32,13 +32,19 @@ import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
 ///Pharmacy add ons
+import PharmacistRegisterPage from './Components/Pages/PharmacistRegisterPage';
 import{MedicineList} from "./Components/UI/MedicineList";
 import {Cart} from "./Components/Pages/Cart";
 import  CompletionMed from "./Components/Pages/CompletionMedPayment.jsx";
 import  CreditPayment from "./Components/Pages/CreditPaymentMed.jsx";
 import OrderDetails from './Components/UI/orderDetails';
 import PharmacistReqs from "./Components/Pages/PharmacistReqs";
+import PharmaHome from "./Components/Pages/PharmaHome";
 import{MedicineListControl} from "./Components/UI/MedicineListAdminPharma";
+import{MedicineListwithSales} from "./Components/UI/MedicineListWithSales";
+import {AddMedicine} from "./Components/UI/AddMed";
+import ManagePrescriptions from "./Components/Pages/ManagePrescriptions.jsx";
+
 
 
 
@@ -52,6 +58,7 @@ function App() {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/doctor-home" element={<Doctor />} />
+        <Route path="/pharma-home" element={<PharmaHome />} />
         <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />
         <Route path="/" element={<Login />} />
         <Route path="/admin-home" element={<AdminHome />} />
@@ -78,9 +85,12 @@ function App() {
         <Route path="/my-health-records/:patientUsername" element={<MyHealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
+        {/* /doctor/prescriptions/${patient._id} */}
+        <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
         
 
         {/* pharmacy */}
+        <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />
         <Route path="/admin-home/pharmaRequests" element={<PharmacistReqs />} />
         <Route path="/medicine" element={<MedicineList />} />
         <Route path="/cart" element={<Cart/>} />
@@ -88,6 +98,8 @@ function App() {
         <Route path="/Medcompletion/:address/:intentid" element={<CompletionMed />} />
         <Route path="/orderdetails" element={<OrderDetails/>} />
         <Route path="/medicineControl" element={<MedicineListControl/>} />
+        <Route path="/medicine/sales" element={<MedicineListwithSales />} />
+        <Route path="/addMed" element={<AddMedicine />} />
 
 
       </Routes>
