@@ -10,7 +10,7 @@ const {viewProfile,
     searchAppointments,viewALLAppointments,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
-    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,getFullAccount
        ,updateContractStatus,addPrescription } = require('../Routes/doctorController.js');
 
 
@@ -37,7 +37,6 @@ router.put('/:doctorId/activate-delete-contract', userVerification, activateAndD
 router.post('/availability', userVerification, addAvailability);
 router.get('/availability', userVerification, viewAvailability);
 router.post('/updateContractStatus',userVerification,updateContractStatus);
-router.post('/myPatients/Prescriptions',userVerification,viewPatientPrescribtion);
 router.post('/PDF',userVerification,convertToPDF);
 router.get('/fullPatient/:username' , userVerification, getFullAccount);
 router.post('/addPrescription/:username', userVerification, addPrescription);

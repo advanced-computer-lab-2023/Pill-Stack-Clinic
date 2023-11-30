@@ -634,26 +634,6 @@ const deleteContract = async (req, res) => {
     res.send(profile.Availability);
   }
 
-  const viewPatientPrescribtion=async (req,res)=>{
-    console.log("here  "+req.body.username);
-    const docUsername=req.user.Username;
-    if(!docUsername){
-      res.send("Doc username undefined");
-      return;
-    }
-    const userUsername=req.body.username;
-    if(!userUsername){
-      res.send("User username undefined");
-      return;
-    }
-    const User=await userModel.findOne({Username:userUsername});
-    const data=User.Prescriptions;
-    const myPrescribtions= data.filter(function (Prescription){
-      return Prescription.DocUsername===docUsername;
-    });
-     res.send(myPrescribtions);
-
-  }
 
 
   const convertToPDF=async(req,res)=>{
@@ -768,7 +748,7 @@ const deleteContract = async (req, res) => {
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,convertToPDF,
-    selectPatient,viewPatientPrescribtion,
+    selectPatient,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,

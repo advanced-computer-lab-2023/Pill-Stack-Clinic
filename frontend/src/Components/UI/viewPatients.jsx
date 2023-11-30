@@ -97,9 +97,7 @@ const DoctorPatientsTable = () => {
 
     fetchPatients();
   }, []);
-  const viewMyPatientPrescrebtion= async(patient)=>{
-    const response=await axios.get('http://localhost:8000/doctor/myPatients/Prescriptions')
-  }
+
 
   const filteredPatients = patients.filter(patient => {
     const statusMatches = statusFilter === 'All' || patient.Status === statusFilter;
