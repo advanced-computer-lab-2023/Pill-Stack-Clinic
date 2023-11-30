@@ -6,6 +6,7 @@ const { default: mongoose } = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const PDFDocument = require('pdfkit');
 
 
 
@@ -631,6 +632,78 @@ const deleteContract = async (req, res) => {
      profile.save();
     res.send(profile.Availability);
   }
+
+  const viewPatientPrescribtion=async (req,res)=>{
+    console.log("here  "+req.body.username);
+    const docUsername=req.user.Username;
+    if(!docUsername){
+      res.send("Doc username undefined");
+      return;
+    }
+    const userUsername=req.body.username;
+    if(!userUsername){
+      res.send("User username undefined");
+      return;
+    }
+    const User=await userModel.findOne({Username:userUsername});
+    const data=User.Prescriptions;
+    const myPrescribtions= data.filter(function (Prescription){
+      return Prescription.DocUsername===docUsername;
+    });
+     res.send(myPrescribtions);
+
+  }
+
+
+  const convertToPDF=async(req,res)=>{
+    const docUsername=req.user.Username;
+    if(!docUsername){
+      res.send("Doc username undefined");
+      return;
+    }
+    const userUsername=req.body.username;
+    if(!userUsername){
+      res.send("User username undefined");
+      return;
+    }
+    const User=await userModel.findOne({Username:userUsername});
+    const data=User.Prescriptions;
+    const myPrescribtions= data.filter(function (Prescription){
+      console.log(Prescription.DocUsername + " "+ docUsername);
+      return Prescription.DocUsername===docUsername;
+    });
+    let i=0;
+   
+    const doc = new PDFDocument;
+    doc.pipe(fs.createWriteStream(userUsername+docUsername+".pdf"));
+    doc.fontSize(9).translate(450,0).text(myPrescribtions[0].PrecriptionDate.getDay()+"-"+myPrescribtions[0].PrecriptionDate.getMonth()+"-"+
+    myPrescribtions[0].PrecriptionDate.getFullYear());
+    doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
+    doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
+    doc.moveDown().translate(-200,30);
+
+    // Set the stroke color to black
+    doc.strokeColor('black');
+    
+    // Set the line width
+    doc.lineWidth(1);
+    
+    // Draw a line
+    doc.moveTo(10, 50)
+       .lineTo(590, 50)
+       .stroke();
+     doc.fontSize(18).fillColor('green').text("Doctor Name: "+docUsername);
+   
+    for(let j=0;j<myPrescribtions[0].Medicine.length;j++){
+      doc.translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Medicine: "+myPrescribtions[0].Medicine[j].MedicineID).translate(0,10+20*i);
+      doc.fontSize(13).fillColor('black').text("Quantity: "+myPrescribtions[0].Medicine[j].Quantity).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Instruction: "+myPrescribtions[0].Medicine[j].Instructions).translate(0,10+20*i);
+    }
+    doc.end();
+   res.send(""+userUsername+docUsername+".pdf");
+
+  }
   
   
 
@@ -639,8 +712,8 @@ const deleteContract = async (req, res) => {
 
 module.exports = {
     viewProfile,editView,editProfile,
-    viewMyPatients,
-    selectPatient,
+    viewMyPatients,convertToPDF,
+    selectPatient,viewPatientPrescribtion,
     searchAppointments,viewALLAppointments,
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
