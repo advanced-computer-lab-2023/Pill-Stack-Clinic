@@ -7,6 +7,7 @@ const orderModel=require('../Models/Order.js');
 const path = require('path');
 const fs = require('fs');
 const sendEmail = require("../Utilities/SendEmail");
+const PDFDocument = require('pdfkit');
 
 
 
@@ -396,6 +397,7 @@ const viewPrescribtion= async (req, res) => {
          return res.status(404).send('User not found' );
       }else{
       const Prescription = user.Prescriptions[index];
+      //console.log(Prescription);
       res.send(Prescription)
       }
    } catch (error) {
@@ -866,44 +868,95 @@ const viewPackageSubscribtion=async(req,res)=>{
       }
    }
 }
-
 const cancelAppointment = async (req, res) => {
    try {
      const appointmentId = req.body.appointmentId;
      const username = req.user.Username;
- 
+
      const user = await userModel.findOne({ Username: username });
      const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
- 
+
      if (!appointment) {
        return res.status(404).json({ error: 'Appointment not found' });
      }
- 
+
      const currentDate = new Date();
      const startDate = new Date(appointment.StartDate);
- 
+     const Price = appointment.Price;
+
      if (startDate - currentDate < 24 * 60 * 60 * 1000) {
        // Cancel normally
        appointment.Status = 'cancelled';
        console.log('Cancelled appointment with no refund');
- 
+
        // Send a response to the frontend with refund:false
        res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
      } else {
        // Cancel with refund
        appointment.Status = 'cancelled';
-       console.log('Cancelled appointment with refund!');
- 
-       // Send a response to the frontend with refund:true
-       res.status(200).json({ message: 'Appointment cancelled successfully', refund: true });
+       user.WalletBalance += Price; // Increment user balance with the appointment price
+       console.log('Cancelled appointment with refund! Refunded amount:', Price);
+
+       // Send a response to the frontend with refund:true and the refunded amount
+       res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
      }
- 
+
      await user.save();
    } catch (error) {
      console.error('Error cancelling appointment:', error);
      res.status(500).json({ error: 'Internal Server Error' });
    }
+};
+
+
+const cancelFamAppointment = async (req, res) => {
+   try {
+     const appointmentId = req.body.appointmentId;
+     const username = req.user.Username;
+ 
+     const user = await userModel.findOne({ Username: username });
+     const familyAppointment = user.FamilyBookedAppointments.find(
+       (app) => app._id.toString() === appointmentId
+     );
+ 
+     if (!familyAppointment) {
+       return res.status(404).json({ error: 'Family Appointment not found' });
+     }
+ 
+     const currentDate = new Date();
+     const startDate = new Date(familyAppointment.StartDate);
+     const Price = familyAppointment.Price;
+ 
+     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+       // Cancel normally
+       familyAppointment.Status = 'cancelled';
+       console.log('Cancelled family appointment with no refund');
+ 
+       // Send a response to the frontend with refund:false
+       res
+         .status(200)
+         .json({ message: 'Family Appointment cancelled successfully', refund: false });
+     } else {
+       // Cancel with refund
+       familyAppointment.Status = 'cancelled';
+       user.WalletBalance += Price; // Increment user balance with the family appointment price
+       console.log('Cancelled family appointment with refund! Refunded amount:', Price);
+ 
+       // Send a response to the frontend with refund:true and the refunded amount
+       res.status(200).json({
+         message: `Family Appointment cancelled successfully. Refunded amount: ${Price}`,
+         refund: true,
+       });
+     }
+ 
+     await user.save();
+   } catch (error) {
+     console.error('Error cancelling family appointment:', error);
+     res.status(500).json({ error: 'Internal Server Error' });
+   }
  };
+ 
+
  
 
 
@@ -1166,14 +1219,56 @@ const viewMyHealthRecords = async (req, res) => {
    }
  };
 
+ const convertToPDF=async(req,res)=>{
+   const userUsername=req.user.Username;
+   const prescriptions=req.body.prescription;
+  
+   let i=0;
+   let date=new Date(prescriptions.Date);
+   let month=date.getMonth()+1;
+   const doc = new PDFDocument;
+   doc.pipe(fs.createWriteStream(userUsername+prescriptions.DocUsername+i+".pdf"));
+   doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+   date.getFullYear());
+   doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
+   doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
+   doc.moveDown().translate(-200,30);
+
+   // Set the stroke color to black
+   doc.strokeColor('black');
+   
+   // Set the line width
+   doc.lineWidth(1);
+   
+   // Draw a line
+   doc.moveTo(10, 50)
+      .lineTo(590, 50)
+      .stroke();
+    doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescriptions.DocUsername);
+  
+   for(let j=0;j<prescriptions.Medicine.length;j++){
+     doc.translate(0,10);
+     doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineID).translate(0,10+20*i);
+     doc.fontSize(13).fillColor('black').text("Quantity: "+prescriptions.Medicine[j].Quantity).translate(0,10);
+     doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
+   }
+   doc.end();
+   const filePath = path.join(__dirname,'../',userUsername+prescriptions.DocUsername+i+".pdf");
+   const fileData = fs.readFileSync(filePath);
+   const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
+   res.json({ file: base64File ,filename:userUsername+prescriptions.DocUsername+i+".pdf"});
+
+
+ }
+
 
 module.exports = {selectedDoctorDetails,addFamilyMem,
-   viewAllAvailableAppointments,getAmount,
+   viewAllAvailableAppointments,getAmount,convertToPDF,
    viewAvailDoctorAppointments,searchDoctors, getUsers,
    searchAppointments,viewALLAppointments,
    viewDoctors,viewFamilyMembers,viewPrescribtion,
    filterPrescriptions,viewPrescriptions,viewProfile,
-   viewPrescribtion, viewPatientWallet,cancelSubscription,cancelAppointment,
+   viewPrescribtion, viewPatientWallet,cancelSubscription,cancelAppointment,cancelFamAppointment,
    viewUpcomPastAppointments,payAppointmentWallet,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,

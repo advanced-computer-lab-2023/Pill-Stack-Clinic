@@ -20,6 +20,8 @@ import '../UI/button.css'
 import { MdClear } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const  FamilyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -66,12 +68,55 @@ const  FamilyAppointments = () => {
     setSelectedEndDate(null);
   };
 
+  const handleCancelFamAppointment = async (appointmentId, index) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/patient/cancelFamAppointments',
+        { appointmentId },
+        {
+          withCredentials: true,
+        }
+      );
+
+      // Update the state to reflect the canceled family appointment
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment, i) =>
+          i === index
+            ? { ...appointment, Status: 'cancelled' }
+            : appointment
+        )
+      );
+
+      // Display toast based on the response
+      if (response.data.refund) {
+        toast.success(`Cancelled family appointment with refund! Refunded amount: ${response.data.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } else {
+        toast.success('Cancelled family appointment with no refund!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      }
+
+      console.log('Cancelled family appointment');
+    } catch (error) {
+      console.error('Error cancelling family appointment:', error);
+      toast.error('Failed to cancel family appointment. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+  
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
-      <Text fontSize={'3xl'} color={'white'}>Family Appointments</Text>
-      <button className="btn" onClick={back}>back</button>
-    </Box>
-    <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    <>
+      <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+        <Text fontSize={'3xl'} color={'white'}>Family Appointments</Text>
+        <button className="btn" onClick={back}>back</button>
+      </Box>
+      <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
         <FormControl mb={4}>
           <Flex alignItems="center" mb={2}>
             <Text mr={2} fontSize="sm">
@@ -91,12 +136,12 @@ const  FamilyAppointments = () => {
               <option value="rescheduled">Rescheduled</option>
             </Select>
           </Flex>
-
+  
           <Flex alignItems="center" mb={2}>
             <Text mr={2} fontSize="sm">
               Filter by Date:
             </Text>
-
+  
             <DatePicker
               selected={selectedStartDate}
               onChange={(date) => setSelectedStartDate(date)}
@@ -105,12 +150,13 @@ const  FamilyAppointments = () => {
               timeIntervals={15}
               dateFormat="MMMM d, yyyy h:mm aa"
               placeholderText="Start Date & Time"
-              size="sm" />
-
+              size="sm"
+            />
+  
             <Text mx={2} fontSize="sm">
               to
             </Text>
-
+  
             <DatePicker
               selected={selectedEndDate}
               onChange={(date) => setSelectedEndDate(date)}
@@ -119,9 +165,10 @@ const  FamilyAppointments = () => {
               timeIntervals={15}
               dateFormat="MMMM d, yyyy h:mm aa"
               placeholderText="End Date & Time"
-              size="sm" />
+              size="sm"
+            />
           </Flex>
-
+  
           <Button
             colorScheme="teal"
             onClick={handleClear}
@@ -153,14 +200,25 @@ const  FamilyAppointments = () => {
                 <Td>{new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
                 <Td>{appointment.Status}</Td>
                 <Td>
-                  {/* Add actions as needed */}
+                  {appointment.Status !== 'completed' && (
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleCancelFamAppointment(appointment._id, index)}
+                      isDisabled={appointment.Status === 'cancelled'}
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
-      </Box></>
+      </Box>
+      <ToastContainer /> {/* Toast container for displaying notifications */}
+    </>
   );
-};
+};  
 
 export default FamilyAppointments;

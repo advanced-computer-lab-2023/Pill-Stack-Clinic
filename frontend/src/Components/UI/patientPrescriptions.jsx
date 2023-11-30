@@ -44,6 +44,7 @@ const PrescriptionViewer = () => {
         });
 
         setPrescriptions(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching prescriptions:', error);
       }
@@ -82,7 +83,36 @@ const PrescriptionViewer = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  let i=1;
+  const Download=async(prescription)=>{
+    const response=await axios.post("http://localhost:8000/patient/PDF",{prescription:prescription},
+    {withCredentials:true},)
+    console.log(response.data.file); 
+    const base64File = response.data.file;
+    const fileType = base64File.substring('data:'.length, ';'.length);
+    const fileName = response.data.filename;
+   
+    const binaryData = atob(base64File.split(',')[1]);
+    const length = binaryData.length;
+    const arrayBuffer = new ArrayBuffer(length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+   
+    for (let i = 0; i < length; i++) {
+       uint8Array[i] = binaryData.charCodeAt(i);
+    }
+   
+    const blob = new Blob([uint8Array], { type: fileType });
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    // const link = document.createElement('a');
+    // link.download = 'Prescription';
 
+    // link.href = '../../../backend/src/'+response.data;
+
+    // link.click();
+  }
   return (
     <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Prescription</Text>
@@ -128,23 +158,19 @@ const PrescriptionViewer = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Medicine ID</Th>
-              <Th>Quantity</Th>
-              <Th>Instructions</Th>
+            <Th>Doctor Username</Th>
               <Th>Date</Th>
-              <Th>Doctor Username</Th>
               <Th>Status</Th>
               <Th>Actions</Th>
+              <Th>Download PDF</Th>
             </Tr>
           </Thead>
           <Tbody>
             {filteredPrescriptions.map((prescription, index) => (
               <Tr key={index}>
-                <Td>{prescription.Medicine[0].MedicineID}</Td>
-                <Td>{prescription.Medicine[0].Quantity}</Td>
-                <Td>{prescription.Medicine[0].Instructions}</Td>
+                 <Td>{prescription.DocUsername}</Td>
                 <Td>{new Date(prescription.Date).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
-                <Td>{prescription.DocUsername}</Td>
+               
                 <Td>{prescription.Status}</Td>
                 <Td>
                   <Tooltip label="View Details" hasArrow placement="top">
@@ -153,6 +179,11 @@ const PrescriptionViewer = () => {
                     </Button>
                   </Tooltip>
                 </Td>
+                <Td>
+                  {/* <a href='../../../backend/src/Nadatest3Dr.DS0.pdf' download="Prescription PDF"
+        target="_blank"
+        rel="noreferrer"> */}
+                  <Button colorScheme="teal" onClick={() => Download(prescription)}>Download</Button></Td>
               </Tr>
             ))}
           </Tbody>
@@ -162,13 +193,26 @@ const PrescriptionViewer = () => {
           <ModalContent>
             <ModalHeader>Prescription Details</ModalHeader>
             <ModalCloseButton />
+           
             <ModalBody>
-              <p>Medicine ID: {selectedPrescription?.Medicine[0].MedicineID}</p>
-              <p>Quantity: {selectedPrescription?.Medicine[0].Quantity}</p>
-              <p>Instructions: {selectedPrescription?.Medicine[0].Instructions}</p>
-              <p>Date: {selectedPrescription?.Date}</p>
-              <p>Doctor Username: {selectedPrescription?.DocUsername}</p>
-              <p>Status: {selectedPrescription?.Status}</p>
+            {selectedPrescription?.Medicine.map((Medicine)=>(
+             
+               <>
+                
+               <p></p>
+               <p>Medicine {i++}</p>
+               <p>Medicine Name: {Medicine.MedicineID}</p>
+               <p>Quantity: {Medicine.Quantity}</p>
+               <p>Instructions: {Medicine.Instructions}</p>
+               <br></br>
+             
+               </>
+            ))}
+            <p>More Info</p>
+            <p>Date: {selectedPrescription?.Date}</p>
+               <p>Doctor: {selectedPrescription?.DocUsername}</p>
+               <p>Status: {selectedPrescription?.Status}</p>
+             
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="teal" onClick={closeModal}>
@@ -180,5 +224,10 @@ const PrescriptionViewer = () => {
       </Box></>
   );
 };
-
+{/* <Th>Medicine ID</Th>
+<Th>Quantity</Th>
+<Th>Instructions</Th> 
+         <Td>{prescription.Medicine[0].MedicineID}</Td>
+                <Td>{prescription.Medicine[0].Quantity}</Td>
+                <Td>{prescription.Medicine[0].Instructions}</Td>*/}
 export default PrescriptionViewer;
