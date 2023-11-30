@@ -192,6 +192,61 @@ const updateContractStatus=async(req,res)=>{
 
  }
 
+ const cancelAppointment = async (req, res) => {
+  try {
+      const appointmentId = req.body.appointmentId;
+      const username = req.user.Username;
+
+      // Find the doctor
+      const doctor = await doctorModel.findOne({ Username: username });
+
+      // Find the appointment in the doctor's BookedAppointments
+      const appointment = doctor.BookedAppointments.find(app => app._id.toString() === appointmentId);
+
+      if (appointment) {
+          const patientUsername = appointment.PatientUsername;
+
+          // Find the patient
+          const user = await userModel.findOne({ Username: patientUsername });
+
+          // Check if the appointment is also in the FamilyBookedAppointments
+          const familyAppointment = user.FamilyBookedAppointments.find(famAppointment => famAppointment._id.toString() === appointmentId);
+
+          if (familyAppointment) {
+              // Update status to 'cancelled' in FamilyBookedAppointments
+              familyAppointment.Status = 'cancelled';
+          } else {
+              // Update status to 'cancelled' in BookedAppointments
+              appointment.Status = 'cancelled';
+              user.BookedAppointments = user.BookedAppointments.map(app => app._id.toString() === appointmentId ? { ...app, Status: 'cancelled' } : app);
+          }
+
+          // Add the appointment price to user balance
+          const appointmentPrice = appointment.Price || 0;
+          user.WalletBalance += appointmentPrice;
+
+          // Save changes to the patient
+          await user.save();
+
+          // Remove the cancelled appointment from BookedAppointments
+          doctor.BookedAppointments = doctor.BookedAppointments.filter(app => app._id.toString() !== appointmentId);
+
+          // Save changes to the doctor
+          await doctor.save();
+
+          console.log('Appointment cancelled successfully');
+          res.status(200).json({ message: 'Appointment cancelled successfully', refund: true });
+      } else {
+          console.error('Appointment not found');
+          res.status(404).json({ error: 'Appointment not found' });
+      }
+  } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
  const viewDoctorWallet = async (req, res) => {
   try {
     const doctorId = req.user.id; // Assuming you have user ID available in req.user
@@ -767,9 +822,15 @@ const deleteContract = async (req, res) => {
 
 module.exports = {
     viewProfile,editView,editProfile,
+<<<<<<< Updated upstream
     viewMyPatients,convertToPDF,
     selectPatient,viewPatientPrescribtion,
     searchAppointments,viewALLAppointments,
+=======
+    viewMyPatients,
+    selectPatient,
+    searchAppointments,viewALLAppointments,cancelAppointment,
+>>>>>>> Stashed changes
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,

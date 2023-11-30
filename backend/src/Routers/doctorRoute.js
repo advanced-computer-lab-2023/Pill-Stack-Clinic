@@ -6,8 +6,13 @@ const {viewProfile,
     editView,
     editProfile,
     viewMyPatients, 
+<<<<<<< Updated upstream
     selectPatient,convertToPDF,
     searchAppointments,viewALLAppointments,scheduleFollowUp,
+=======
+    selectPatient,
+    searchAppointments,viewALLAppointments,cancelAppointment,scheduleFollowUp,
+>>>>>>> Stashed changes
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
@@ -22,6 +27,7 @@ router.get('/profile',userVerification, viewProfile);
 router.get('/profile/edit/:id',editView);
 router.get('/profile/edit/:id',editProfile);
 router.post('/allApp',userVerification,viewALLAppointments);
+router.post('/cancelAppointments',userVerification,cancelAppointment);
 router.post('/searchName',userVerification,PostByName);
 router.post('/search',userVerification,searchAppointments);
 router.get('/myPatients',userVerification, viewMyPatients);

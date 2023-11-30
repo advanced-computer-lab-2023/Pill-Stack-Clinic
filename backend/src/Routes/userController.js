@@ -870,44 +870,54 @@ const viewPackageSubscribtion=async(req,res)=>{
 }
 const cancelAppointment = async (req, res) => {
    try {
-     const appointmentId = req.body.appointmentId;
-     const username = req.user.Username;
+       const appointmentId = req.body.appointmentId;
+       const username = req.user.Username;
 
-     const user = await userModel.findOne({ Username: username });
-     const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
+       const user = await userModel.findOne({ Username: username });
+       const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
 
-     if (!appointment) {
-       return res.status(404).json({ error: 'Appointment not found' });
-     }
+       if (!appointment) {
+           return res.status(404).json({ error: 'Appointment not found' });
+       }
 
-     const currentDate = new Date();
-     const startDate = new Date(appointment.StartDate);
-     const Price = appointment.Price;
+       const currentDate = new Date();
+       const startDate = new Date(appointment.StartDate);
+       const Price = appointment.Price;
 
-     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
-       // Cancel normally
-       appointment.Status = 'cancelled';
-       console.log('Cancelled appointment with no refund');
+       if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+           // Cancel normally
+           appointment.Status = 'cancelled';
+           console.log('Cancelled appointment with no refund');
 
-       // Send a response to the frontend with refund:false
-       res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
-     } else {
-       // Cancel with refund
-       appointment.Status = 'cancelled';
-       user.WalletBalance += Price; // Increment user balance with the appointment price
-       console.log('Cancelled appointment with refund! Refunded amount:', Price);
+           // Send a response to the frontend with refund:false
+           res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
+       } else {
+           // Cancel with refund
+           appointment.Status = 'cancelled';
+           user.WalletBalance += Price; // Increment user balance with the appointment price
+           console.log('Cancelled appointment with refund! Refunded amount:', Price);
 
-       // Send a response to the frontend with refund:true and the refunded amount
-       res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
-     }
+           // Send a response to the frontend with refund:true and the refunded amount
+           res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
+       }
 
-     await user.save();
+       await user.save();
+
+       // Update the corresponding appointment in the doctor's BookedAppointments
+       const doctorUsername = appointment.DoctorUsername;
+       const doctor = await doctorModel.findOne({ Username: doctorUsername });
+       if (doctor) {
+           const doctorAppointment = doctor.BookedAppointments.find((docApp) => docApp._id.toString() === appointmentId);
+           if (doctorAppointment) {
+               doctorAppointment.Status = 'cancelled';
+               await doctor.save();
+           }
+       }
    } catch (error) {
-     console.error('Error cancelling appointment:', error);
-     res.status(500).json({ error: 'Internal Server Error' });
+       console.error('Error cancelling appointment:', error);
+       res.status(500).json({ error: 'Internal Server Error' });
    }
 };
-
 
 const cancelFamAppointment = async (req, res) => {
    try {
@@ -950,6 +960,19 @@ const cancelFamAppointment = async (req, res) => {
      }
  
      await user.save();
+ 
+     // Update the doctor's schema
+     const doctorUsername = familyAppointment.DoctorUsername;
+     const doctor = await doctorModel.findOne({ Username: doctorUsername });
+     const doctorAppointment = doctor.BookedAppointments.find(
+       (app) => app._id.toString() === appointmentId
+     );
+ 
+     if (doctorAppointment) {
+       // Update the status in the doctor's schema
+       doctorAppointment.Status = 'cancelled';
+       await doctor.save();
+     }
    } catch (error) {
      console.error('Error cancelling family appointment:', error);
      res.status(500).json({ error: 'Internal Server Error' });
