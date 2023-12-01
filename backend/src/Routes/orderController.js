@@ -64,7 +64,7 @@ module.exports.creditConfirm=async(req,res)=>{
                 for (const pharm of pharms) {
                     const notification = `${product.Name} is out of stock`;
                     pharm.Notifications.push(notification);
-                    const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock`;
+                    const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock.`;
                     await sendEmail(pharm.Email, "Medicine Stock ",emailText );
                     await pharm.save();
                 }
@@ -102,7 +102,7 @@ module.exports.checkoutCash = async (req,res) => {
                             for (const pharm of pharms) {
                                 const notification = `${product.Name} is out of stock`;
                                 pharm.Notifications.push(notification);
-                                const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock`;
+                                const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock.`;
                                 await sendEmail(pharm.Email, "Medicine Stock ",emailText );
                                 await pharm.save();
                             }
@@ -165,7 +165,7 @@ module.exports.checkoutWallet = async (req,res) => {
                                 console.log('here1');
                                 const notification = `${product.Name} is out of stock`;
                                 pharm.Notifications.push(notification);
-                                const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock`;
+                                const emailText = `Dear ${pharm.Name},\nKindly note that the medicine ${product.Name} is out of stock.`;
                                 await sendEmail(pharm.Email, "Medicine Stock ",emailText );
                                 await pharm.save();
                             }

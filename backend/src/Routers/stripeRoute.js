@@ -135,12 +135,12 @@ doctor.WalletBalance=docBalance;
 const formattedDate = Appointment.StartDate.toLocaleDateString();
 const formattedTimeStart = Appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
 const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
-const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd}`;
 doctor.Notifications.push(notification);
 user.Notifications.push(notification);
 doctor.save();
 user.save();
-const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd}`;
 await sendEmail(user.Email, "New Appointment ",emailText );
 await sendEmail(doctor.Email,"New Appointment",emailText)
  }
