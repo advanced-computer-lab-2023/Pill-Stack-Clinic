@@ -9,7 +9,7 @@ const {viewALLAppointments,searchDoctors,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
     removeMedicalDocument,getAmount,viewAllAvailableAppointments,
     viewFamilyAppointments,viewMyHealthRecords,getAddresses,convertToPDF,
-    orderDetails,addDeliveryAddress} = require('../Routes/userController.js');
+    orderDetails,addDeliveryAddress,requestFollowUp,requestFollowUp2} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -51,6 +51,8 @@ router.post('/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation',userV
 router.get('/viewMyHealthRecords/:Username/:Patientname',userVerification,viewMyHealthRecords)
 router.post('/checkSubscribed',checkSubscribed);
 router.post('/PDF',userVerification,convertToPDF);
+router.post('/request-follow-upp',userVerification ,requestFollowUp);
+router.post('/request-follow-upp2',userVerification ,requestFollowUp2);
 ////Pharmacy add ons 
 router.get('/Address',userVerification,getAddresses)
 router.get('/orderDetails',userVerification,orderDetails)

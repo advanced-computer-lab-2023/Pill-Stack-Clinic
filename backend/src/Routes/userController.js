@@ -1301,6 +1301,72 @@ const viewMyHealthRecords = async (req, res) => {
 
 
  }
+ const requestFollowUp = async (req, res) => {
+   const patientUsername = req.user.Username; // assuming username is in the session or token
+   const { doctorName, startDate, endDate } = req.body;
+
+
+   try {
+       const doctor = await doctorModel.findOne({ Name: doctorName });
+       if (!doctor) {
+           return res.status(404).json({ message: "Doctor not found" });
+       }
+
+       // Create a new follow-up object
+       const followUp = {
+           PatientUsername: patientUsername,
+           PatientName: req.user.Name, // Assuming patient's name is also available
+           StartDate: new Date(startDate),
+           EndDate: new Date(endDate),
+           Status: 'upcoming'
+       };
+
+       // Add to doctor's followup array
+       doctor.followup.push(followUp);
+       await doctor.save();
+
+       res.status(200).json({ message: 'Follow-up request added successfully' });
+   } catch (error) {
+       res.status(500).json({ message: error.message });
+   }
+};
+const requestFollowUp2 = async (req, res) => {
+   const patientUsername = req.user.Username; // Username of the logged-in user
+   const { patientname, doctorName, startDate, endDate } = req.body;
+
+   try {
+       // Fetch the logged-in user's details
+       const user = await userModel.findOne({ Username: patientUsername });
+
+       // Find the family member's username using their name
+       const familyMember = user.familyMembers.find(member => member.MemberName === patientname);
+       if (!familyMember) {
+           return res.status(404).json({ message: "Family member not found" });
+       }
+
+       const doctor = await doctorModel.findOne({ Name: doctorName });
+       if (!doctor) {
+           return res.status(404).json({ message: "Doctor not found" });
+       }
+
+       // Create a new follow-up object
+       const followUp = {
+           PatientUsername: familyMember.Username, // Use the family member's username
+           PatientName: patientname,
+           StartDate: new Date(startDate),
+           EndDate: new Date(endDate),
+           Status: 'upcoming'
+       };
+
+       // Add to doctor's followup array
+       doctor.followup.push(followUp);
+       await doctor.save();
+
+       res.status(200).json({ message: 'Follow-up request added successfully' });
+   } catch (error) {
+       res.status(500).json({ message: error.message });
+   }
+};
 
 
 module.exports = {selectedDoctorDetails,addFamilyMem,
@@ -1314,7 +1380,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords,
-    orderDetails,getAddresses,addDeliveryAddress
+    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2
    
    
    

@@ -31,6 +31,8 @@ import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
+import FollowUpRegisterForm from './Components/Pages/FollowUpRegisterForm.jsx';
+import RequestFollowUp from './Components/Pages/RequestFollowUp.jsx';
 ///Pharmacy add ons
 import PharmacistRegisterPage from './Components/Pages/PharmacistRegisterPage';
 import{MedicineList} from "./Components/UI/MedicineList";
@@ -87,7 +89,8 @@ function App() {
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
         {/* /doctor/prescriptions/${patient._id} */}
         <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
-        
+        <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />
+        <Route path="/follow-up-request2" element={<RequestFollowUp />} />
 
         {/* pharmacy */}
         <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />
