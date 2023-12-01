@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Badge, Box,IconButton, Popover, PopoverContent, PopoverTrigger, VStack } from '@chakra-ui/react';
-import { BellIcon, CloseIcon ,WarningIcon } from '@chakra-ui/icons'; // Import CloseIcon
+import { BellIcon, CloseIcon ,WarningIcon } from '@chakra-ui/icons'; 
 import { Text,Flex } from '@chakra-ui/react';
 
 const Notifications = ({ notifications }) => {

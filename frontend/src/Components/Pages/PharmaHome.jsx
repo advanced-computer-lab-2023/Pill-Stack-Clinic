@@ -16,7 +16,7 @@ import {
   ModalBody,
   ModalFooter,
 } from '@chakra-ui/react'; 
-
+import Notifications from '../UI/notifications'; 
 import {
   faCubesStacked,
   faCapsules,
@@ -155,6 +155,7 @@ function PharmaHome() {
       <Flex bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
           <Text fontSize={'3xl'} color={'white'} >Welcome To Pill lorem </Text>
           <Spacer/>
+          <Notifications  notifications={fullUser.Notifications}/>
           <Button onClick={openViewFamilyModal} style={{ color: 'Black', marginRight: '10px', textDecoration: 'none', cursor: 'pointer', marginBottom: '2px', ':hover': { color: 'black' } }}>ChangePass</Button>
 
 

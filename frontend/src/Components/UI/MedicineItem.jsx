@@ -37,9 +37,16 @@ const MedicineItem = ({ medicine, addToCart }) => {
           </NumberInputStepper>
         </NumberInput>
       </div>
-      <Button onClick={() => addToCart(medicine, quantity)} mt={2} colorScheme="teal">
+      {medicine.Quantity > 0 ? (
+        <Button onClick={() => addToCart(medicine, quantity)} mt={2} colorScheme="teal">
         Add to Cart
       </Button>
+      ) : (
+        <Button mt={2} colorScheme="teal" disabled>
+          Out of Stock
+        </Button>
+      )}
+     
     </div>
   );
 };
