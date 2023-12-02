@@ -12,7 +12,7 @@ const {viewProfile,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
-    ,updateContractStatus,addPrescription } = require('../Routes/doctorController.js');
+    ,updateContractStatus,addPrescription,generateRoom,join,getPatientUsername,sendMessage  } = require('../Routes/doctorController.js');
 
 
 
@@ -43,5 +43,8 @@ router.post('/myPatients/Prescriptions',userVerification,viewPatientPrescribtion
 router.post('/PDF',userVerification,convertToPDF);
 router.get('/fullPatient/:username' , userVerification, getFullAccount);
 router.post('/addPrescription/:username', userVerification, addPrescription);
+router.get('/getPatientUsername/:username',getPatientUsername);
+router.post('/ChatDoctor/:doctorUsername/:username',join);
+router.post('/sendMessage/:patientUsername/:doctorUsername',sendMessage);
 
 module.exports = router;

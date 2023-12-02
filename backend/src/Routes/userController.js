@@ -1367,7 +1367,137 @@ const requestFollowUp2 = async (req, res) => {
        res.status(500).json({ message: error.message });
    }
 };
+const generateRoom = () => {
+   return Math.random().toString(36).substring(2, 15);
+ };
+ const joinChatRoomPatient = async (req, res) => {
+   try {
 
+     const username = req.params.username;
+     const doctorUsername = req.params.doctorUsername;
+     console.log(doctorUsername)
+     const patient = await userModel.findOne({ Username: username });
+     if (!patient) {
+       return res.status(404).json({ message: 'Patient not found' });
+     }
+ 
+     // Check if the patient already has a chat room with this doctor
+     const existingChatRoom = patient.chatRooms.find(
+      (room) => room.doctorUsername === doctorUsername && room.username === username
+    );
+     if (existingChatRoom) {
+      console.log("mariam")
+      console.log(existingChatRoom);
+
+       // If a chat room already exists, return the existing room and messages
+       const { room, messages } = existingChatRoom;
+       res.status(200).json({ room, messages });
+     } else {
+       // Otherwise, create a new chat room
+       const room = generateRoom();
+ 
+       // Initialize an empty array for messages
+       const messages = [];
+ 
+       // Store the room information and messages for the doctor-patient chat
+       patient.chatRooms.push({
+         room,
+         doctorUsername,
+         username,
+         messages,
+       });
+
+       await patient.save();
+  
+       res.status(200).json({ room, messages });
+     }
+   } catch (error) {
+     console.error('Error joining chat room for patient:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+ 
+
+ const getDoctorUsername = async (req, res) => {
+   try {
+     const { username } = req.params;
+     console.log(username);
+     const user = await userModel.findOne({ Username: username });
+ 
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+ 
+ 
+     // Ensure that user.BookedAppointments is defined and is an array
+     if (!Array.isArray(user.BookedAppointments)) {
+       return res.status(400).json({ message: 'Invalid user data' });
+     }
+ 
+     // Extract unique doctor usernames from completed appointments
+     const doctorsWithCompletedAppointments = Array.from(
+       new Set(
+         user.BookedAppointments
+           .filter(appointment => appointment.Status === 'completed')
+           .map(appointment => appointment.DoctorUsername)
+       )
+     );
+     console.log(doctorsWithCompletedAppointments);
+ 
+     res.status(200).json({ doctorsWithCompletedAppointments });
+   } catch (error) {
+     console.error('Error retrieving doctors with completed appointments:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+ const sendMessage = async (req, res, socket) => {
+   try {
+     // Find the chat room based on doctorUsername
+     const patientUsername = req.params.patientUsername;
+     const selectedDoctor = req.params.selectedDoctor;
+     const message = req.body.message;
+     // Find the user with the specified doctor in their chatRooms
+     const user = await userModel.findOne({
+      'Username': patientUsername,
+      'chatRooms.doctorUsername': selectedDoctor
+    });
+     console.log(user+"uuu")
+     if (user) {
+       // Find the specific room within the chatRooms array
+       const specificRoom = user.chatRooms.find(room => room.doctorUsername === selectedDoctor);
+ 
+       if (specificRoom) {
+         // Create the message object
+         const messageData = {
+           sender: patientUsername,
+           recipient: selectedDoctor,
+           message: message,
+         };
+ 
+         // Add the message to the specific room
+         specificRoom.messages.push(messageData);
+         // Save changes to the user's database
+         await user.save();
+ 
+         // Emit the message to other users in the chat room
+         const room = specificRoom.room;
+         console.log(room)
+         console.log(message)
+
+         return { room, message: messageData };
+       } else {
+         console.error('Chat room not found for the selected doctor');
+         return null;
+       }
+     } else {
+       console.error('User not found for the selected doctor');
+       return null;
+     }
+   } catch (error) {
+     console.error('Error sending message:', error);
+     throw error;
+   }
+ };
 
 module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllAvailableAppointments,getAmount,convertToPDF,
@@ -1380,7 +1510,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords,
-    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2
+    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage
    
    
    

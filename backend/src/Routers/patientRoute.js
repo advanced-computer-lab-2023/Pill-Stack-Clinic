@@ -9,7 +9,7 @@ const {viewALLAppointments,searchDoctors,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
     removeMedicalDocument,getAmount,viewAllAvailableAppointments,
     viewFamilyAppointments,viewMyHealthRecords,getAddresses,convertToPDF,
-    orderDetails,addDeliveryAddress,requestFollowUp,requestFollowUp2} = require('../Routes/userController.js');
+    orderDetails,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -53,6 +53,9 @@ router.post('/checkSubscribed',checkSubscribed);
 router.post('/PDF',userVerification,convertToPDF);
 router.post('/request-follow-upp',userVerification ,requestFollowUp);
 router.post('/request-follow-upp2',userVerification ,requestFollowUp2);
+router.get('/getDoctorUsername/:username',getDoctorUsername);
+router.post('/Chat/:username/:doctorUsername',joinChatRoomPatient)
+router.post('/sendMessage/:patientUsername/:selectedDoctor',sendMessage)
 ////Pharmacy add ons 
 router.get('/Address',userVerification,getAddresses)
 router.get('/orderDetails',userVerification,orderDetails)
