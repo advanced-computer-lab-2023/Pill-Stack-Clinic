@@ -16,7 +16,6 @@ function ChatMessages({ socket}) {
   const { username } = useParams();
   const [chatOpen, setChatOpen] = useState(false);
 
-  console.log(username)
 
   useEffect(() => {
     const fetchDoctorList = async () => {
