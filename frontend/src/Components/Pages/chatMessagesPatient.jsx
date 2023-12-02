@@ -14,6 +14,8 @@ function ChatMessages({ socket}) {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [room, setRoom] = useState("");
   const { username } = useParams();
+  const [chatOpen, setChatOpen] = useState(false);
+
   console.log(username)
 
   useEffect(() => {
@@ -42,6 +44,7 @@ function ChatMessages({ socket}) {
       setRoom(chatRoom);
       setMessageList(messageList);
       console.log(messageList)
+      setChatOpen(true);
 
       
     } catch (error) {
@@ -100,7 +103,7 @@ function ChatMessages({ socket}) {
         </ul>
       </div>
 
-      <div className="chat-window">
+      {chatOpen&&(<div className="chat-window">
         <div className="chat-header">
           <p>Live Chat</p>
         </div>
@@ -142,7 +145,7 @@ function ChatMessages({ socket}) {
           <button onClick={sendMessage}> &#9658;</button>
         </div>
       </div>
-    </div>
+       )} </div>
   );
 }
 
