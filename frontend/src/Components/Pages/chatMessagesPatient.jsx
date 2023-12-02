@@ -42,6 +42,7 @@ function ChatMessages({ socket}) {
       setSelectedDoctor(doctorUsername);
       setRoom(chatRoom);
       setMessageList(messageList);
+      
       console.log(messageList)
       setChatOpen(true);
 

@@ -39,6 +39,7 @@ function ChatMessages({ socket }) {
       setSelectedPatient(patientUsername);
       setRoom(chatRoom);
       setMessageList(messageList);
+      console.log(messageList)
       setChatOpen(true);
     } catch (error) {
       console.error('Error joining chat room for patient:', error);
