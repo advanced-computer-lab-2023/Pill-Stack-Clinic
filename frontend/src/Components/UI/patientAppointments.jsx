@@ -66,8 +66,47 @@ const AppointmentSearchAndTable = () => {
   };
 
   const handleCancelAppointment = async (appointmentId) => {
-    // ... existing logic for canceling an appointment
-  };
+    try {
+        const response = await axios.post(
+            'http://localhost:8000/patient/cancelAppointments',
+            { appointmentId },
+            {
+                withCredentials: true,
+            }
+        );
+
+        // Update the state to reflect the canceled appointment
+        setAppointments((prevAppointments) =>
+            prevAppointments.map((appointment) =>
+                appointment._id === appointmentId
+                    ? { ...appointment, Status: 'cancelled' }
+                    : appointment
+            )
+        );
+
+        // Display toast based on the response
+        if (response.data.refund) {
+            toast.success(`Cancelled appointment with refund! Refunded amount: ${response.data.message}`, {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } else {
+            toast.success('Cancelled appointment with no refund!', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+
+        console.log('Cancelled appointment');
+    } catch (error) {
+        console.error('Error cancelling appointment:', error);
+        toast.error('Failed to cancel appointment. Please try again.', {
+            position: 'top-right',
+            autoClose: 3000,
+        });
+    }
+};
+
 
   const handleFollowUpRequest = (appointment) => {
     console.log("Requesting follow-up for:", appointment);
