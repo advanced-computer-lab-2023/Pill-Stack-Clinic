@@ -637,32 +637,20 @@ const deleteContract = async (req, res) => {
 
 
   const convertToPDF=async(req,res)=>{
-    const docUsername=req.user.Username;
-    if(!docUsername){
-      res.send("Doc username undefined");
-      return;
-    }
-    const userUsername=req.body.username;
-    if(!userUsername){
-      res.send("User username undefined");
-      return;
-    }
-    const User=await userModel.findOne({Username:userUsername});
-    const data=User.Prescriptions;
-    const myPrescribtions= data.filter(function (Prescription){
-      console.log(Prescription.DocUsername + " "+ docUsername);
-      return Prescription.DocUsername===docUsername;
-    });
+    const userUsername=req.params.username;
+    const prescriptions=req.body.prescription;
+   console.log(prescriptions);
     let i=0;
-   
+    let date=new Date(prescriptions.PrecriptionDate);
+    let month=date.getMonth()+1;
     const doc = new PDFDocument;
-    doc.pipe(fs.createWriteStream(userUsername+docUsername+".pdf"));
-    doc.fontSize(9).translate(450,0).text(myPrescribtions[0].PrecriptionDate.getDay()+"-"+myPrescribtions[0].PrecriptionDate.getMonth()+"-"+
-    myPrescribtions[0].PrecriptionDate.getFullYear());
+    doc.pipe(fs.createWriteStream(prescriptions.DocUsername+userUsername+".pdf"));
+    doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+    date.getFullYear());
     doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
     doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
     doc.moveDown().translate(-200,30);
-
+ 
     // Set the stroke color to black
     doc.strokeColor('black');
     
@@ -673,17 +661,23 @@ const deleteContract = async (req, res) => {
     doc.moveTo(10, 50)
        .lineTo(590, 50)
        .stroke();
-     doc.fontSize(18).fillColor('green').text("Doctor Name: "+docUsername);
-   
-    for(let j=0;j<myPrescribtions[0].Medicine.length;j++){
+     doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescriptions.DocUsername);
+     doc.fontSize(18).fillColor('green').text("Patient Name: "+userUsername);
+    for(let j=0;j<prescriptions.Medicine.length;j++){
       doc.translate(0,10);
-      doc.fontSize(13).fillColor('black').text("Medicine: "+myPrescribtions[0].Medicine[j].MedicineID).translate(0,10+20*i);
-      doc.fontSize(13).fillColor('black').text("Quantity: "+myPrescribtions[0].Medicine[j].Quantity).translate(0,10);
-      doc.fontSize(13).fillColor('black').text("Instruction: "+myPrescribtions[0].Medicine[j].Instructions).translate(0,10+20*i);
+      doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineName).translate(0,10+20*i);
+      doc.fontSize(13).fillColor('black').text("Dosage: "+prescriptions.Medicine[j].MedicineDose).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Quantity: "+prescriptions.Medicine[j].Quantity).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
     }
     doc.end();
-   res.send(""+userUsername+docUsername+".pdf");
-
+    const filePath = path.join(__dirname,'../',prescriptions.DocUsername+userUsername+".pdf");
+    const fileData = fs.readFileSync(filePath);
+    const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
+    res.json({ file: base64File ,filename:prescriptions.DocUsername+userUsername+".pdf"});
+ 
+ 
+ 
   }
   
   const getFullAccount = async (req, res) => {
@@ -691,6 +685,42 @@ const deleteContract = async (req, res) => {
       const user = req.params.username;
       console.log(user);
       const patient = await userModel.findOne({ Username: user });
+      const prescriptions = patient.Prescriptions;
+     
+      prescriptions.map((prescription) => {
+        const doc = new PDFDocument;
+        let i=0;
+        console.log(prescription);
+        let date=new Date(prescription.PrecriptionDate);
+        let month=date.getMonth()+1;
+        doc.pipe(fs.createWriteStream(prescription.DocUsername+user+".pdf"));
+        doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+     date.getFullYear());
+     doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
+     doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
+     doc.moveDown().translate(-200,30);
+  
+     // Set the stroke color to black
+     doc.strokeColor('black');
+     
+     // Set the line width
+     doc.lineWidth(1);
+     
+     // Draw a line
+     doc.moveTo(10, 50)
+        .lineTo(590, 50)
+        .stroke();
+      doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescription.DocUsername);
+      doc.fontSize(18).fillColor('green').text("Patient Name: "+user);
+     for(let j=0;j<prescription.Medicine.length;j++){
+       doc.translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Medicine: "+prescription.Medicine[j].MedicineName).translate(0,10+20*i);
+       doc.fontSize(13).fillColor('black').text("Dosage: "+prescription.Medicine[j].Dose).translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Quantity: "+prescription.Medicine[j].Quantity).translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Instruction: "+prescription.Medicine[j].Instructions).translate(0,10+20*i);
+     }
+     
+        doc.end();});
       if (!patient) {
         return res.status(404).send({ error: 'User not found' });
       }
@@ -713,16 +743,16 @@ const deleteContract = async (req, res) => {
       const date = new Date();
 
       const meds = await Promise.all(prescriptions.map(async (prescription) => {
-        const { medName, quantity, instructions } = prescription;
+        const { medName, quantity, instructions, dose } = prescription;
         console.log("name", medName);
         console.log("quantity", quantity);
         console.log("instructions", instructions);
         const med = await medModel.findOne({ Name: medName });
         if (!med) {
-          throw new Error('Medicine not found');
+          res.send('med not found')
         }
         const medId = med._id;
-        return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions };
+        return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions, Dose: dose };
       }));
       console.log(meds);
 

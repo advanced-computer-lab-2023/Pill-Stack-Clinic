@@ -37,7 +37,7 @@ router.put('/:doctorId/activate-delete-contract', userVerification, activateAndD
 router.post('/availability', userVerification, addAvailability);
 router.get('/availability', userVerification, viewAvailability);
 router.post('/updateContractStatus',userVerification,updateContractStatus);
-router.post('/PDF',userVerification,convertToPDF);
+router.post('/PDF/:username',userVerification,convertToPDF);
 router.get('/fullPatient/:username' , userVerification, getFullAccount);
 router.post('/addPrescription/:username', userVerification, addPrescription);
 

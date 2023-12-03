@@ -414,8 +414,42 @@ const viewPrescriptions = async (req, res) => {
  
      // Map the prescriptions to extract Medicine details
      const mappedPrescriptions = prescriptions.map((prescription) => {
+      const doc = new PDFDocument;
+      let i=0;
+      let date=new Date(prescription.PrecriptionDate);
+      // console.log(prescription.PrecriptionDate);
+      let month=date.getMonth()+1;
+      doc.pipe(fs.createWriteStream(username+prescription.DocUsername+".pdf"));
+      doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+   date.getFullYear());
+   doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
+   doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
+   doc.moveDown().translate(-200,30);
+
+   // Set the stroke color to black
+   doc.strokeColor('black');
+   // Set the line width
+   doc.lineWidth(1);
+   // Draw a line
+   doc.moveTo(10, 50)
+      .lineTo(590, 50)
+      .stroke();
+    doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescription.DocUsername);
+    doc.fontSize(18).fillColor('green').text("Patient Name: "+username);
+  
+   for(let j=0;j<prescription.Medicine.length;j++){
+     doc.translate(0,10);
+     doc.fontSize(13).fillColor('black').text("Medicine: "+prescription.Medicine[j].MedicineName).translate(0,10+20*i);
+     doc.fontSize(13).fillColor('black').text("Dosage: "+prescription.Medicine[j].Dose).translate(0,10);
+     doc.fontSize(13).fillColor('black').text("Quantity: "+prescription.Medicine[j].Quantity).translate(0,10);
+     doc.fontSize(13).fillColor('black').text("Instruction: "+prescription.Medicine[j].Instructions).translate(0,10+20*i);
+   }
+   
+      doc.end();
        const medicineDetails = prescription.Medicine.map((medicine) => ({
          MedicineID: medicine.MedicineID,
+         MedicineName: medicine.MedicineName,
+         MedicineDose:medicine.Dose,
          Quantity: medicine.Quantity,
          Instructions: medicine.Instructions,
        }));
@@ -427,7 +461,7 @@ const viewPrescriptions = async (req, res) => {
        };
      });
  
-     console.log(mappedPrescriptions);
+   //  console.log(mappedPrescriptions);
  
      res.send(mappedPrescriptions);
    } catch (error) {
@@ -1222,12 +1256,12 @@ const viewMyHealthRecords = async (req, res) => {
  const convertToPDF=async(req,res)=>{
    const userUsername=req.user.Username;
    const prescriptions=req.body.prescription;
-  
+  console.log(prescriptions);
    let i=0;
-   let date=new Date(prescriptions.Date);
+   let date=new Date(prescriptions.PrecriptionDate);
    let month=date.getMonth()+1;
    const doc = new PDFDocument;
-   doc.pipe(fs.createWriteStream(userUsername+prescriptions.DocUsername+i+".pdf"));
+   doc.pipe(fs.createWriteStream(userUsername+prescriptions.DocUsername+".pdf"));
    doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
    date.getFullYear());
    doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
@@ -1245,18 +1279,20 @@ const viewMyHealthRecords = async (req, res) => {
       .lineTo(590, 50)
       .stroke();
     doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescriptions.DocUsername);
-  
+    doc.fontSize(18).fillColor('green').text("Patient Name: "+userUsername);
    for(let j=0;j<prescriptions.Medicine.length;j++){
      doc.translate(0,10);
-     doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineID).translate(0,10+20*i);
+     doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineName).translate(0,10+20*i);
+     doc.fontSize(13).fillColor('black').text("Dosage: "+prescriptions.Medicine[j].MedicineDose).translate(0,10);
      doc.fontSize(13).fillColor('black').text("Quantity: "+prescriptions.Medicine[j].Quantity).translate(0,10);
      doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
    }
    doc.end();
-   const filePath = path.join(__dirname,'../',userUsername+prescriptions.DocUsername+i+".pdf");
+   const filePath = path.join(__dirname,'../',userUsername+prescriptions.DocUsername+".pdf");
    const fileData = fs.readFileSync(filePath);
    const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
-   res.json({ file: base64File ,filename:userUsername+prescriptions.DocUsername+i+".pdf"});
+   res.json({ file: base64File ,filename:userUsername+prescriptions.DocUsername+".pdf"});
+
 
 
  }
