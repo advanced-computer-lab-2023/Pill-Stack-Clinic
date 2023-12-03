@@ -110,7 +110,7 @@ const searchDoctors = async (req, res) => {
        console.log(endDate);
 
        if (name) {
-         query["Name"] = { $regex: new RegExp(`.*${name}.*`, 'i') };
+         query["Usename"] = { $regex: new RegExp(`.*${name}.*`, 'i') };
        }
 
        if (speciality) {
@@ -353,6 +353,7 @@ const viewDoctors = async (req, res) => {
             };
          });
          res.send(updatedDoctors);
+
       } else {
          // Handle the case when the user is not found
          res.status(404).send('User not found');
@@ -591,7 +592,7 @@ const viewAvailDoctorAppointments = async (req, res) => {
        return res.status(404).json({ message: 'Doctor not found' });
      }
      const doctorAppointments = selectedDoctor.Availability;
-     res.status(200).json(doctorAppointments);
+     res.status(200).json(selectedDoctor);
    } catch (error) {
      console.error('Error viewing doctor appointments:', error);
      res.status(500).json({ message: 'Internal server error' });
