@@ -72,7 +72,7 @@ export const BookAppointments = () => {
           { withCredentials: true }
         );
         setDoctor(response.data);
-        setFilteredAppointments(response.data)
+        setFilteredAppointments(response.data.Availability)
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
@@ -93,7 +93,7 @@ export const BookAppointments = () => {
     try {
       // Fetch all appointments
       const response = await axios.get(
-        "http://localhost:8000/patient/bookAppointments",
+        `http://localhost:8000/patient/viewDoctorAppointments/${doctorUsername}`,
         { withCredentials: true }
       );
       setDoctor(response.data);
@@ -332,7 +332,7 @@ export const BookAppointments = () => {
           </Thead>
           <Tbody>
             {filteredAppointments?.length > 0 ? (
-                doctors.Availability.map((appointment, appIndex) => (
+                filteredAppointments.map((appointment, appIndex) => (
                   <Tr key={ appIndex}>
                     <Td>{doctors.Name}</Td>
                     <Td>{doctors.Speciality}</Td>
