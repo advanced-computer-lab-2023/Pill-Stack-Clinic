@@ -31,6 +31,10 @@ import PayPackage from "./Components/Pages/payPackage.jsx";
 import PackCompletion from "./Components/Pages/PackCompletion.jsx"
 import PatientRegisterForm from './Components/Pages/PatientRegisterForm';
 import DoctorRegisterPage from "./Components/Pages/DoctorRegisterPage";
+import FollowUpRegisterForm from './Components/Pages/FollowUpRegisterForm.jsx';
+import RequestFollowUp from './Components/Pages/RequestFollowUp.jsx';
+import ChatMessages from './Components/Pages/chatMessagesPatient.jsx';
+import ChatMessagesDoctor from './Components/Pages/chatMessagesDoctor.jsx';
 ///Pharmacy add ons
 import PharmacistRegisterPage from './Components/Pages/PharmacistRegisterPage';
 import{MedicineList} from "./Components/UI/MedicineList";
@@ -47,7 +51,8 @@ import ManagePrescriptions from "./Components/Pages/ManagePrescriptions.jsx";
 
 
 
-
+import io from 'socket.io-client';
+const socket = io.connect("http://localhost:8000");
 
 function App() {
   
@@ -85,9 +90,12 @@ function App() {
         <Route path="/my-health-records/:patientUsername" element={<MyHealthRecords />} />
         <Route path="/patient-register" element={<PatientRegisterForm />} />
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
+        <Route path="/chatwithdoctor/:username" element={<ChatMessages socket={socket} />} />
+        <Route path="/chatwithpatient/:username" element={<ChatMessagesDoctor socket={socket} />} />
         {/* /doctor/prescriptions/${patient._id} */}
         <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
-        
+        <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />
+        <Route path="/follow-up-request2" element={<RequestFollowUp />} />
 
         {/* pharmacy */}
         <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />

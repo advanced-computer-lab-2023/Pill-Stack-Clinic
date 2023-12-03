@@ -557,7 +557,7 @@ module.exports.DeleteNotif = async (req, res) => {
     );
 
     user.Notifications=updatedNotifications;
-    user.save();
+    await user.save();
   }catch (error){
     res.status(500);
   }

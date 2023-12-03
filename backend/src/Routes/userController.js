@@ -727,15 +727,15 @@ const viewAvailDoctorAppointments = async (req, res) => {
    const docBalance=doctor.WalletBalance+(0.9*amount);
    doctor.WalletBalance=docBalance;
    const formattedDate = Appointment.StartDate.toLocaleDateString();
-   const formattedTimeStart = Appointment.StartDate.toLocaleTimeString();
-   const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString();
-   const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+   const formattedTimeStart = Appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+   const formattedTimeEnd = Appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+   const notification = ` Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd}`;
    doctor.Notifications.push(notification);
    doctor.save();
    user.WalletBalance=wallet-amount;
    user.Notifications.push(notification);
    user.save();
-   const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} .`;
+   const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd}`;
    await sendEmail(user.Email, "New Appointment ",emailText );
    await sendEmail(doctor.Email,"New Appointment",emailText)
    res.send("Appointment booked successfully");
@@ -904,44 +904,64 @@ const viewPackageSubscribtion=async(req,res)=>{
 }
 const cancelAppointment = async (req, res) => {
    try {
-     const appointmentId = req.body.appointmentId;
-     const username = req.user.Username;
+       const appointmentId = req.body.appointmentId;
+       const username = req.user.Username;
 
-     const user = await userModel.findOne({ Username: username });
-     const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
+       const user = await userModel.findOne({ Username: username });
+       const appointment = user.BookedAppointments.find((app) => app._id.toString() === appointmentId);
 
-     if (!appointment) {
-       return res.status(404).json({ error: 'Appointment not found' });
-     }
+       if (!appointment) {
+           return res.status(404).json({ error: 'Appointment not found' });
+       }
 
-     const currentDate = new Date();
-     const startDate = new Date(appointment.StartDate);
-     const Price = appointment.Price;
+       const currentDate = new Date();
+       const startDate = new Date(appointment.StartDate);
+       const Price = appointment.Price;
+       const formattedDate = appointment.StartDate.toLocaleDateString();
+       const formattedTimeStart = appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+       const formattedTimeEnd = appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+       let notification ;
 
-     if (startDate - currentDate < 24 * 60 * 60 * 1000) {
-       // Cancel normally
-       appointment.Status = 'cancelled';
-       console.log('Cancelled appointment with no refund');
+       if (startDate - currentDate < 24 * 60 * 60 * 1000) {
+           // Cancel normally
+           appointment.Status = 'cancelled';
+           console.log('Cancelled appointment with no refund');
+          notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
 
-       // Send a response to the frontend with refund:false
-       res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
-     } else {
-       // Cancel with refund
-       appointment.Status = 'cancelled';
-       user.WalletBalance += Price; // Increment user balance with the appointment price
-       console.log('Cancelled appointment with refund! Refunded amount:', Price);
+           // Send a response to the frontend with refund:false
+           res.status(200).json({ message: 'Appointment cancelled successfully', refund: false });
+       } else {
+           // Cancel with refund
+           appointment.Status = 'cancelled';
+           user.WalletBalance += Price; // Increment user balance with the appointment price
+           console.log('Cancelled appointment with refund! Refunded amount:', Price);
+           notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
 
-       // Send a response to the frontend with refund:true and the refunded amount
-       res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
-     }
+           // Send a response to the frontend with refund:true and the refunded amount
+           res.status(200).json({ message: `Appointment cancelled successfully. Refunded amount: ${Price}`, refund: true });
+       }
+       user.Notifications.push(notification);
+       const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+       await sendEmail(user.Email, "Appointment Cancellation ",emailText );
+       await user.save();
 
-     await user.save();
+       // Update the corresponding appointment in the doctor's BookedAppointments
+       const doctorUsername = appointment.DoctorUsername;
+       const doctor = await doctorModel.findOne({ Username: doctorUsername });
+       if (doctor) {
+           const doctorAppointment = doctor.BookedAppointments.find((docApp) => docApp._id.toString() === appointmentId);
+           if (doctorAppointment) {
+               doctorAppointment.Status = 'cancelled';
+               doctor.Notifications.push(notification);
+               await sendEmail(doctor.Email,"New Appointment",emailText)
+               await doctor.save();
+           }
+       }
    } catch (error) {
-     console.error('Error cancelling appointment:', error);
-     res.status(500).json({ error: 'Internal Server Error' });
+       console.error('Error cancelling appointment:', error);
+       res.status(500).json({ error: 'Internal Server Error' });
    }
 };
-
 
 const cancelFamAppointment = async (req, res) => {
    try {
@@ -960,7 +980,12 @@ const cancelFamAppointment = async (req, res) => {
      const currentDate = new Date();
      const startDate = new Date(familyAppointment.StartDate);
      const Price = familyAppointment.Price;
- 
+     const formattedDate = familyAppointment.StartDate.toLocaleDateString();
+     const formattedTimeStart = familyAppointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+     const formattedTimeEnd = familyAppointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+     const notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+     const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+
      if (startDate - currentDate < 24 * 60 * 60 * 1000) {
        // Cancel normally
        familyAppointment.Status = 'cancelled';
@@ -982,8 +1007,24 @@ const cancelFamAppointment = async (req, res) => {
          refund: true,
        });
      }
- 
+     user.Notifications.push(notification);
+     await sendEmail(user.Email, "Appointment Cancellation ",emailText );
      await user.save();
+ 
+     // Update the doctor's schema
+     const doctorUsername = familyAppointment.DoctorUsername;
+     const doctor = await doctorModel.findOne({ Username: doctorUsername });
+     const doctorAppointment = doctor.BookedAppointments.find(
+       (app) => app._id.toString() === appointmentId
+     );
+ 
+     if (doctorAppointment) {
+       // Update the status in the doctor's schema
+       doctorAppointment.Status = 'cancelled';
+       doctor.Notifications.push(notification);
+       await sendEmail(doctor.Email,"New Appointment",emailText)
+       await doctor.save();
+     }
    } catch (error) {
      console.error('Error cancelling family appointment:', error);
      res.status(500).json({ error: 'Internal Server Error' });
@@ -1296,7 +1337,203 @@ const viewMyHealthRecords = async (req, res) => {
 
 
  }
+ const requestFollowUp = async (req, res) => {
+   const patientUsername = req.user.Username; // assuming username is in the session or token
+   const { doctorName, startDate, endDate } = req.body;
 
+
+   try {
+       const doctor = await doctorModel.findOne({ Name: doctorName });
+       if (!doctor) {
+           return res.status(404).json({ message: "Doctor not found" });
+       }
+
+       // Create a new follow-up object
+       const followUp = {
+           PatientUsername: patientUsername,
+           PatientName: req.user.Name, // Assuming patient's name is also available
+           StartDate: new Date(startDate),
+           EndDate: new Date(endDate),
+           Status: 'upcoming'
+       };
+
+       // Add to doctor's followup array
+       doctor.followup.push(followUp);
+       await doctor.save();
+
+       res.status(200).json({ message: 'Follow-up request added successfully' });
+   } catch (error) {
+       res.status(500).json({ message: error.message });
+   }
+};
+const requestFollowUp2 = async (req, res) => {
+   const patientUsername = req.user.Username; // Username of the logged-in user
+   const { patientname, doctorName, startDate, endDate } = req.body;
+
+   try {
+       // Fetch the logged-in user's details
+       const user = await userModel.findOne({ Username: patientUsername });
+
+       // Find the family member's username using their name
+       const familyMember = user.familyMembers.find(member => member.MemberName === patientname);
+       if (!familyMember) {
+           return res.status(404).json({ message: "Family member not found" });
+       }
+
+       const doctor = await doctorModel.findOne({ Name: doctorName });
+       if (!doctor) {
+           return res.status(404).json({ message: "Doctor not found" });
+       }
+
+       // Create a new follow-up object
+       const followUp = {
+           PatientUsername: familyMember.Username, // Use the family member's username
+           PatientName: patientname,
+           StartDate: new Date(startDate),
+           EndDate: new Date(endDate),
+           Status: 'upcoming'
+       };
+
+       // Add to doctor's followup array
+       doctor.followup.push(followUp);
+       await doctor.save();
+
+       res.status(200).json({ message: 'Follow-up request added successfully' });
+   } catch (error) {
+       res.status(500).json({ message: error.message });
+   }
+};
+const generateRoom = () => {
+   return Math.random().toString(36).substring(2, 15);
+ };
+ const joinChatRoomPatient = async (req, res) => {
+   try {
+
+     const username = req.params.username;
+     const doctorUsername = req.params.doctorUsername;
+     console.log(doctorUsername)
+     const patient = await userModel.findOne({ Username: username });
+     if (!patient) {
+       return res.status(404).json({ message: 'Patient not found' });
+     }
+ 
+     // Check if the patient already has a chat room with this doctor
+     const existingChatRoom = patient.chatRooms.find(
+      (room) => room.doctorUsername === doctorUsername && room.username === username
+    );
+     if (existingChatRoom) {
+      console.log("mariam")
+      console.log(existingChatRoom);
+
+       // If a chat room already exists, return the existing room and messages
+       const { room, messages } = existingChatRoom;
+       res.status(200).json({ room, messages });
+     } else {
+       // Otherwise, create a new chat room
+       const room = generateRoom();
+ 
+       // Initialize an empty array for messages
+       const messages = [];
+ 
+       // Store the room information and messages for the doctor-patient chat
+       patient.chatRooms.push({
+         room,
+         doctorUsername,
+         username,
+         messages,
+       });
+
+       await patient.save();
+  
+       res.status(200).json({ room, messages });
+     }
+   } catch (error) {
+     console.error('Error joining chat room for patient:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+ 
+
+ const getDoctorUsername = async (req, res) => {
+   try {
+     const { username } = req.params;
+     console.log(username);
+     const user = await userModel.findOne({ Username: username });
+ 
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+ 
+ 
+     // Ensure that user.BookedAppointments is defined and is an array
+     if (!Array.isArray(user.BookedAppointments)) {
+       return res.status(400).json({ message: 'Invalid user data' });
+     }
+ 
+     // Extract unique doctor usernames from completed appointments
+     const doctorsWithCompletedAppointments = Array.from(
+       new Set(
+         user.BookedAppointments
+           .filter(appointment => appointment.Status === 'completed')
+           .map(appointment => appointment.DoctorUsername)
+       )
+     );
+     console.log(doctorsWithCompletedAppointments);
+ 
+     res.status(200).json({ doctorsWithCompletedAppointments });
+   } catch (error) {
+     console.error('Error retrieving doctors with completed appointments:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+ const sendMessage = async (req, res, socket) => {
+   try {
+     // Find the chat room based on doctorUsername
+     const patientUsername = req.params.patientUsername;
+     const selectedDoctor = req.params.selectedDoctor;
+     const message = req.body.message;
+     // Find the user with the specified doctor in their chatRooms
+     const user = await userModel.findOne({
+      'Username': patientUsername,
+      'chatRooms.doctorUsername': selectedDoctor
+    });
+     console.log(user+"uuu")
+     if (user) {
+       // Find the specific room within the chatRooms array
+       const specificRoom = user.chatRooms.find(room => room.doctorUsername === selectedDoctor);
+ 
+       if (specificRoom) {
+         // Create the message object
+         const messageData = {
+           sender: patientUsername,
+           recipient: selectedDoctor,
+           message: message,
+         };
+ 
+         // Add the message to the specific room
+         specificRoom.messages.push(messageData);
+         // Save changes to the user's database
+         await user.save();
+ 
+         // Emit the message to other users in the chat room
+         const room = specificRoom.room;
+         console.log(room)
+         console.log(message)
+
+         return { room, message: messageData };
+       } else {
+         console.error('Chat room not found for the selected doctor');
+         return null;
+       }
+     } else {
+       console.error('User not found for the selected doctor');
+       return null;
+     }
+   } catch (error) {
+     console.error('Error sending message:', error);
+     throw error;
+   }
+ };
 
 module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllAvailableAppointments,getAmount,convertToPDF,
@@ -1309,7 +1546,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords,
-    orderDetails,getAddresses,addDeliveryAddress
+    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage
    
    
    

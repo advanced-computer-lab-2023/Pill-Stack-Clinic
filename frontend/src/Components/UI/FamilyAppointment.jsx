@@ -109,24 +109,25 @@ const  FamilyAppointments = () => {
       });
     }
   };
+  const handleFollowUpRequest = async (appointment) => {
+    navigate('/follow-up-request2', { state: { appointment, familyMemberUsername: appointment.familyMemberUsername } });
+  };
   
   return (
     <>
       <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
         <Text fontSize={'3xl'} color={'white'}>Family Appointments</Text>
-        <button className="btn" onClick={back}>back</button>
+        <button className="btn" onClick={() => navigate(-1)}>Back</button>
       </Box>
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
         <FormControl mb={4}>
           <Flex alignItems="center" mb={2}>
-            <Text mr={2} fontSize="sm">
-              Filter by Status:
-            </Text>
-            <Select
-              placeholder="Select Status"
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              size="sm"
+            <Text mr={2} fontSize="sm">Filter by Status:</Text>
+            <Select 
+              placeholder="Select Status" 
+              value={selectedStatus} 
+              onChange={(e) => setSelectedStatus(e.target.value)} 
+              size="sm" 
               fontSize="sm"
             >
               <option value="All">All</option>
@@ -138,43 +139,38 @@ const  FamilyAppointments = () => {
           </Flex>
   
           <Flex alignItems="center" mb={2}>
-            <Text mr={2} fontSize="sm">
-              Filter by Date:
-            </Text>
-  
-            <DatePicker
-              selected={selectedStartDate}
-              onChange={(date) => setSelectedStartDate(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="MMMM d, yyyy h:mm aa"
-              placeholderText="Start Date & Time"
-              size="sm"
+            <Text mr={2} fontSize="sm">Filter by Date:</Text>
+            <DatePicker 
+              selected={selectedStartDate} 
+              onChange={(date) => setSelectedStartDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="Start Date & Time" 
+              size="sm" 
             />
   
-            <Text mx={2} fontSize="sm">
-              to
-            </Text>
+            <Text mx={2} fontSize="sm">to</Text>
   
-            <DatePicker
-              selected={selectedEndDate}
-              onChange={(date) => setSelectedEndDate(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="MMMM d, yyyy h:mm aa"
-              placeholderText="End Date & Time"
-              size="sm"
+            <DatePicker 
+              selected={selectedEndDate} 
+              onChange={(date) => setSelectedEndDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="End Date & Time" 
+              size="sm" 
             />
           </Flex>
   
-          <Button
-            colorScheme="teal"
-            onClick={handleClear}
-            size="sm"
-            fontSize="sm"
-            leftIcon={<MdClear />}
+          <Button 
+            colorScheme="teal" 
+            onClick={handleClear} 
+            size="sm" 
+            fontSize="sm" 
+            leftIcon={<MdClear />} 
             mt={2}
           >
             Clear Filters
@@ -208,6 +204,15 @@ const  FamilyAppointments = () => {
                       isDisabled={appointment.Status === 'cancelled'}
                     >
                       Cancel
+                    </Button>
+                  )}
+                  {appointment.Status === 'completed' && (
+                    <Button 
+                      colorScheme="blue" 
+                      size="sm" 
+                      onClick={() => handleFollowUpRequest(appointment)}
+                    >
+                      Request Follow-Up
                     </Button>
                   )}
                 </Td>

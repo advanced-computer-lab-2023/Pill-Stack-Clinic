@@ -78,6 +78,21 @@ const doctorSchema = new Schema({
         }
               })
     ],
+    followup: [
+      new Schema({
+        _id: mongoose.Schema.Types.ObjectId,
+
+        PatientUsername: String,
+        PatientName:String,
+        StartDate:Date,
+        EndDate:Date,
+        Price:Number,
+        Status: {
+          type: String,
+          enum: ['upcoming', 'completed', 'cancelled', 'rescheduled'],
+        }
+              })
+    ],
     HealthRecords:[
       {
         PatientUsername: { type: String, required: true },

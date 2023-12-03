@@ -7,7 +7,8 @@ import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
 import DoctorShortcuts from "../UI/DoctorShortcuts";
 import DoctorInfoCard from "../UI/DoctorInfoCard";
 import WithSubnavigation from "../UI/navbar";
-
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export const Doctor = () => {
   const navigate = useNavigate();
@@ -178,6 +179,23 @@ export const Doctor = () => {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            background: "#28a745",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          <Link to={`/chatwithPatient/${username}`} style={{ textDecoration: "none", color: "white" }}>
+            Chat with your patient
+          </Link>
+        </motion.div>
       </div>
       <ToastContainer />
     </>

@@ -51,7 +51,10 @@ const pharmacistSchema = new Schema({
       data: Buffer,
       contentType: String,
     
-    }
+    },
+    Notifications:[{
+      type:String
+    }]
     
     }, { timestamps: true});
     pharmacistSchema.pre('save', function(next) {
