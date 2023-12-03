@@ -164,9 +164,11 @@ const getUsers = async (req, res) => {
    const BookedAppointments = profile.BookedAppointments;
    const currDate=new Date();
    for (const app of BookedAppointments) {
+      if(app.Status==='upcoming' || app.Status==='rescheduled'){
      if(app.StartDate<currDate){
       app.Status='completed';
      }
+   }
     }
     profile.save();
    res.status(200).json(profile.BookedAppointments);
@@ -180,9 +182,12 @@ const getUsers = async (req, res) => {
    const familyAppointments = profile.FamilyBookedAppointments;
    const currDate=new Date();
    for (const app of familyAppointments) {
+      if(app.Status==='upcoming' || app.Status==='rescheduled'){
+
      if(app.StartDate<currDate){
       app.Status='completed';
      }
+   }
     }
     profile.save();
    res.status(200).json(profile.FamilyBookedAppointments);

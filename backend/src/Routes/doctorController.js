@@ -184,9 +184,12 @@ const updateContractStatus=async(req,res)=>{
   const BookedAppointments = profile.BookedAppointments;
   const currDate=new Date();
   for (const app of BookedAppointments) {
+    if(app.Status==='upcoming' || app.Status==='rescheduled'){
+
     if(app.StartDate<currDate){
      app.Status='completed';
     }
+  }
    }
    profile.save();
   res.send(profile.BookedAppointments);
