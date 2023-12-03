@@ -11,7 +11,7 @@ const {viewProfile,
     viewALLAppointments,cancelAppointment,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
-    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,getFullAccount
        ,updateContractStatus,addPrescription,addPrescription,generateRoom,join,getPatientUsername,sendMessage   } = require('../Routes/doctorController.js');
 
 
