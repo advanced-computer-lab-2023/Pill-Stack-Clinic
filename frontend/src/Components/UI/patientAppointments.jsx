@@ -11,6 +11,7 @@ import {
   Button,
   FormControl,
   Text,
+  Flex
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { MdClear } from 'react-icons/md';
@@ -125,8 +126,61 @@ const AppointmentSearchAndTable = () => {
         </Button>
       </Box>
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md" bg="white" color="black">
-        <FormControl mb={4}>
-          {/* ... filter controls */}
+      <FormControl mb={4}>
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">Filter by Status:</Text>
+            <Select 
+              placeholder="Select Status" 
+              value={selectedStatus} 
+              onChange={(e) => setSelectedStatus(e.target.value)} 
+              size="sm" 
+              fontSize="sm"
+            >
+              <option value="All">All</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="rescheduled">Rescheduled</option>
+            </Select>
+          </Flex>
+  
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">Filter by Date:</Text>
+            <DatePicker 
+              selected={selectedStartDate} 
+              onChange={(date) => setSelectedStartDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="Start Date & Time" 
+              size="sm" 
+            />
+  
+            <Text mx={2} fontSize="sm">to</Text>
+  
+            <DatePicker 
+              selected={selectedEndDate} 
+              onChange={(date) => setSelectedEndDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="End Date & Time" 
+              size="sm" 
+            />
+          </Flex>
+  
+          <Button 
+            colorScheme="teal" 
+            onClick={handleClear} 
+            size="sm" 
+            fontSize="sm" 
+            leftIcon={<MdClear />} 
+            mt={2}
+          >
+            Clear Filters
+          </Button>
         </FormControl>
 
         <Table variant="simple">
