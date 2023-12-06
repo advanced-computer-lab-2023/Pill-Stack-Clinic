@@ -12,7 +12,14 @@ import {
   Button,
   FormControl,
   Text,
-  Flex
+  Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -29,6 +36,11 @@ const  FamilyAppointments = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [editedAppointmentId, setEditedAppointmentId] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rescheduleFormData, setRescheduleFormData] = useState({
+    appointmentDate: null
+  });
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
 
@@ -61,6 +73,20 @@ const  FamilyAppointments = () => {
     });
     setFilteredAppointments(filtered);
   }, [selectedStatus, selectedStartDate, selectedEndDate, appointments]);
+
+  const refreshAppointments = async () => {
+    try {
+      // Fetch all appointments
+      const response = await axios.get("http://localhost:8000/patient/viewFamilyAppointments", {
+        withCredentials: true
+      });
+      console.log(response.data);
+      setAppointments(response.data);
+      setFilteredAppointments(response.data); // Initialize filteredAppointments with all appointments
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
 
   const handleClear = () => {
     setSelectedStatus('All');
@@ -112,7 +138,46 @@ const  FamilyAppointments = () => {
   const handleFollowUpRequest = async (appointment) => {
     navigate('/follow-up-request2', { state: { appointment, familyMemberUsername: appointment.familyMemberUsername } });
   };
+
+  const handleCancelReschedule = () => {
+    setEditedAppointmentId(null);
+    // setIsModalOpen(false);
+  };
   
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    //rescheduleFormData.appointmentDate=(value);
+    setRescheduleFormData({
+      ...rescheduleFormData,
+      [name]: new Date(value),
+    });
+  };
+
+  const openModal = async (appointmentId) => {
+    setEditedAppointmentId(appointmentId);
+    setIsModalOpen(true);
+    console.log(appointmentId);
+  };
+
+  const handleReschedule = async () => {
+    try {
+      console.log(editedAppointmentId + " " + rescheduleFormData.appointmentDate);
+      const response = await axios.post("http://localhost:8000/patient/famRescheduleAppointment", {appointmentId: editedAppointmentId, newDate: rescheduleFormData.appointmentDate
+      },
+      { withCredentials: true });
+      
+      console.log(response.data);
+      // Update the state or perform other actions as needed
+    } catch (error) {
+      console.error('Errorrrrrrrrrrrrrr rescheduling appointment:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
+    setIsModalOpen(false);
+    setRescheduleFormData({ ...rescheduleFormData, appointmentDate: null });
+    refreshAppointments();
+  };
+
+
   return (
     <>
       <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
@@ -185,6 +250,7 @@ const  FamilyAppointments = () => {
               <Th>Appointment End Time</Th>
               <Th>Appointment Status</Th>
               <Th>Actions</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -192,8 +258,8 @@ const  FamilyAppointments = () => {
               <Tr key={index}>
                 <Td>{appointment.PatientName}</Td>
                 <Td>{appointment.DoctorName}</Td>
-                <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
-                <Td>{new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+                <Td>{new Date(appointment.StartDate).toLocaleString('en-US')}</Td>
+                <Td>{new Date(appointment.EndDate).toLocaleString('en-US')}</Td>
                 <Td>{appointment.Status}</Td>
                 <Td>
                   {appointment.Status !== 'completed' && (
@@ -216,10 +282,54 @@ const  FamilyAppointments = () => {
                     </Button>
                   )}
                 </Td>
+                <Td>
+                <Button
+                      colorScheme="teal"
+                      onClick={() => openModal(appointment._id)}
+                      //size="sm"
+                      //fontSize="sm"
+                    >
+                      Reschedule
+                    </Button>
+                {/* /)} */}
+                </Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
+        <Modal isOpen={isModalOpen} onClose={() => {
+          setIsModalOpen(false);
+          handleCancelReschedule();
+        }}>
+        <ModalOverlay />
+        <ModalContent>
+        <ModalHeader>Reschedule Appointment</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {/* Reschedule form */}
+          <DatePicker
+            selected={rescheduleFormData.appointmentDate}
+            onChange={(date) => handleInputChange({ target: { name: "appointmentDate", value: date } })}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="Select Date & Time"
+            style={{ width: '100%', height: '2.5rem' }}
+            minDate={new Date()}
+          />
+          {/* Add other reschedule form inputs here */}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="teal" size="sm" onClick={() => handleReschedule()}>
+            Save
+          </Button>
+          {/* <Button variant="ghost" size="sm" onClick={handleCancelReschedule}>
+            Cancel
+          </Button> */}
+        </ModalFooter>
+        </ModalContent>
+        </Modal>
       </Box>
       <ToastContainer /> {/* Toast container for displaying notifications */}
     </>
