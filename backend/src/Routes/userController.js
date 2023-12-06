@@ -1231,6 +1231,86 @@ const viewMyHealthRecords = async (req, res) => {
      return res.status(500).json({ message: 'Internal server error' });
    }
  };
+
+ const rescheduleAppointment = async (req, res) => {
+   try {
+      // Extract necessary information from the request (e.g., username, appointment details)
+      console.log("heloo");
+      const appointmentId = req.body.appointmentId;
+      const newDate = req.body.newDate;
+      const username = req.user.Username;
+      console.log(String(newDate));
+      const patient=await userModel.findOne({Username:username});
+
+      if (!patient) {
+         return res.status(404).json({ message: 'Patient not found' });
+      }
+
+      // Find the appointment to be rescheduled
+      const Appointment = patient.BookedAppointments.find(
+         (appointment) => {
+      
+            return ((appointment._id).toString()=== appointmentId)}
+       );
+
+      if (!Appointment) {
+         return res.status(404).json({ message: 'Appointment not found' });
+      }
+      
+     // Update the appointment details with the new information
+      Appointment.StartDate = newDate;
+      Appointment.Status = 'rescheduled';
+
+      // Save the updated patient document
+      await patient.save();
+
+      res.status(200).json({ message: 'Appointment rescheduled successfully' });
+   } catch (error) {
+      console.error('Error rescheduling appointment:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+};
+
+const famRescheduleAppointment = async (req, res) => {
+   try {
+      // Extract necessary information from the request (e.g., username, appointment details)
+      console.log("heloo");
+      const appointmentId = req.body.appointmentId;
+      const newDate = req.body.newDate;
+      const username = req.user.Username;
+      console.log(String(newDate));
+      const patient=await userModel.findOne({Username:username});
+
+      if (!patient) {
+         return res.status(404).json({ message: 'Patient not found' });
+      }
+
+      // Find the appointment to be rescheduled
+      const Appointment = patient.FamilyBookedAppointments.find(
+         (appointment) => {
+      
+            return ((appointment._id).toString()=== appointmentId)}
+       );
+
+      if (!Appointment) {
+         return res.status(404).json({ message: 'Appointment not found' });
+      }
+      
+     // Update the appointment details with the new information
+      Appointment.StartDate = newDate;
+      Appointment.Status = 'rescheduled';
+
+      // Save the updated patient document
+      await patient.save();
+
+      res.status(200).json({ message: 'Appointment rescheduled successfully' });
+   } catch (error) {
+      console.error('Error rescheduling appointment:', error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+};
+
+
  ///////Pharamcy add on
  const orderDetails = async (req, res) => {
    console.log("DAREEENNN");
@@ -1552,7 +1632,8 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    viewAllPacks,subscribePackageCash,viewPackageSubscribtion,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords,
-    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage
+    orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage,
+    rescheduleAppointment, famRescheduleAppointment
    
    
    
