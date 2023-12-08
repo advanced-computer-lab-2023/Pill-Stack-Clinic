@@ -734,9 +734,6 @@ const deleteContract = async (req, res) => {
 
       const meds = await Promise.all(prescriptions.map(async (prescription) => {
         const { medName, quantity, instructions, dose } = prescription;
-        console.log("name", medName);
-        console.log("quantity", quantity);
-        console.log("instructions", instructions);
         const med = await medModel.findOne({ Name: medName });
         if (!med) {
           res.send('med not found')
@@ -744,7 +741,6 @@ const deleteContract = async (req, res) => {
         const medId = med._id;
         return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions, Dose: dose };
       }));
-      console.log(meds);
 
 
 
@@ -760,6 +756,62 @@ const deleteContract = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  const editPrescription = async (req, res) => {
+    try {
+      const doctorId = req.user.id; 
+      const doctor = await doctorModel.findById(doctorId);
+      const docUsername = doctor.Username;
+
+      const patientUsername = req.params.username;
+      const patient = await userModel.findOne({ Username: patientUsername });
+
+      const presId = req.params.presId;
+      console.log("presId", presId , "patientUsername", patientUsername);
+
+
+      const { prescription } = req.body;
+      console.log("prescription", ...prescription);
+      console.log("prescription", prescription);
+      const presDate  = patient.Prescriptions.id(presId).PrecriptionDate;
+      patient.Prescriptions.id(presId).remove();
+
+      console.log("patient.Prescriptions", patient.Prescriptions);
+      console.log("nanana" , prescription);
+      const meds = await Promise.all(prescription[0].map(async (pre) => {
+        const { MedicineName, Quantity, Instructions, Dose } = pre;
+        console.log("medName", MedicineName);
+        const med = await medModel.findOne({ Name: MedicineName });
+        if (!med) {
+          console.log("med not found");
+          throw new Error('med not found');
+        }
+        const medId = med._id;
+        console.log("medId", medId);
+        console.log("medName", MedicineName);
+        console.log("quantity", Quantity);
+        console.log("instructions", Instructions);
+        console.log("dose", Dose);
+        
+        return { MedicineID: medId, MedicineName:MedicineName, Quantity:Quantity, Instructions:Instructions, Dose: Dose };
+      }));
+
+      console.log("patient.Prescriptions", patient.Prescriptions[0]);
+      patient.Prescriptions.push({
+        DocUsername: docUsername, 
+        PrecriptionDate: presDate,
+        Medicine: meds, 
+        Status: 'Unfilled' 
+      });
+
+      await patient.save();
+      res.send({ message: 'Prescription edited successfully' });
+    } catch (error) {
+      res.status(400).send( 'problema' );
+    }
+  }
+
+
   
 
 
@@ -774,5 +826,5 @@ module.exports = {
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus, getFullAccount,
-    addPrescription
+    addPrescription, editPrescription
 };

@@ -11,7 +11,7 @@ const {viewProfile,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
-       ,updateContractStatus,addPrescription } = require('../Routes/doctorController.js');
+       ,updateContractStatus,addPrescription, editPrescription } = require('../Routes/doctorController.js');
 
 
 
@@ -41,5 +41,6 @@ router.post('/myPatients/Prescriptions',userVerification,viewPatientPrescribtion
 router.post('/PDF',userVerification,convertToPDF);
 router.get('/fullPatient/:username' , userVerification, getFullAccount);
 router.post('/addPrescription/:username', userVerification, addPrescription);
+router.put('/editPrescription/:username/:presId', userVerification, editPrescription);
 
 module.exports = router;

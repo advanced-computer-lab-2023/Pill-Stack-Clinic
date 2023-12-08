@@ -116,7 +116,6 @@ const userSchema = new Schema({
   ]
   , Prescriptions:[
     new Schema({
-      _id: mongoose.Schema.Types.ObjectId,
 
       Medicine: [
         new Schema({

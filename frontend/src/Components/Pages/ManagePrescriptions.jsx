@@ -45,10 +45,11 @@ const ManagePrescriptions = () => {
 
     useEffect(() => {
             const getPatient = async () => {
-                const { data } = await axios.get(`http://localhost:8000/doctor/fullPatient/${patientUser}`, {
-                    withCredentials: true,
-                });
-                setPatient(data);
+              console.log("DADADADA");
+              const { data } = await axios.get(`http://localhost:8000/doctor/fullPatient/${patientUser}`, {
+                  withCredentials: true,
+              });
+              setPatient(data);
             }
             getPatient();
     }, [up]);
@@ -86,6 +87,7 @@ const ManagePrescriptions = () => {
         }
 
         const handleAddPrescription = async () => {
+
             const { data } = await axios.post(`http://localhost:8000/doctor/addPrescription/${patientUser}`, {
                 prescriptions: inputList,
             }, {
@@ -96,6 +98,18 @@ const ManagePrescriptions = () => {
             onClose();
         }
 
+        const handleEdit = async (prescription, id) => {
+            console.log("yoo", prescription);
+            console.log("foo", id);
+
+            const { data } = await axios.put(`http://localhost:8000/doctor/editPrescription/${patientUser}/${id}`, {
+                prescription,
+            }, {
+                withCredentials: true,
+            });
+            console.log(data);
+            setUp(!up);
+        }
         
 
 
@@ -123,7 +137,7 @@ const ManagePrescriptions = () => {
               patient.Prescriptions.map((prescription, index) => (
                 <>
                 {console.log("presss", prescription)}
-                <Prescription data={prescription} key={index}/>
+                <Prescription data={prescription} keyId={prescription._id} callback={handleEdit}/>
                 </>
               ))
               : 
