@@ -33,6 +33,7 @@ const PrescriptionViewer = () => {
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedPrescription, setSelectedPrescription] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isfalse, setfalse] = useState(false);
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
   useEffect(() => {
@@ -85,8 +86,16 @@ const PrescriptionViewer = () => {
   };
   let i=1;
   const Download=async(prescription)=>{
+    try{
     const response=await axios.post("http://localhost:8000/patient/PDF",{prescription:prescription},
     {withCredentials:true},)
+    // setTimeout(() => {
+    //   setfalse(true);
+    // }, 5000);
+    // if(!response.ok){
+    //   throw new Error('Server response not OK');
+    // }
+    if(response.status){
     console.log(response.data.file); 
     const base64File = response.data.file;
     const fileType = base64File.substring('data:'.length, ';'.length);
@@ -105,7 +114,10 @@ const PrescriptionViewer = () => {
     const link = document.createElement('a');
     link.download = fileName;
     link.href = URL.createObjectURL(blob);
-    link.click();
+    link.click();}}
+    catch(err){
+      console.log(err);
+    }
     // const link = document.createElement('a');
     // link.download = 'Prescription';
 
@@ -183,6 +195,7 @@ const PrescriptionViewer = () => {
                   {/* <a href='../../../backend/src/Nadatest3Dr.DS0.pdf' download="Prescription PDF"
         target="_blank"
         rel="noreferrer"> */}
+        {console.log(prescription)}
                   <Button colorScheme="teal" onClick={() => Download(prescription)}>Download</Button></Td>
               </Tr>
             ))}
@@ -198,10 +211,11 @@ const PrescriptionViewer = () => {
             {selectedPrescription?.Medicine.map((Medicine)=>(
              
                <>
-                
+                {console.log(Medicine)}
                <p></p>
                <p>Medicine {i++}</p>
-               <p>Medicine Name: {Medicine.MedicineID}</p>
+               <p>Medicine Name: {Medicine.MedicineName}</p>
+               <p>Medicene Dosage: {Medicine.MedicineDose}</p>
                <p>Quantity: {Medicine.Quantity}</p>
                <p>Instructions: {Medicine.Instructions}</p>
                <br></br>

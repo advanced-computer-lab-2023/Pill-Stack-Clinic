@@ -85,7 +85,7 @@ _hover={{ bg: '#353535',  color: 'white' }}>
     </Center>
   </AbsoluteCenter>
 </LinkBox>
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/bookAppointments"
+{/* <LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="home/bookAppointments"
 _hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
   <LinkOverlay href="home/bookAppointments"></LinkOverlay>
   <AbsoluteCenter>
@@ -99,7 +99,7 @@ _hover={{ bg: '#353535',  color: 'white', cursor: "pointer"  }}>
       </a>
     </Center>
   </AbsoluteCenter>
-</LinkBox>
+</LinkBox> */}
 <LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' onClick={openUploadDocModal}
   _hover={{ bg: '#353535',  color: 'white', cursor: "pointer" }}>
   <LinkOverlay onClick={openUploadDocModal}></LinkOverlay>

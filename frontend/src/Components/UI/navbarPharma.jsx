@@ -5,6 +5,7 @@ import { faCartShopping} from "@fortawesome/free-solid-svg-icons";
 import './button.css'
 import { useNavigate } from 'react-router-dom';
 
+
 import '../UI/navbarPharma.css'
 export const Navbar=()=>{
     const navigate = useNavigate();

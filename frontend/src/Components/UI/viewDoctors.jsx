@@ -20,10 +20,14 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  FormControl,
+  Flex,
   chakra,
 } from '@chakra-ui/react';
-import axios from 'axios';
+import { MdClear } from 'react-icons/md';
 
+import axios from 'axios';
+import {BookAppointments} from './bookAppointments.jsx'
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [searchName, setSearchName] = useState('');
@@ -34,7 +38,7 @@ const DoctorList = () => {
   const [searchEndTime, setSearchEndTime] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [availability, setAvailability] = useState([]);
+  const [bookAppointments, setBookAppointments] = useState(false);
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
   useEffect(() => {
@@ -85,6 +89,10 @@ const DoctorList = () => {
     setSelectedDoctor(doctor);
     openModal();
   };
+  const handleClear = () => {
+    setSearchName('');
+    setSearchSpeciality('')
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -93,17 +101,21 @@ const DoctorList = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleBookAppointments=(docusername)=>{
+    navigate(`/home/bookAppointments/${docusername}`);
 
-  const handleViewAvailability = async (doctor) => {
-    try {
-      const response = await axios.get(`http://localhost:8000/patient/viewDoctorAppointments/${doctor.username}`, {
-        withCredentials: true,
-      });
-      setAvailability(response.data);
-    } catch (error) {
-      console.error('Error fetching availability:', error);
-    }
-  };
+  }
+
+  // const handleViewAvailability = async (doctor) => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:8000/patient/viewDoctorAppointments/${doctor.username}`, {
+  //       withCredentials: true,
+  //     });
+  //     setAvailability(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching availability:', error);
+  //   }
+  // };
 
   return (
     <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
@@ -111,7 +123,9 @@ const DoctorList = () => {
       <button className="btn" onClick={back}>back</button>
     </Box>
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-        <Input
+          <FormControl mb={4}>
+          <Flex alignItems="center" mb={2}>
+          <Input
           type="text"
           placeholder="Search for a doctor by name"
           value={searchName}
@@ -130,30 +144,20 @@ const DoctorList = () => {
           <option value="Death">Death</option>
           {/* Add other speciality options as needed */}
         </Select>
-        <Input
-          type="date"
-          placeholder="Search by Start Date"
-          value={searchStartDate}
-          onChange={(e) => setSearchStartDate(e.target.value)}
-          mb={2} />
-        <Input
-          type="time"
-          placeholder="Search by Start Time"
-          value={searchStartTime}
-          onChange={(e) => setSearchStartTime(e.target.value)}
-          mb={2} />
-        <Input
-          type="date"
-          placeholder="Search by End Date"
-          value={searchEndDate}
-          onChange={(e) => setSearchEndDate(e.target.value)}
-          mb={2} />
-        <Input
-          type="time"
-          placeholder="Search by End Time"
-          value={searchEndTime}
-          onChange={(e) => setSearchEndTime(e.target.value)}
-          mb={2} />
+          </Flex>
+  
+  
+          <Button 
+            colorScheme="teal" 
+            onClick={handleClear} 
+            size="sm" 
+            fontSize="sm" 
+            leftIcon={<MdClear />} 
+            mt={2}
+          >
+            Clear Filters
+          </Button>
+        </FormControl>
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -168,7 +172,7 @@ const DoctorList = () => {
                 key={index}
                 onClick={() => {
                   handleSelectDoctor(doctor);
-                  handleViewAvailability(doctor);
+                 // handleViewAvailability(doctor);
                 } }
                 style={{ cursor: 'pointer' }}
               >
@@ -192,7 +196,7 @@ const DoctorList = () => {
               <p>Speciality: {selectedDoctor?.speciality}</p>
               <p>Affiliation: {selectedDoctor?.affiliation}</p>
               <p style={{ marginBottom: '30px' }}>Educational background: {selectedDoctor?.background}</p>
-              {selectedDoctor?.availability.length > 0 && (
+              {/* {selectedDoctor?.availability.length > 0 && (
                 <div>
                   <strong style={{ fontWeight: 'bold' }}>Available Appointments</strong>
                   <ul>
@@ -203,7 +207,12 @@ const DoctorList = () => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+             <Button colorScheme="teal" onClick={() => handleBookAppointments(selectedDoctor?.username)}>
+             Book Appointment
+            </Button>
+
+             
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="teal" onClick={closeModal}>

@@ -7,11 +7,12 @@ const {viewProfile,
     editProfile,
     viewMyPatients, 
     selectPatient,convertToPDF,
-    searchAppointments,viewALLAppointments,scheduleFollowUp,
+    searchAppointments,
+    viewALLAppointments,cancelAppointment,scheduleFollowUp,
     PostByName, viewDoctorWallet,viewUpcomPastAppointments,
     scheduleAppointment,viewContract,deleteContract,editProfileInfo, 
-    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,viewPatientPrescribtion,getFullAccount
-       ,updateContractStatus,addPrescription, editPrescription } = require('../Routes/doctorController.js');
+    addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,getFullAccount
+    ,updateContractStatus,addPrescription,generateRoom,join,getPatientUsername,sendMessage  , editPrescription } = require('../Routes/doctorController.js');
 
 
 
@@ -22,6 +23,7 @@ router.get('/profile',userVerification, viewProfile);
 router.get('/profile/edit/:id',editView);
 router.get('/profile/edit/:id',editProfile);
 router.post('/allApp',userVerification,viewALLAppointments);
+router.post('/cancelAppointments',userVerification,cancelAppointment);
 router.post('/searchName',userVerification,PostByName);
 router.post('/search',userVerification,searchAppointments);
 router.get('/myPatients',userVerification, viewMyPatients);
@@ -37,10 +39,13 @@ router.put('/:doctorId/activate-delete-contract', userVerification, activateAndD
 router.post('/availability', userVerification, addAvailability);
 router.get('/availability', userVerification, viewAvailability);
 router.post('/updateContractStatus',userVerification,updateContractStatus);
-router.post('/myPatients/Prescriptions',userVerification,viewPatientPrescribtion);
-router.post('/PDF',userVerification,convertToPDF);
+router.post('/PDF/:username',userVerification,convertToPDF);
 router.get('/fullPatient/:username' , userVerification, getFullAccount);
 router.post('/addPrescription/:username', userVerification, addPrescription);
+router.get('/getPatientUsername/:username',getPatientUsername);
+router.post('/ChatDoctor/:doctorUsername/:username',join);
+router.post('/sendMessage/:patientUsername/:doctorUsername',sendMessage);
 router.put('/editPrescription/:username/:presId', userVerification, editPrescription);
+
 
 module.exports = router;

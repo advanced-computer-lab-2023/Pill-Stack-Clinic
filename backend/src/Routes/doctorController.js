@@ -8,6 +8,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const sendEmail = require("../Utilities/SendEmail");
+
 
 
 
@@ -182,15 +184,80 @@ const updateContractStatus=async(req,res)=>{
   const BookedAppointments = profile.BookedAppointments;
   const currDate=new Date();
   for (const app of BookedAppointments) {
+    if(app.Status==='upcoming' || app.Status==='rescheduled'){
+
     if(app.StartDate<currDate){
      app.Status='completed';
     }
-   }
+  }
+  }
    profile.save();
   res.send(profile.BookedAppointments);
 
 
  }
+
+ const cancelAppointment = async (req, res) => {
+  try {
+      const appointmentId = req.body.appointmentId;
+      const username = req.user.Username;
+
+      // Find the doctor
+      const doctor = await doctorModel.findOne({ Username: username });
+
+      // Find the appointment in the doctor's BookedAppointments
+      const appointment = doctor.BookedAppointments.find(app => app._id.toString() === appointmentId);
+
+      if (appointment) {
+          const patientUsername = appointment.PatientUsername;
+
+          // Find the patient
+          const user = await userModel.findOne({ Username: patientUsername });
+
+          // Check if the appointment is also in the FamilyBookedAppointments
+          const familyAppointment = user.FamilyBookedAppointments.find(famAppointment => famAppointment._id.toString() === appointmentId);
+
+          if (familyAppointment) {
+              // Update status to 'cancelled' in FamilyBookedAppointments
+              familyAppointment.Status = 'cancelled';
+          } else {
+              // Update status to 'cancelled' in BookedAppointments
+              appointment.Status = 'cancelled';
+              user.BookedAppointments = user.BookedAppointments.map(app => app._id.toString() === appointmentId ? { ...app, Status: 'cancelled' } : app);
+          }
+
+          // Add the appointment price to user balance
+          const appointmentPrice = appointment.Price || 0;
+          user.WalletBalance += appointmentPrice;
+          const formattedDate = appointment.StartDate.toLocaleDateString();
+          const formattedTimeStart = appointment.StartDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+          const formattedTimeEnd = appointment.EndDate.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+          const notification = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+          const emailText = ` Your appointment scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd} has been cancelled.`;
+          user.Notifications.push(notification);
+          await sendEmail(user.Email, "Appointment Cancellation ",emailText );
+          // Save changes to the patient
+          await user.save();
+
+          // Remove the cancelled appointment from BookedAppointments
+          doctor.BookedAppointments = doctor.BookedAppointments.filter(app => app._id.toString() !== appointmentId);
+          doctor.Notifications.push(notification);
+          await sendEmail(doctor.Email,"New Appointment",emailText)
+          // Save changes to the doctor
+          await doctor.save();
+
+          console.log('Appointment cancelled successfully');
+          res.status(200).json({ message: 'Appointment cancelled successfully', refund: true });
+      } else {
+          console.error('Appointment not found');
+          res.status(404).json({ error: 'Appointment not found' });
+      }
+  } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
  const viewDoctorWallet = async (req, res) => {
   try {
@@ -634,45 +701,12 @@ const deleteContract = async (req, res) => {
     res.send(profile.Availability);
   }
 
-  const viewPatientPrescribtion=async (req,res)=>{
-    console.log("here  "+req.body.username);
-    const docUsername=req.user.Username;
-    if(!docUsername){
-      res.send("Doc username undefined");
-      return;
-    }
-    const userUsername=req.body.username;
-    if(!userUsername){
-      res.send("User username undefined");
-      return;
-    }
-    const User=await userModel.findOne({Username:userUsername});
-    const data=User.Prescriptions;
-    const myPrescribtions= data.filter(function (Prescription){
-      return Prescription.DocUsername===docUsername;
-    });
-     res.send(myPrescribtions);
-
-  }
 
 
   const convertToPDF=async(req,res)=>{
-    const docUsername=req.user.Username;
-    if(!docUsername){
-      res.send("Doc username undefined");
-      return;
-    }
-    const userUsername=req.body.username;
-    if(!userUsername){
-      res.send("User username undefined");
-      return;
-    }
-    const User=await userModel.findOne({Username:userUsername});
-    const data=User.Prescriptions;
-    const myPrescribtions= data.filter(function (Prescription){
-      console.log(Prescription.DocUsername + " "+ docUsername);
-      return Prescription.DocUsername===docUsername;
-    });
+    const userUsername=req.params.username;
+    const prescriptions=req.body.prescription;
+   console.log(prescriptions);
     let i=0;
    
     const doc = new PDFDocument;
@@ -693,13 +727,14 @@ const deleteContract = async (req, res) => {
     doc.moveTo(10, 50)
        .lineTo(590, 50)
        .stroke();
-     doc.fontSize(18).fillColor('green').text("Doctor Name: "+docUsername);
-   
-    for(let j=0;j<myPrescribtions[0].Medicine.length;j++){
+     doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescriptions.DocUsername);
+     doc.fontSize(18).fillColor('green').text("Patient Name: "+userUsername);
+    for(let j=0;j<prescriptions.Medicine.length;j++){
       doc.translate(0,10);
-      doc.fontSize(13).fillColor('black').text("Medicine: "+myPrescribtions[0].Medicine[j].MedicineID).translate(0,10+20*i);
-      doc.fontSize(13).fillColor('black').text("Quantity: "+myPrescribtions[0].Medicine[j].Quantity).translate(0,10);
-      doc.fontSize(13).fillColor('black').text("Instruction: "+myPrescribtions[0].Medicine[j].Instructions).translate(0,10+20*i);
+      doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineName).translate(0,10+20*i);
+      doc.fontSize(13).fillColor('black').text("Dosage: "+prescriptions.Medicine[j].MedicineDose).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Quantity: "+prescriptions.Medicine[j].Quantity).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
     }
     doc.end();
    res.send(""+userUsername+docUsername+".pdf");
@@ -711,6 +746,42 @@ const deleteContract = async (req, res) => {
       const user = req.params.username;
       console.log(user);
       const patient = await userModel.findOne({ Username: user });
+      const prescriptions = patient.Prescriptions;
+     
+      prescriptions.map((prescription) => {
+        const doc = new PDFDocument;
+        let i=0;
+        console.log(prescription);
+        let date=new Date(prescription.PrecriptionDate);
+        let month=date.getMonth()+1;
+        doc.pipe(fs.createWriteStream(prescription.DocUsername+user+".pdf"));
+        doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+     date.getFullYear());
+     doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
+     doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
+     doc.moveDown().translate(-200,30);
+  
+     // Set the stroke color to black
+     doc.strokeColor('black');
+     
+     // Set the line width
+     doc.lineWidth(1);
+     
+     // Draw a line
+     doc.moveTo(10, 50)
+        .lineTo(590, 50)
+        .stroke();
+      doc.fontSize(18).fillColor('green').text("Doctor Name: "+prescription.DocUsername);
+      doc.fontSize(18).fillColor('green').text("Patient Name: "+user);
+     for(let j=0;j<prescription.Medicine.length;j++){
+       doc.translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Medicine: "+prescription.Medicine[j].MedicineName).translate(0,10+20*i);
+       doc.fontSize(13).fillColor('black').text("Dosage: "+prescription.Medicine[j].Dose).translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Quantity: "+prescription.Medicine[j].Quantity).translate(0,10);
+       doc.fontSize(13).fillColor('black').text("Instruction: "+prescription.Medicine[j].Instructions).translate(0,10+20*i);
+     }
+     
+        doc.end();});
       if (!patient) {
         return res.status(404).send({ error: 'User not found' });
       }
@@ -809,22 +880,163 @@ const deleteContract = async (req, res) => {
     } catch (error) {
       res.status(400).send( 'problema' );
     }
-  }
+    }
 
 
+
+
+  const sendMessage = async (req, res, socket) => {
+    console.log("maaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    try {
+      // Find the chat room based on doctorUsername
+      const patientUsername = req.params.patientUsername;
+      const doctorUsername = req.params.doctorUsername;
+      const message = req.body.message;
+      // Find the user with the specified doctor in their chatRooms
+      const user = await userModel.findOne({
+       'Username': patientUsername,
+       'chatRooms.doctorUsername': doctorUsername
+     });
+      console.log(user +"ss")
+      if (user) {
+        // Find the specific room within the chatRooms array
+        const specificRoom = user.chatRooms.find(room => room.doctorUsername === doctorUsername);
   
+  
+        if (specificRoom) {
+          // Create the message object
+          const messageData = {
+            sender: doctorUsername,
+            recipient: patientUsername,
+            message: message,
+          };
+
+        if (specificRoom) {
+          // Create the message object
+          const messageData = {
+            sender: doctorUsername,
+            recipient: patientUsername,
+            message: message,
+          };
+  
+          // Add the message to the specific room
+          specificRoom.messages.push(messageData);
+          // Save changes to the user's database
+          await user.save();
+  
+ 
+ 
+          return { room, message: messageData };
+        } else {
+          console.error('Chat room not found for the selected doctor');
+          return null;
+        }
+      } else  {
+        console.error('User not found for the selected doctor');
+        return null;
+      }
+    }} catch (error) {
+      console.error('Error sending message:', error);
+      throw error;
+    }
+  };
 
 
+  const generateRoom = () => {
+    return Math.random().toString(36).substring(2, 15);
+  };
+  const join = async (req, res) => {
+    try {
+      const { doctorUsername, username } = req.params;
+
+      const patient = await userModel.findOne({ Username: username });
+
+      if (!patient) {
+
+        return res.status(404).json({ message: 'doctor not found' });
+      }
+
+      // Check if the patient already has a chat room with this doctor
+      const existingChatRoom = patient.chatRooms.find(
+        (room) => room.doctorUsername === doctorUsername && room.username === username
+      );
+  
+      if (existingChatRoom) {
+        // If a chat room already exists, return the existing room and messages
+        const { room, messages } = existingChatRoom;
+        console.log("mariam")
+        console.log(room)
+
+        res.status(200).json({ room, messages });
+      } else {
+        // Otherwise, create a new chat room
+        const room = generateRoom();
+  
+        // Initialize an empty array for messages
+        const messages = [];
+  
+        // Store the room information and messages for the doctor-patient chat
+        patient.chatRooms.push({
+          room,
+          doctorUsername,
+          username,
+          messages,
+        });
+ 
+        await patient.save();
+   
+        res.status(200).json({ room, messages });
+      }
+    } catch (error) {
+      console.error('Error joining chat room for patient:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+ 
+
+  const getPatientUsername = async (req, res) => {
+    try {
+      const { username } = req.params;
+      console.log(username);
+      const user = await doctorModel.findOne({ Username: username });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+  
+      // Ensure that user.BookedAppointments is defined and is an array
+      if (!Array.isArray(user.BookedAppointments)) {
+        return res.status(400).json({ message: 'Invalid user data' });
+      }
+  
+      // Extract unique doctor usernames from completed appointments
+      const patientsWithCompletedAppointments = Array.from(
+        new Set(
+          user.BookedAppointments
+            .filter(appointment => appointment.Status === 'completed')
+            .map(appointment => appointment.PatientUsername)
+        )
+      );
+      console.log(patientsWithCompletedAppointments);
+  
+      res.status(200).json({ patientsWithCompletedAppointments });
+    } catch (error) {
+      console.error('Error retrieving doctors with completed appointments:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
 
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,convertToPDF,
-    selectPatient,viewPatientPrescribtion,
-    searchAppointments,viewALLAppointments,
+    selectPatient,
+    searchAppointments,viewALLAppointments,cancelAppointment,
     PostByName, viewDoctorWallet,editProfileInfo,
     viewUpcomPastAppointments,scheduleFollowUp,
    scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus, getFullAccount,
-    addPrescription, editPrescription
-};
+    addPrescription, editPrescription, sendMessage, join, getPatientUsername,generateRoom
+}

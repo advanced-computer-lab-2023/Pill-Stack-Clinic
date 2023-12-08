@@ -19,8 +19,7 @@ import { Box,
     useDisclosure,
     Button,
     Input,
-
-
+    Spacer
 
   
  } from '@chakra-ui/react';
@@ -29,7 +28,7 @@ import { m } from 'framer-motion';
 
 
 function Prescription(
-    {data, keyId, callback}
+    {data, keyId, callback, download}
 ) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [inputList, setinputList]= useState([data.Medicine]);
@@ -92,19 +91,21 @@ function Prescription(
               ))
             }
 
-            <Flex mt={10} justifyContent={'space-between'} alignItems={'center'}>
+            <Flex mt={10} alignItems={'center'}>
             {
               data.Status === 'Unfilled' && 
               <IconButton
-                isRound={true}
-                variant='solid'
-                colorScheme='teal'
-                aria-label='Done'
-                fontSize='20px'
-                icon={<EditIcon />}
+              isRound={true}
+              variant='solid'
+              colorScheme='teal'
+              aria-label='Done'
+              fontSize='20px'
+              icon={<EditIcon />}
                 onClick={() => onOpen()}
               />
             }
+            <Button colorScheme="teal" left="5%" onClick={() => download(data)}>Download</Button>
+         <Spacer></Spacer>
 
 
             <Text

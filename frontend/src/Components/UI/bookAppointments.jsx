@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useParams} from "react-router-dom";
+
 import '../UI/button.css'
 import {
   Text,
@@ -25,16 +26,18 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@chakra-ui/react'
-
+import { MdClear } from 'react-icons/md';
+import DatePicker from 'react-datepicker';
 import axios from 'axios';
 
 export const BookAppointments = () => {
+  const { doctorUsername} = useParams();
   const navigate = useNavigate();
   const [doctors, setDoctor] = useState([]);
-  const [searchName, setSearchName] = useState('');
-  const [speciality, setSpeciality] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [searchName, setSearchName] = useState(doctorUsername);
+ // const [speciality, setSpeciality] = useState('');
+ const [selectedStartDate, setSelectedStartDate] = useState(null);
+ const [selectedEndDate, setSelectedEndDate] = useState(null);
   const back =()=>  navigate(-1);
   const [time, setTime] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState(doctors);
@@ -60,23 +63,37 @@ export const BookAppointments = () => {
     async function fetchAppointments() {
       try {
         // Fetch all appointments
+        // const response = await axios.get(
+        //   "http://localhost:8000/patient/bookAppointments",
+        //   { withCredentials: true }
+        // );
         const response = await axios.get(
-          "http://localhost:8000/patient/bookAppointments",
+          `http://localhost:8000/patient/viewDoctorAppointments/${doctorUsername}`,
           { withCredentials: true }
         );
         setDoctor(response.data);
-        setFilteredAppointments(response.data)
+        setFilteredAppointments(response.data.Availability)
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     }
     fetchAppointments();
   }, []);
+  useEffect(() => {
+    const filtered = doctors.Availability?.filter((appointment) => {
+      const dateMatches =
+        (selectedStartDate === null || new Date(appointment.StartDate) >= selectedStartDate) &&
+        (selectedEndDate === null || new Date(appointment.StartDate) <= selectedEndDate);
+
+      return dateMatches;
+    });
+    setFilteredAppointments(filtered);
+  }, [ selectedStartDate, selectedEndDate, doctors]);
   const refreshAppointments = async () => {
     try {
       // Fetch all appointments
       const response = await axios.get(
-        "http://localhost:8000/patient/bookAppointments",
+        `http://localhost:8000/patient/viewDoctorAppointments/${doctorUsername}`,
         { withCredentials: true }
       );
       setDoctor(response.data);
@@ -85,15 +102,15 @@ export const BookAppointments = () => {
       console.error('Error fetching appointments:', error);
     }
   };
-  const handleSearch = async () => {
-    const response = await axios.post(
-      "http://localhost:8000/patient/searchDoctors",{name:searchName,speciality:speciality,startDate:startDate,endDate:endDate
-    },
-      { withCredentials: true }
-    );
-    setFilteredAppointments(response.data);
+  // const handleSearch = async () => {
+  //   const response = await axios.post(
+  //     "http://localhost:8000/patient/searchDoctors",{name:searchName,startDate:startDate,endDate:endDate
+  //   },
+  //     { withCredentials: true }
+  //   );
+  //   setFilteredAppointments(response.data);
     
-  };
+  // };
 
   const getAmount= async (selectedPatientValue) => {
     const response = await axios.post(
@@ -115,6 +132,11 @@ export const BookAppointments = () => {
     }
     
   };
+  const handleClear = () => {
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+  };
+
    
   const handleViewAllAppointments = () => {
     // Clear search results to display all appointments
@@ -255,58 +277,46 @@ export const BookAppointments = () => {
           </Alert>
         )}
 
-        <form onSubmit={(e) => { e.preventDefault(); handleSearch(); } }>
-          <Flex direction={{ base: 'column', md: 'row' }} spacing={4}>
-            <FormControl>
-              <FormLabel>Search by Name or Speciality</FormLabel>
-              <Input
-                placeholder="Enter name or speciality"
-                value={searchName}
-                onChange={(e) => setSearchName(e.target.value)} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Select Speciality</FormLabel>
-              <Select
-                value={speciality}
-                onChange={(e) => setSpeciality(e.target.value)}
-              >
-                <option value="">All</option>
-                <option value="Cardiologist">Cardiologist</option>
-                <option value="Dermatologist">Dermatologist</option>
-                <option value="Neurology">Neurology</option>
-                <option value="Internal medicine">Internal medicine</option>
-                <option value="Death">Death</option>
-                <option value="Plastic Surgery">Plastic Surgery</option>
-                <option value="Nervous System">Nervous System</option>
-                <option value="ENT">ENT</option>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Start Date</FormLabel>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)} />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>End Date</FormLabel>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)} />
-            </FormControl>
-
+<FormControl mb={4}>
+        
+          <Flex alignItems="center" mb={2}>
+            <Text mr={2} fontSize="sm">Filter by Date:</Text>
+            <DatePicker 
+              selected={selectedStartDate} 
+              onChange={(date) => setSelectedStartDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="Start Date & Time" 
+              size="sm" 
+            />
+  
+            <Text mx={2} fontSize="sm">to</Text>
+  
+            <DatePicker 
+              selected={selectedEndDate} 
+              onChange={(date) => setSelectedEndDate(date)} 
+              showTimeSelect 
+              timeFormat="HH:mm" 
+              timeIntervals={15} 
+              dateFormat="MMMM d, yyyy h:mm aa" 
+              placeholderText="End Date & Time" 
+              size="sm" 
+            />
           </Flex>
-          <HStack spacing={4} mt={4}>
-            <Button colorScheme="teal" type="submit">
-              Search
-            </Button>
-            <Button colorScheme="teal" onClick={handleViewAllAppointments}>
-              View All Appointments
-            </Button>
-          </HStack>
-        </form>
+  
+          <Button 
+            colorScheme="teal" 
+            onClick={handleClear} 
+            size="sm" 
+            fontSize="sm" 
+            leftIcon={<MdClear />} 
+            mt={2}
+          >
+            Clear Filters
+          </Button>
+        </FormControl>
 
 
 
@@ -321,26 +331,25 @@ export const BookAppointments = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredAppointments.length > 0 ? (
-              filteredAppointments.map((doctor, index) => (
-                doctor.Availability.map((appointment, appIndex) => (
-                  <Tr key={index + '-' + appIndex}>
-                    <Td>{doctor.Name}</Td>
-                    <Td>{doctor.Speciality}</Td>
+            {filteredAppointments?.length > 0 ? (
+                filteredAppointments.map((appointment, appIndex) => (
+                  <Tr key={ appIndex}>
+                    <Td>{doctors.Name}</Td>
+                    <Td>{doctors.Speciality}</Td>
                     <Td>{new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
                     <Td>{new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
                     <Td>
-                      <Button colorScheme="teal" onClick={() => openModal(doctor.Username, appointment._id)}>
+                      <Button colorScheme="teal" onClick={() => openModal(doctors.Username, appointment._id)}>
 
                         Book
                       </Button>
                     </Td>
                   </Tr>
                 ))
-              ))
+            
             ) : (
               <Tr>
-                <Td colSpan="5">No appointments found matching the criteria.</Td>
+                <Td colSpan="5">Sorry for the inconvennince,Doctor {doctorUsername} does not have any available appointments.</Td>
               </Tr>
             )}
           </Tbody>

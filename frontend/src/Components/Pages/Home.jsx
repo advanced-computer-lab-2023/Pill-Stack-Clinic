@@ -7,11 +7,12 @@ import { ToastContainer, toast } from "react-toastify";
 import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import { saveAs } from 'file-saver';
+import { Link } from "react-router-dom";
+
 import { Box, Flex, Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  Link,
   ModalFooter,
   Tabs,
   TabList,
@@ -889,6 +890,23 @@ export const Home = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            background: "#28a745",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          <Link to={`/chatwithdoctor/${username}`} style={{ textDecoration: "none", color: "white" }}>
+            Chat with your doctor
+          </Link>
+        </motion.div>
 
 
 

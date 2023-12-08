@@ -9,7 +9,10 @@ require("dotenv").config();
 const {patientRegister ,addFamilyMem,getUsers,searchDoctors,selectedDoctorDetails, updateUser, deleteUser,searchAppointments, viewALLAppointments,viewDoctors,viewPrescriptions,viewDoctorAppointments,filterPrescriptions,viewPrescribtion} = require("./Routes/userController");
 const {createDocReq} = require("./Routes/doctorController");
 const {addAdmin,removeUser} = require("./Routes/adminController");
+
+const http = require("http");
 const cors = require('cors');
+const{Server} = require("socket.io");
 var cookies = require("cookie-parser");
 const fs = require('fs');
 
@@ -39,7 +42,35 @@ const corsOptions = {
   credentials: true,
 };
 
+const server = http.createServer(app);
+
 app.use(cors(corsOptions));
+
+const io = new Server(server,{
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET","POST"],
+  },
+});
+io.on("connection", (socket)=>{
+  console.log(`user Connected: ${socket.id}`);
+
+  socket.on("join_room",(data)=>{
+    socket.join(data);
+    console.log(`user with ID: ${socket.id} joined room: ${data}`)
+
+  });
+
+  socket.on("send_message",(data=>{
+    socket.to(data.room).emit("receive_message",data);
+  }));
+
+
+  socket.on("disconnect",()=>{
+    console.log("User disconnected", socket.id);
+    });
+});
+
 const port = process.env.PORT || "8000";
 const doctor = require("./Routers/doctorRoute");
 const pharmacist = require("./Routers/pharmacistRoute");
@@ -76,7 +107,7 @@ mongoose.connect(MongoURI)
 .then(()=>{
   console.log("MongoDB is now connected!")
 // Starting server
- app.listen(port, () => {
+ server.listen(port, () => {
     console.log(`Listening to requests on http://localhost:${port}`);
   })
 })

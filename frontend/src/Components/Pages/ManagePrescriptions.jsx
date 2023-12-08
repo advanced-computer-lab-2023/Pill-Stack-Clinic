@@ -111,6 +111,40 @@ const ManagePrescriptions = () => {
             setUp(!up);
         }
         
+        const Download=async(prescription)=>{
+          try{
+          const response=await axios.post(`http://localhost:8000/doctor/PDF/${patientUser}`,{prescription:prescription},
+          {withCredentials:true},)
+          // setTimeout(() => {
+          //   setfalse(true);
+          // }, 5000);
+          // if(!response.ok){
+          //   throw new Error('Server response not OK');
+          // }
+          if(response.status){
+          console.log(response.data.file); 
+          const base64File = response.data.file;
+          const fileType = base64File.substring('data:'.length, ';'.length);
+          const fileName = response.data.filename;
+         
+          const binaryData = atob(base64File.split(',')[1]);
+          const length = binaryData.length;
+          const arrayBuffer = new ArrayBuffer(length);
+          const uint8Array = new Uint8Array(arrayBuffer);
+         
+          for (let i = 0; i < length; i++) {
+             uint8Array[i] = binaryData.charCodeAt(i);
+          }
+         
+          const blob = new Blob([uint8Array], { type: fileType });
+          const link = document.createElement('a');
+          link.download = fileName;
+          link.href = URL.createObjectURL(blob);
+          link.click();}}
+          catch(err){
+            console.log(err);
+          }
+        }
 
 
   return (
@@ -137,7 +171,7 @@ const ManagePrescriptions = () => {
               patient.Prescriptions.map((prescription, index) => (
                 <>
                 {console.log("presss", prescription)}
-                <Prescription data={prescription} keyId={prescription._id} callback={handleEdit}/>
+                <Prescription data={prescription} keyId={prescription._id} callback={handleEdit}  download={()=>Download(prescription)}/>
                 </>
               ))
               : 

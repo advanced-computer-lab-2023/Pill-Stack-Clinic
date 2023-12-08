@@ -7,7 +7,23 @@ const medicalDocumentSchema = new mongoose.Schema({
   name: String,
   path: String,
 });
-
+const chatSchema = new mongoose.Schema({
+  room: {
+    type: String,
+    unique: true,
+  },
+  doctorUsername: String,
+  username:String,
+  messages: [
+    {
+      sender: String,
+      recipient: String,
+      message: String,
+      timestamp: { type: String,
+        default: `${new Date(Date.now()).getHours()}:${new Date(Date.now()).getMinutes()}`, },
+    },
+  ],
+});
 
 const userSchema = new Schema({
   Username: {
@@ -50,6 +66,7 @@ const userSchema = new Schema({
     type: Number,
     default: 0,
   },
+  chatRooms: [chatSchema],
   HealthRecords: [
     {
       PatientName: { type:String, required: true },
