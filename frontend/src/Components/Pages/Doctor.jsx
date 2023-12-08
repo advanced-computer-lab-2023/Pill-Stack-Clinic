@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input, Center } from "@chakra-ui/react";
 import DoctorShortcuts from "../UI/DoctorShortcuts";
 import DoctorInfoCard from "../UI/DoctorInfoCard";
 import WithSubnavigation from "../UI/navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ChatIcon, Icon } from "@chakra-ui/icons";
 
 export const Doctor = () => {
   const navigate = useNavigate();
@@ -187,15 +188,20 @@ export const Doctor = () => {
             bottom: "20px",
             right: "20px",
             background: "#28a745",
-            padding: "10px 20px",
-            borderRadius: "5px",
+            borderRadius: "100px",
             cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+
           }}
-        >
-          <Link to={`/chatwithPatient/${username}`} style={{ textDecoration: "none", color: "white" }}>
-            Chat with your patient
+        > 
+          <Link to={`/chatwithPatient/${username}`}>
+            <Center>
+              <Icon as={ChatIcon} boxSize={6} m={5}/>
+            </Center>
           </Link>
-        </motion.div>
+       </motion.div>
       </div>
       <ToastContainer />
     </>
