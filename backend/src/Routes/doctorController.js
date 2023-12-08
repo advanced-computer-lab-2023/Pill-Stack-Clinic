@@ -708,15 +708,16 @@ const deleteContract = async (req, res) => {
     const prescriptions=req.body.prescription;
    console.log(prescriptions);
     let i=0;
-   
+    let date=new Date(prescriptions.PrecriptionDate);
+    let month=date.getMonth()+1;
     const doc = new PDFDocument;
-    doc.pipe(fs.createWriteStream(userUsername+docUsername+".pdf"));
-    doc.fontSize(9).translate(450,0).text(myPrescribtions[0].PrecriptionDate.getDay()+"-"+myPrescribtions[0].PrecriptionDate.getMonth()+"-"+
-    myPrescribtions[0].PrecriptionDate.getFullYear());
+    doc.pipe(fs.createWriteStream(prescriptions.DocUsername+userUsername+".pdf"));
+    doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
+    date.getFullYear());
     doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
     doc.fontSize(20).translate(-240,60).text("Prescription",50,50);
     doc.moveDown().translate(-200,30);
-
+ 
     // Set the stroke color to black
     doc.strokeColor('black');
     
@@ -737,9 +738,15 @@ const deleteContract = async (req, res) => {
       doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
     }
     doc.end();
-   res.send(""+userUsername+docUsername+".pdf");
-
+    const filePath = path.join(__dirname,'../',prescriptions.DocUsername+userUsername+".pdf");
+    const fileData = fs.readFileSync(filePath);
+    const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
+    res.json({ file: base64File ,filename:prescriptions.DocUsername+userUsername+".pdf"});
+ 
+ 
+ 
   }
+  
   
   const getFullAccount = async (req, res) => {
     try {
