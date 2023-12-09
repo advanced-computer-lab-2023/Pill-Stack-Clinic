@@ -88,26 +88,6 @@ function PackageCard( {pack,count}) {
 
 
 
-
-    //backend
-    // const deletePack=async(req,res)=>{
-    //     const { id } = req.params;
-         
-    //     try {
-    //       const pack = await packageModel.findById(id);
-    //       if (!pack) {
-    //         return res.status(404).send('Profile not found');
-    //       }
-      
-    //       await pack.delete();
-      
-    //       // Redirect back to the profile view or show a success message
-    //       res.send('Pacakge Deleted');
-    //     } catch (error) {
-    //       console.error(error);
-    //       res.status(500).send('Internal Server Error');
-    //     }
-    // }
     const handleDelete = () => {
         const ID = pack._id;
         try {
@@ -119,28 +99,33 @@ function PackageCard( {pack,count}) {
             console.log(err);
         }
     }
-    
+
 
   return (
     <>
-    <Card variant={'elevated'} boxShadow='inner' p={3}>
-        <CardHeader>
-        <Heading size='md' textAlign={'center'}> {Package_Name}</Heading>
+    <Card variant={'elevated'}  rounded={10} >
+        <CardHeader m={0} bg={'#10f17760'}  rounded={10}>
+        <Flex alignItems={'center'}>
+            <Text color='blue.600' fontSize='2xl'>${Price}</Text>
+            <Text as={'sub'} ml={1}>  per year </Text>
+        </Flex>
         </CardHeader>
-        <CardBody px={3}>
-        <Text fontSize={'xl'}> Price: ${Price}</Text>
-        <Text fontSize={'xl'} >
-             Family Discount:
-             {Family_Discount}
-        </Text>
-         <Text fontSize={'xl'} >
-             Pharmacy Discount:
-             {Pharmacy_Discount}
-         </Text>
-         <Text fontSize={'xl'} >
-             Session Discount:
-             {Session_Discount}
-         </Text>
+        <CardBody pt={0}>
+        <Text fontSize={'5xl'} textAlign={'center'} fontWeight={'light'}  mb={5} > {Package_Name}</Text>
+        <Stack spacing={6} >
+        <Flex alignItems={'center'} flexWrap="nowrap" >
+            <Text color='blue.600' fontSize='2xl'>{Family_Discount}% Off</Text>
+            <Text fontSize={'xl'} ml={2}> for family members Discount </Text>
+        </Flex>
+        <Flex alignItems={'center'}>
+            <Text color='blue.600' fontSize='2xl'>{Pharmacy_Discount}% Off</Text>
+            <Text fontSize={'xl'} ml={2}> on pharmacy products </Text>
+        </Flex>
+        <Flex alignItems={'center'}>
+            <Text color='blue.600' fontSize='2xl'>{Session_Discount}% Off</Text>
+            <Text fontSize={'xl'} ml={2}> on sessions </Text>
+        </Flex>
+        </Stack>
         </CardBody>
         <CardFooter p={2}  >
             <HStack mt={5} justifyContent="flex-end">

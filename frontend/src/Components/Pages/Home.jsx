@@ -695,13 +695,12 @@ export const Home = () => {
 
 
 <Modal isOpen={isAddFamModalOpen} onClose={closeAddFamilyModal} size={'xl'} >
-        <ModalOverlay 
-          bg='blackAlpha.300'
-          backdropFilter='blur(10px) hue-rotate(90deg)' 
+        <ModalOverlay
+          backdropFilter='blur(10px)' 
         />
         <ModalContent>
           <ModalHeader>Add Family Members To my Account </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton/>
           <ModalBody>
           <Tabs variant='soft-rounded' colorScheme='green'>
             <TabList>

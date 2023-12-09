@@ -114,23 +114,24 @@ function AdminPacks() {
             <Text fontSize={'3xl'} color={'white'} >Manage Packages</Text>
             <button className="btn" onClick={back}>back</button>
         </Box>
-        <Box m={10} mt={20} bg='#f5f5f5'>
+        <Box m={10}  >
+        <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
+            <Button  size="md" bg={'grey'} 
+            onClick={handleModal}>
+                Add Package
+            </Button>
+        </Flex>
             {
                 packs &&
                 // <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={5} rounded={5} flexDirection={'column'}>
-                    <SimpleGrid spacing={10} templateColumns='repeat(auto-fill, minmax(300px, 0.9fr))' p={15}>
+                    <SimpleGrid mb={5}  spacing={10} templateColumns='repeat(auto-fill, 30%)' as={'Flex'} justifyContent={'center'}>
                     {packs.map((pack) => (
                         <PackageCard key={pack.id} pack={pack} count={count}/>
                     ))}
                     </SimpleGrid>
                 // </Box>
             }
-            <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
-            <Button  size="md" bg={'grey'} 
-            onClick={handleModal}>
-                Add Package
-            </Button>
-            </Flex>
+
         </Box>
         <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
             <ModalOverlay />
