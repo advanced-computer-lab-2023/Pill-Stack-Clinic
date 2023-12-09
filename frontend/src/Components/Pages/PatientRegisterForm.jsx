@@ -17,10 +17,12 @@ const PatientRegisterForm = () => {
     gender: '',
     mobile: '',
     EmergencyContact_name: '',
-    EmergencyContact_mobileNumber: ''
+    EmergencyContact_mobileNumber: '',
+    EmergencyContact_Relation: ''
+
   });
 
-  const { username, name, email, password, dob, gender, mobile, EmergencyContact_name, EmergencyContact_mobileNumber } = formData;
+  const { username, name, email, password, dob, gender, mobile, EmergencyContact_name, EmergencyContact_mobileNumber,EmergencyContact_Relation } = formData;
 
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -106,7 +108,15 @@ const PatientRegisterForm = () => {
           <FormLabel>Emergency Contact Mobile Number</FormLabel>
           <Input type="tel" name="EmergencyContact_mobileNumber" value={EmergencyContact_mobileNumber} onChange={onChange} />
         </FormControl>
-
+        <FormControl isRequired mt={4}>
+          <FormLabel>Emergency Contact Relation</FormLabel>
+          <Input
+            type="text"
+            name="EmergencyContact_Relation"
+            value={EmergencyContact_Relation}
+            onChange={onChange}
+          />
+        </FormControl>
         <Button mt={4} colorScheme="teal" type="submit">Register</Button>
         <br></br>
         <br></br>

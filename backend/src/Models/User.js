@@ -62,6 +62,10 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+  EmergencyContact_Relation:{
+    type: String,
+    required: true,
+  },
   WalletBalance:{
     type: Number,
     default: 0,
