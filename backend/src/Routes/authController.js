@@ -40,7 +40,9 @@ const secPass = await bcrypt.hash(req.body.password, salt)
       Gender: req.body.gender,
       MobileNumber: req.body.mobile,
       EmergencyContact_Name: req.body.EmergencyContact_name,
-      EmergencyContact_MobileNumber: req.body.EmergencyContact_mobileNumber});
+      EmergencyContact_MobileNumber: req.body.EmergencyContact_mobileNumber,
+      EmergencyContact_Relation: req.body.EmergencyContact_Relation
+    });
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
       withCredentials: true,
