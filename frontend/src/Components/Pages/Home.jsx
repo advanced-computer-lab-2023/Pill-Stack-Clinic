@@ -8,6 +8,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import { saveAs } from 'file-saver';
 import { Link } from "react-router-dom";
+import { ChatIcon, Icon } from "@chakra-ui/icons";
 
 import { Box, Flex, Modal,
   ModalOverlay,
@@ -898,13 +899,14 @@ export const Home = () => {
             bottom: "20px",
             right: "20px",
             background: "#28a745",
-            padding: "10px 20px",
-            borderRadius: "5px",
+            borderRadius: "100px",
             cursor: "pointer",
           }}
         >
-          <Link to={`/chatwithdoctor/${username}`} style={{ textDecoration: "none", color: "white" }}>
-            Chat with your doctor
+          <Link to={`/chatwithdoctor/${username}`}>
+          <Center>
+              <Icon as={ChatIcon} boxSize={6} m={5}/>
+            </Center>          
           </Link>
         </motion.div>
 
