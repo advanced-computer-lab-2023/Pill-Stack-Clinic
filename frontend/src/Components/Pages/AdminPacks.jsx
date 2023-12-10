@@ -114,7 +114,7 @@ function AdminPacks() {
             <Text fontSize={'3xl'} color={'white'} >Manage Packages</Text>
             <button className="btn" onClick={back}>back</button>
         </Box>
-        <Box m={10}  >
+        <Box m={10} mb={5}  >
         <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
             <Button  size="md" bg={'grey'} 
             onClick={handleModal}>
@@ -123,9 +123,8 @@ function AdminPacks() {
         </Flex>
             {
                 packs &&
-                // <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={5} rounded={5} flexDirection={'column'}>
-                    <SimpleGrid mb={5}  spacing={10} templateColumns='repeat(auto-fill, 30%)' as={'Flex'} justifyContent={'center'}>
-                    {packs.map((pack) => (
+                <SimpleGrid  spacing={10} templateColumns='repeat(auto-fill, 30%)' as={'Flex'} justifyContent={'center'}>
+                {packs.map((pack) => (
                         <PackageCard key={pack.id} pack={pack} count={count}/>
                     ))}
                     </SimpleGrid>

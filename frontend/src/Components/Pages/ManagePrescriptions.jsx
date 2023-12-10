@@ -99,8 +99,6 @@ const ManagePrescriptions = () => {
         }
 
         const handleEdit = async (prescription, id) => {
-            console.log("yoo", prescription);
-            console.log("foo", id);
 
             const { data } = await axios.put(`http://localhost:8000/doctor/editPrescription/${patientUser}/${id}`, {
                 prescription,
@@ -151,8 +149,7 @@ const ManagePrescriptions = () => {
     <>
         <Box m={20}>
             <Flex justifyContent={'space-between'}>
-            <Text 
-                fontSize={'4xl'}> Available Prescriptions
+            <Text fontSize={'4xl'}> Available Prescriptions
             </Text>
             <Button
                 colorScheme={'teal'}
