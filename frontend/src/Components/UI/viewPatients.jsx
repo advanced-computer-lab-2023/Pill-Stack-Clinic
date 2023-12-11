@@ -14,23 +14,13 @@ import {
   Th,
   Td,
   Box,
-  Container,
   Input,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverBody,
   Button,
   Select,
   FormControl,
   FormLabel,
   Flex,
-  Stack
-} from "@chakra-ui/react";
-import {
+  Stack,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -38,6 +28,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import {
   Alert,
@@ -50,6 +41,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { useDisclosure } from "@chakra-ui/react";
 import Prescription from './Prescription';
+import PatientCard from './PatientCard';
+import { motion } from 'framer-motion';
+
 
 
 const DoctorPatientsTable = () => {
@@ -89,7 +83,35 @@ const DoctorPatientsTable = () => {
           withCredentials: true,
         });
 
-        setPatients(response.data);
+        //group by username each in a list without an object name for every username
+        const groupedPatients = response.data.reduce((acc, patient) => {
+          const existingPatient = acc.find((p) => p.PatientUsername === patient.PatientUsername);
+          
+          if (existingPatient) {
+            existingPatient.appointments.push(patient);
+          } else {
+            acc.push({
+              PatientUsername: patient.PatientUsername,
+              PatientName: patient.PatientName,
+              appointments: [patient],
+            });
+          }
+          return acc;
+        }, []);
+
+        //loop on every patient's appointments status and if any one of his appointments is upcoming then add isUpcoming = true
+        groupedPatients.forEach((patient) => {
+          patient.appointments.forEach((appointment) => {
+            if (appointment.Status === 'upcoming') {
+              patient.isUpcoming = true;
+            }
+          });
+        });
+
+
+        console.log("grp", groupedPatients);
+
+        setPatients(groupedPatients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -99,17 +121,16 @@ const DoctorPatientsTable = () => {
   }, []);
 
 
-  const filteredPatients = patients.filter(patient => {
-    const statusMatches = statusFilter === 'All' || patient.Status === statusFilter;
-    const nameMatches = patient.PatientName && patient.PatientName.toLowerCase().includes(searchInput.toLowerCase());
-    const dateMatches = (
-      startDate === null ||
-      endDate === null ||
-      (new Date(patient.StartDate) >= startDate && new Date(patient.StartDate) <= endDate)
-    );
-
-    return statusMatches && nameMatches && dateMatches;
-  });
+  // const filteredPatients = patients.filter(patient => {
+  //   const statusMatches = statusFilter === 'All' || patient.Status === statusFilter;
+  //   const nameMatches = patient.PatientName && patient.PatientName.toLowerCase().includes(searchInput.toLowerCase());
+  //   const dateMatches = (
+  //     startDate === null ||
+  //     endDate === null ||
+  //     (new Date(patient.StartDate) >= startDate && new Date(patient.StartDate) <= endDate)
+  //   );
+  //   return statusMatches && nameMatches && dateMatches;
+  // });
 
 
   const openPatientDetails = async (patient) => {
@@ -301,122 +322,26 @@ const DoctorPatientsTable = () => {
             dateFormat="MMMM d, yyyy" />
         </FormControl>
       </Flex>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Patient Name</Th>
-            <Th>Status</Th>
-            <Th>Start Date</Th>
-            <Th>End Date </Th>
-            <Th> </Th>
-            <Th> </Th>
-            <Th> </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredPatients.map((patient, index) => (
-            <Tr key={index}>
-              <Td>{patient.PatientName}</Td>
-              <Td>{patient.Status}</Td>
-              <Td>{new Date(patient.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
-              <Td>{new Date(patient.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
+      <SimpleGrid m={10} columns={4} spacing={5}>
+        
+      {
+        patients.map((patient, index) => (
+          <motion.div
+          key={index}
+          whileHover={{ scale: 1.1, transition: { duration: 0.1 } , cursor: 'pointer', boxShadow: '2xl' }}
+          
+          onClick={() => {
+            navigate(`/doctor/myPatients/${patient.PatientUsername}`);
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          <PatientCard patient={patient}/>
+        </motion.div>
+        ))  
+      }
+      </SimpleGrid>
 
-              <Td>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      size="sm"
-                      colorScheme="teal"
-                      onClick={() => openPatientDetails(patient)}
-                    >
-                      View Details
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverHeader>Patient Details</PopoverHeader>
-                    {selectedPatient!==null && ( <PopoverBody>
-                    <p>Patient username: {selectedPatient.Username}</p>
-                    <p>Email: {selectedPatient.Email}</p>
-                    <p>DOB: {new Date(selectedPatient.DateOfBirth).toLocaleDateString('en-US')}</p>
-                    <p>Phone number: {selectedPatient.MobileNumber}</p>
-                    <span
-                    style={{ color: 'teal', cursor: 'pointer' }}
-                    onClick={() => openUploadDocModal(selectedPatient)}
-                    >
-                    View Medical History
-                    </span>
 
-                  </PopoverBody>)}
-                      
-                  </PopoverContent>
-                </Popover>
-              </Td>
-              <Td>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      size="sm"
-                      colorScheme="teal"
-                      onClick={() => openPatientDetails(patient)}
-                    >
-                      Add Health Record
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverHeader>Health Record</PopoverHeader>
-                    <PopoverBody>
-                      <Input
-                        type="text"
-                        placeholder='Input Record Here'
-                        value={newRecordInput}
-                        onChange={(e) => setNewRecordInput(e.target.value)} />
-                      <Button
-                        marginTop="10px"
-                        size="sm"
-                        alignSelf="end"
-                        onClick={() => addHealthRecord(patient)}
-                      >
-                        Save
-                      </Button>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Td>
-              <Td>
-                <Button
-                  size="sm"
-                  colorScheme="teal"
-                  onClick={() => openModal(patient)}
-                >
-                  Schedule a follow up
-                </Button>
-              </Td>
-              <Td>
-                <Link to={`/my-health-records/${patient.PatientUsername}/${patient.PatientName}`}>
-                  <Button size="sm" colorScheme="teal">
-                    View Health Records
-                  </Button>
-                </Link>
-              </Td>
-              <Td>
-                <Button size="sm" colorScheme="teal"
-                  onClick={() => {
-                    // setPatientData(patient);
-                    // setIsOpenPrescriptions(true)
-                    navigate(`/doctor/prescriptions/${patient.PatientUsername}`);
-                  }
-                  }>
-                  Manage Prescriptions
-                </Button>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
       <Modal isOpen={isModalOpen} onClose={() => {
         setIsModalOpen(false);
         setFollowUpPatient('');

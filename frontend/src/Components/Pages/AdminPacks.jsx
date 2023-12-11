@@ -162,7 +162,7 @@ function AdminPacks() {
             <ModalFooter>
                 <Button colorScheme="blue" mr={3}
                 onClick={handleAddPack}>
-                Save
+                    Save
                 </Button>
             </ModalFooter>
             </ModalContent>

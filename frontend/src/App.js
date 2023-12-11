@@ -48,7 +48,7 @@ import{MedicineListControl} from "./Components/UI/MedicineListAdminPharma";
 import{MedicineListwithSales} from "./Components/UI/MedicineListWithSales";
 import {AddMedicine} from "./Components/UI/AddMed";
 import ManagePrescriptions from "./Components/Pages/ManagePrescriptions.jsx";
-
+import MyPatientFull from "./Components/Pages/MyPatientFull.jsx";
 
 
 import io from 'socket.io-client';
@@ -96,6 +96,8 @@ function App() {
         <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
         <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />
         <Route path="/follow-up-request2" element={<RequestFollowUp />} />
+        {/* /doctor/myPatients/${patient.PatientUsername} */}
+        <Route path="/doctor/myPatients/:patientUser" element={<MyPatientFull/>} />
 
         {/* pharmacy */}
         <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />
