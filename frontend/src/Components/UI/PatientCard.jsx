@@ -35,9 +35,9 @@ function PatientCard({patient}) {
             {doctor.availability[0] ? <Badge colorScheme='green'
             >Available</Badge> : <Badge colorScheme='red'>Unavailable</Badge>}
             </Flex> */}
-            <Flex>
+            <Flex p={0}>
             <Avatar name={patient.PatientName} />
-            <Box ml='3'>
+            <Box ml='3' p={0}>
                 <Text fontWeight='bold' mb={0}>
                 {patient.PatientName}
                 </Text>

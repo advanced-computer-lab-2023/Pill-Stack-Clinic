@@ -80,10 +80,8 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
       <Box fontSize="16px" mb="10px">MyPatients</Box>
 
     <Center>
-      <a href="doctor-home/myPatients" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />
        
-      </a>
     </Center>
   </AbsoluteCenter>
 </LinkBox>

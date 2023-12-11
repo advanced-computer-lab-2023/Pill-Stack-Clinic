@@ -47,6 +47,7 @@ import { motion } from 'framer-motion';
 
 
 const DoctorPatientsTable = () => {
+  const [allPatients, setAllPatients] = useState([]); 
   const [patients, setPatients] = useState([]);
   const [statusFilter, setStatusFilter] = useState('All');
   const [searchInput, setSearchInput] = useState('');
@@ -105,11 +106,10 @@ const DoctorPatientsTable = () => {
             }
           });
         });
-
-
-        console.log("grp", groupedPatients);
-
         setPatients(groupedPatients);
+        setAllPatients(groupedPatients);
+
+
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -129,6 +129,17 @@ const DoctorPatientsTable = () => {
   //   );
   //   return statusMatches && nameMatches && dateMatches;
   // });
+
+  useEffect(() => {
+    //search by patient name
+    const filteredPatients = allPatients.filter(patient => {
+      const nameMatches = patient.PatientName && patient.PatientName.toLowerCase().includes(searchInput.toLowerCase());
+      return nameMatches;
+    });
+    setPatients(filteredPatients);
+  }
+    , [searchInput]);
+
 
 
   const openPatientDetails = async (patient) => {
@@ -283,20 +294,24 @@ const DoctorPatientsTable = () => {
         </Alert>
       )}
       <h1>My Patients</h1>
-      <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+      {/* <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
         <option value="All">All</option>
         <option value="upcoming">Upcoming</option>
         <option value="completed">completed</option>
         <option value="cancelled">cancelled</option>
         <option value="rescheduled">rescheduled</option>
-      </Select>
+      </Select> */}
+      <Flex justifyContent={'flex-end'}>
       <Input
+        w={'20%'}
+        mx={5}
         type="text"
         placeholder="Search by Patient Name"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)} />
-      <Text fontSize="md" mb="2">Filter by Date Range:</Text>
-      <Flex justifyContent="space-between" mb="4">
+      </Flex>
+      {/* <Text fontSize="md" mb="2">Filter by Date Range:</Text> */}
+      {/* <Flex justifyContent="space-between" mb="4">
         <FormControl>
           <FormLabel>Start Date</FormLabel>
           <DatePicker
@@ -319,7 +334,7 @@ const DoctorPatientsTable = () => {
             placeholderText="Select End Date"
             dateFormat="MMMM d, yyyy" />
         </FormControl>
-      </Flex>
+      </Flex> */}
       <SimpleGrid m={10} columns={4} spacing={5}>
         
       {

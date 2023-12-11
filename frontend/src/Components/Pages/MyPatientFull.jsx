@@ -301,7 +301,7 @@ export default function MyPatientFull() {
                   </MDBListGroupItem>
 
                   <Box h={'425px'} overflowY={'scroll'} rounded={4}>
-                  {patient.HealthRecords &&
+                  {patient.HealthRecords && patient.HealthRecords[0] ?
                     patient.HealthRecords.map((record, index) => {
                       return (
                         <MDBListGroupItem className="d-flex justify-content-between align-items-center p-2" key={index}>
@@ -310,6 +310,9 @@ export default function MyPatientFull() {
                         </MDBListGroupItem>
                       )
                     })
+                    :
+                    <Text m={5} textAlign={'center'}>No Available Records</Text>
+                    
                   }
                   </Box>
 
@@ -371,7 +374,7 @@ export default function MyPatientFull() {
                     </MDBCardText>
                     <Box h={'560px'} overflowY={'scroll'} rounded={4} className=''>
                     {
-                      hisAppointments &&
+                      hisAppointments  && hisAppointments.length > 0 ?
                       hisAppointments.map((app, index) => {
                         return (
                           <>
@@ -409,6 +412,8 @@ export default function MyPatientFull() {
                           </>
                         )
                       })
+                      :
+                      <Text m={5} textAlign={'center'}>No Available Appointments</Text>
                     }
                     </Box>
                   </MDBCardBody>
@@ -427,7 +432,7 @@ export default function MyPatientFull() {
 
                     <Box h={'560px'} overflowY={'scroll'} rounded={4}>
                     {
-                      famAppointments &&
+                      famAppointments && famAppointments.length > 0 ?
                       famAppointments.map((app, index) => {
                         return (
                           <>
@@ -450,6 +455,8 @@ export default function MyPatientFull() {
                           </>
                         )
                       })
+                      :
+                      <Text m={5} textAlign={'center'}>No Available Appointments</Text>
                     }
                     </Box>  
                   </MDBCardBody>
