@@ -17,12 +17,41 @@ import {
   MDBProgressBar,
   MDBIcon,
   MDBListGroup,
-  MDBListGroupItem
+  MDBListGroupItem,
 } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import { Box, Button, HStack, Text, border } from '@chakra-ui/react';
+import { Box, Button, HStack, Text, border,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Input,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Select,
+  Flex,
+  Badge,
+
+ } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import './scrollBar.css'
+import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -32,6 +61,17 @@ export default function MyPatientFull() {
     const [currDoc, setCurrDoc] = useState({})
     const [hisAppointments, setHisAppointments] = useState([])
     const [famAppointments, setFamAppointments] = useState([])
+    const [newRecordInput, setNewRecordInput] = useState('');
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [followUpPatient, setFollowUpPatient] = useState('');
+    const [isLoadingAvailability, setIsLoadingAvailability] = useState(false);
+    const [availability, setAvailability] = useState([]);
+    const [isError, setIsError] = useState(false);
+    const [appointment, setAppointment] = useState(null);
+
 
     console.log("patientUser", docUsername)
     const Navigate = useNavigate()
@@ -97,6 +137,87 @@ export default function MyPatientFull() {
     , [patient])
 
 
+    const openPatientDetails = async (patient) => {
+      const response = await axios.post('http://localhost:8000/doctor/myPatients/viewPatient',{username:patient.PatientUsername}, {
+        withCredentials: true, // Include credentials if necessary
+      });
+  
+      setSelectedPatient(response.data);
+    };
+
+    const addHealthRecord = async (patient) => {
+      try {
+        const response = await axios.post('http://localhost:8000/doctor/addHealthRecord', {
+          PatientUsername: patient.Username,
+          PatientName: patient.Name,
+          RecordDetails: newRecordInput,
+        },
+          { withCredentials: true });
+  
+        if (response.status === 201) {
+          setPatient(prev => ({
+            ...prev,
+            HealthRecords: [...prev.HealthRecords, {
+              RecordDetails: newRecordInput,
+              RecordDate: new Date(),
+            }],
+          }));
+          setNewRecordInput('');
+
+          // Close the popover
+          setSelectedPatient(null);
+
+          alert('Health record added successfully!');
+        } else {
+          alert('Failed to add health record. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error adding health record:', error);
+        alert('Failed to add health record. Please try again.');
+      }
+    };
+
+    const openModal = async (patient) => {
+      setIsModalOpen(true);
+      setConfirmationMessage('');
+      setErrorMessage('');
+      setFollowUpPatient(patient);
+  
+      try {
+        setIsLoadingAvailability(true);
+        const response = await axios.get(
+          'http://localhost:8000/doctor/availability',
+          { withCredentials: true }
+        );
+        setAvailability(response.data);
+      } catch (error) {
+        console.error('Error fetching family members:', error);
+      } finally {
+        setIsLoadingAvailability(false);
+      }
+    };
+
+    const scheduleFollowUp = async () => {
+      if (appointment !== null) {
+        const response = await axios.post('http://localhost:8000/doctor/scheduleFollowUp', { oldAppointment: followUpPatient, newAppointment: appointment }, {
+          withCredentials: true,
+        });
+  
+        if (response.data === 'follow up booked successfully') {
+          setConfirmationMessage(response.data);
+          setIsModalOpen(false);
+        } else {
+          setIsError(true);
+          setErrorMessage(response.data);
+        }
+      } else {
+        setIsError(true);
+        setErrorMessage('Please select an appointment');
+      }
+    };
+  
+  
+
   return (
     <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
@@ -113,7 +234,7 @@ export default function MyPatientFull() {
                   className="rounded-circle"
                   style={{ width: '150px' }}
                   fluid />
-                <p className="text-muted mb-1">Patient</p>
+                <p className="text-muted m-3">{patient.Name}</p>
                 {/* <p className="text-muted mb-4">Bay Area, San Francisco, CA</p> */}
                 <div className="d-flex justify-content-center mb-2">
                   <HStack>
@@ -133,10 +254,41 @@ export default function MyPatientFull() {
               <MDBCardBody className="p-0 " >
                 <MDBListGroup flush className="rounded-3 p-3" 
 >
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3 teal-text" >
                     <Text fontSize={'3xl'}>Health Records</Text>
+                    <Popover>
+                    <PopoverTrigger>
+                      <Button
+                        colorScheme="teal"
+                        onClick={() => openPatientDetails(patient)}
+                      >
+                        Add Health Record
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Health Record</PopoverHeader>
+                      <PopoverBody>
+                        <Input
+                          type="text"
+                          placeholder='Input Record Here'
+                          value={newRecordInput}
+                          onChange={(e) => setNewRecordInput(e.target.value)} />
+                        <Button
+                          marginTop="10px"
+                          size="sm"
+                          alignSelf="end"
+                          onClick={() => addHealthRecord(patient)}
+                        >
+                          Save
+                        </Button>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
                   </MDBListGroupItem>
-                  <Box h={'450px'} overflowY={'scroll'} rounded={4}>
+
+                  <Box h={'425px'} overflowY={'scroll'} rounded={4}>
                   {patient.HealthRecords &&
                     patient.HealthRecords.map((record, index) => {
                       return (
@@ -148,6 +300,7 @@ export default function MyPatientFull() {
                     })
                   }
                   </Box>
+
                 </MDBListGroup>
               </MDBCardBody>
             </MDBCard>
@@ -204,7 +357,7 @@ export default function MyPatientFull() {
                         {patient.Name}'s Appointments
                       </span> with me
                     </MDBCardText>
-                    <Box h={'515px'} overflowY={'scroll'} rounded={4} className=''>
+                    <Box h={'560px'} overflowY={'scroll'} rounded={4} className=''>
                     {
                       hisAppointments &&
                       hisAppointments.map((app, index) => {
@@ -212,9 +365,35 @@ export default function MyPatientFull() {
                           <>
                           {/*thick teal line */}
                           <hr class="hr hr-blurry " style={{ borderColor: 'teal'}}/>
-
-                          <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
-                          <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                          {
+                            app.Status === 'completed' ?
+                            <Badge colorScheme='green'>Completed</Badge>:
+                            app.Status === 'cancelled' ?
+                            <Badge colorScheme='red'>Cancelled</Badge>:
+                            app.Status === 'upcoming' ?
+                            <Badge colorScheme='teal'>Upcoming</Badge>:
+                            app.Status === 'rescheduled' ?
+                            <Badge colorScheme='yellow'>Rescheduled</Badge>:
+                            <Badge >Unknown</Badge>
+                            
+                            
+                          }
+                          {/* <Badge colorScheme='green'>Upcoming</Badge> */}
+                          <Flex justifyContent={'space-between'} alignItems={'center'}>
+                            <Box>
+                            <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
+                            <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                            </Box>
+                          <Button
+                            size="sm"
+                            m={2}
+                            colorScheme="teal"
+                            title='Follow Up'
+                            onClick={() => openModal(patient)}
+                          >
+                            <FontAwesomeIcon icon={faCalendarDays} />
+                          </Button>
+                          </Flex>
                           </>
                         )
                       })
@@ -234,16 +413,28 @@ export default function MyPatientFull() {
                       Appointments
                     </MDBCardText>
 
-                    <Box h={'515px'} overflowY={'scroll'} rounded={4}>
+                    <Box h={'560px'} overflowY={'scroll'} rounded={4}>
                     {
                       famAppointments &&
                       famAppointments.map((app, index) => {
                         return (
                           <>
-                          <hr class="hr hr-blurry " style={{ borderColor: 'teal'}}/>
-
-                          <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
-                          <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                          <hr className="hr hr-blurry" style={{ borderColor: 'teal'}}/>
+                          <Flex justifyContent={'space-between'} alignItems={'center'}>
+                            <Box>
+                              <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
+                              <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                            </Box>
+                          <Button
+                            size="sm"
+                            m={2}
+                            colorScheme="teal"
+                            title='Follow Up'
+                            onClick={() => openModal(patient)}
+                          >
+                            <FontAwesomeIcon icon={faCalendarDays} />
+                          </Button>
+                          </Flex>
                           </>
                         )
                       })
@@ -256,6 +447,50 @@ export default function MyPatientFull() {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
+      <Modal isOpen={isModalOpen} onClose={() => {
+        setIsModalOpen(false);
+        setFollowUpPatient('');
+        setIsError(false);
+        setErrorMessage('');
+      } }>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Select Appointment</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isError && (<Alert status='error'>
+              <AlertIcon />
+              <AlertTitle>Missing input</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>)}
+            <FormControl>
+              <FormLabel>Select appointment</FormLabel>
+              <Select
+                value={appointment}
+                onChange={(e) => {
+                  setAppointment(e.target.value);
+                } }
+              >
+                <option value="">Select</option>
+                {isLoadingAvailability ? (
+                  <option>Loading Appointments..</option>
+                ) : (
+                  availability.map((appointment) => (
+                    <option key={appointment._id} value={appointment._id}>
+                      {new Date(appointment.StartDate).toLocaleString('en-US', { timeZone: 'UTC' })} {new Date(appointment.EndDate).toLocaleString('en-US', { timeZone: 'UTC' })}
+                    </option>
+                  ))
+                )}
+              </Select>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={() => scheduleFollowUp()}>
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </section>
   );
 }
