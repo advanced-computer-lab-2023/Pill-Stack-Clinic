@@ -41,7 +41,7 @@ function Sidebar() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-   <Accordion defaultIndex={[0]} allowToggle={true} allowMultiple={true} theme={customAccordionTheme}>
+   <Accordion defaultIndex={[0]} allowToggle={true} allowMultiple={false} theme={customAccordionTheme}>
    <AccordionItem>
     <h2>
       <AccordionButton>
