@@ -47,11 +47,11 @@ import { Box, Button, HStack, Text, border,
   Badge,
 
  } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import './scrollBar.css'
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -71,6 +71,8 @@ export default function MyPatientFull() {
     const [availability, setAvailability] = useState([]);
     const [isError, setIsError] = useState(false);
     const [appointment, setAppointment] = useState(null);
+
+    const navigate = useNavigate();
 
 
     console.log("patientUser", docUsername)
@@ -244,7 +246,17 @@ export default function MyPatientFull() {
                   }
                   }
                    > Manage Prescriptions</Button>
-                  <Button colorScheme='teal' variant={'outline'} > Chat</Button>
+                  <Button colorScheme='teal' variant={'outline'}  
+                  
+                  // go to chatwithPatient/doctorTesting with direct href
+                  onClick={() => {
+                    Navigate(`/chatwithpatient/${docUsername}`)
+                  }
+                  }
+                  > Chat</Button>
+                  {/* <Box as='link' href='/doctor/chatwithPatient/'>
+                    haa
+                  </Box> */}
                   </HStack>
                 </div>
               </MDBCardBody>
