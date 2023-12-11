@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-
+import Sidebar from './side';
 import { ToastContainer, toast } from "react-toastify";
 import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
@@ -456,7 +456,7 @@ export const Home = () => {
     onLogout={Logout}
     notifications={patientData.Notifications}
     />
-
+    <Sidebar/>
  
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
         <h4>
