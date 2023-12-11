@@ -71,7 +71,7 @@ export default function MyPatientFull() {
     const [availability, setAvailability] = useState([]);
     const [isError, setIsError] = useState(false);
     const [appointment, setAppointment] = useState(null);
-
+    const [update, setUpdate] = useState(false)
     const navigate = useNavigate();
 
 
@@ -86,6 +86,7 @@ export default function MyPatientFull() {
                 .then(response => {
                     console.log("full account", response.data)
                     setPatient(response.data)
+
                 })
                 .catch(error => {
                     console.error(error);
@@ -94,7 +95,7 @@ export default function MyPatientFull() {
 
         getPatient()
 
-    }, [])
+    }, [update])
 
     useEffect(() => {
       //filter appointmnts that doesn't match the doc username
@@ -179,11 +180,11 @@ export default function MyPatientFull() {
       }
     };
 
-    const openModal = async (patient) => {
+    const openModal = async (app) => {
       setIsModalOpen(true);
       setConfirmationMessage('');
       setErrorMessage('');
-      setFollowUpPatient(patient);
+      setFollowUpPatient(app);
   
       try {
         setIsLoadingAvailability(true);
@@ -201,13 +202,15 @@ export default function MyPatientFull() {
 
     const scheduleFollowUp = async () => {
       if (appointment !== null) {
-        const response = await axios.post('http://localhost:8000/doctor/scheduleFollowUp', { oldAppointment: followUpPatient, newAppointment: appointment }, {
+        const response = await axios.post('http://localhost:8000/doctor/scheduleFollowUp', { oldAppointment:patient, newAppointment: appointment }, {
           withCredentials: true,
         });
   
         if (response.data === 'follow up booked successfully') {
           setConfirmationMessage(response.data);
           setIsModalOpen(false);
+          setFollowUpPatient('');
+          setUpdate(!update);
         } else {
           setIsError(true);
           setErrorMessage(response.data);
@@ -404,7 +407,7 @@ export default function MyPatientFull() {
                             m={2}
                             colorScheme="teal"
                             title='Follow Up'
-                            onClick={() => openModal(patient)}
+                            onClick={() => openModal(app)}
                           >
                             <FontAwesomeIcon icon={faCalendarDays} />
                           </Button>

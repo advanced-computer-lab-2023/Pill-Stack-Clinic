@@ -626,8 +626,9 @@ const deleteContract = async (req, res) => {
   const scheduleFollowUp= async (req,res) =>{
     const doctorId=req.user._id;
     const oldAppointment=req.body.oldAppointment;
-    const patient=oldAppointment.PatientUsername;
-    const patientName=oldAppointment.PatientName;
+    console.log("oldAppointment",oldAppointment);
+    const patient=oldAppointment.Username;
+    const patientName=oldAppointment.Name;
     const newAppointmentID=req.body.newAppointment;
     const doctor = await doctorModel.findById(doctorId);
     const newAppointment = doctor.Availability.find(
@@ -650,7 +651,7 @@ const deleteContract = async (req, res) => {
         if (isOverlap) {
           return res.send({ message: 'Overlap with existing appointment' });
         }
-
+        console.log("user",user);
         const isOverlapwithUser = user.BookedAppointments.some((existingApp) => {
           const existingStart = new Date(existingApp.StartDate);
           const existingEnd = new Date(existingApp.EndDate);
