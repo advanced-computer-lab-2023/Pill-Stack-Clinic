@@ -2,13 +2,16 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-
 import { ToastContainer, toast } from "react-toastify";
 import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import { saveAs } from 'file-saver';
+<<<<<<< Updated upstream
 import { Link } from "react-router-dom";
 import { ChatIcon, Icon } from "@chakra-ui/icons";
+=======
+import Sidebar from './side';
+>>>>>>> Stashed changes
 
 import { Box, Flex, Modal,
   ModalOverlay,
@@ -68,6 +71,7 @@ export const Home = () => {
   const [floor, setFloor] = useState("");
   const [apartment, setApartment] = useState("");
   const [addressName, setAddressName] = useState("");
+  
 
 
 
@@ -449,6 +453,7 @@ export const Home = () => {
 
   return (
     <> 
+   
     
     <WithSubnavigation
     username={patientData.Name}
@@ -456,6 +461,7 @@ export const Home = () => {
     onLogout={Logout}
     notifications={patientData.Notifications}
     />
+     <Sidebar />
 
  
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
