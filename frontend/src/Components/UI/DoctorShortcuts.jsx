@@ -24,11 +24,12 @@ import {
 
 
 function DoctorShortcuts(props) {
-  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, navigate, username} = props;
-  
-  
+  const {openSecondModal,openAddFamilyModal,openViewFamilyModal,openUploadDocModal, username} = props;  
+  const navigate = useNavigate();
   return (
+
     <Card>
+      {console.log("username", username)}
 <CardHeader h='80px'>
           <Heading size='md'>Shortcuts</Heading>
           </CardHeader>
@@ -71,13 +72,13 @@ _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
   </AbsoluteCenter>
 </LinkBox>
 
-<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' href="doctor-home/myPatients"
+<LinkBox as='article' w='197px' h='148px' maxW='sm' p='1' borderWidth='1px' rounded='md' 
+onClick={() => navigate(`myPatients/${username}`)}
 _hover={{ bg: '#353535',  color: 'white' , cursor: "pointer"}}>
-  <LinkOverlay href="doctor-home/myPatients"></LinkOverlay>
   <AbsoluteCenter>
-    
+
       <Box fontSize="16px" mb="10px">MyPatients</Box>
-    
+
     <Center>
       <a href="doctor-home/myPatients" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ViewIcon boxSize={5} />

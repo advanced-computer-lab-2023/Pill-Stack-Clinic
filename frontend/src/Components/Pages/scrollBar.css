@@ -1,0 +1,32 @@
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #319795;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  /* Custom class for scrollable boxes */
+  .scrollable-box {
+    /* Apply custom scrollbar styles */
+    overflow-y: scroll;
+    max-height: 515px;
+    border-radius: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #319795 #f1f1f1;
+  }
+  .teal-text {
+    color: #319795 !important;
+  }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../UI/button.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import { ToastContainer, toast } from "react-toastify";
@@ -67,14 +67,12 @@ const DoctorPatientsTable = () => {
   const [isOpenPrescriptions, setIsOpenPrescriptions] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   
+  const {docUsername} = useParams();
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
 
   const onClosePrescriptions = () => setIsOpenPrescriptions(false);
 
-  useEffect(() => {
-    console.log('Patients:', patients);
-  }, [patients]);
 
   useEffect(() => {
     async function fetchPatients() {
@@ -326,17 +324,17 @@ const DoctorPatientsTable = () => {
         
       {
         patients.map((patient, index) => (
-          <motion.div
+          <motion.Box
           key={index}
-          whileHover={{ scale: 1.1, transition: { duration: 0.1 } , cursor: 'pointer', boxShadow: '2xl' }}
+          whileHover={{ scale: 1.02, transition: { duration: 0.1 } , cursor: 'pointer', boxShadow: '2xl' }}
           
           onClick={() => {
-            navigate(`/doctor/myPatients/${patient.PatientUsername}`);
+            navigate(`/doctor/myPatients/${docUsername}/${patient.PatientUsername}`);
           }}
           style={{ cursor: 'pointer' }}
         >
           <PatientCard patient={patient}/>
-        </motion.div>
+        </motion.Box>
         ))  
       }
       </SimpleGrid>

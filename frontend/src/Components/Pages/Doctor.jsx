@@ -138,7 +138,7 @@ export const Doctor = () => {
           </Box>
 
           <Box style={{ margin: "0 10px", flex: 1 }}>
-            <DoctorShortcuts style={{ height: "100%" }} />
+            <DoctorShortcuts style={{ height: "100%" }} username= {username}  />
           </Box>
         </Flex>
 

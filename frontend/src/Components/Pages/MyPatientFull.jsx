@@ -1,36 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect, } from 'react'
 import { useParams } from 'react-router-dom'
-
-
-// function MyPatientFull() {
-//     const [patient, setPatient] = useState({})
-//     const { patientUser} = useParams();
-    
-//     useEffect(() => {
-//         const getPatient = async () => {
-//             axios.get(`http://localhost:8000/doctor/fullPatient/${patientUser}`, { withCredentials: true })
-//                 .then(response => {
-//                     console.log("fafa", response.data)
-//                     setPatient(response.data)
-//                 })
-//                 .catch(error => {
-//                     console.error(error);
-//                 });
-//         }
-//         getPatient()
-//     }, [])
-
-    
-//   return (
-//     <>
-
-
-//     </>
-//   )
-// }
-
-// export default MyPatientFull
 import React from 'react';
 import {
   MDBCol,
@@ -50,43 +20,86 @@ import {
   MDBListGroupItem
 } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-
+import { Box, Button, HStack, Text, border } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import './scrollBar.css'
 
 
 
 export default function MyPatientFull() {
     const [patient, setPatient] = useState({})
-    const { patientUser} = useParams();
-    
+    const { patientUser, docUsername} = useParams();
+    const [currDoc, setCurrDoc] = useState({})
+    const [hisAppointments, setHisAppointments] = useState([])
+    const [famAppointments, setFamAppointments] = useState([])
+
+    console.log("patientUser", docUsername)
+    const Navigate = useNavigate()
+
+
     useEffect(() => {
+        const token = localStorage.getItem('token')
         const getPatient = async () => {
             axios.get(`http://localhost:8000/doctor/fullPatient/${patientUser}`, { withCredentials: true })
                 .then(response => {
-                    console.log("fafa", response.data)
+                    console.log("full account", response.data)
                     setPatient(response.data)
                 })
                 .catch(error => {
                     console.error(error);
                 });
         }
+
         getPatient()
+
     }, [])
+
+    useEffect(() => {
+      //filter appointmnts that doesn't match the doc username
+
+      const getHisAppointments = () => {
+        setHisAppointments([])
+        {
+        patient.BookedAppointments &&
+        patient.BookedAppointments.map((app, index) => {
+          
+          if (app.DoctorUsername === docUsername) {
+            setHisAppointments(prev => [...prev, app])
+          }
+        }
+        )
+      }
+      }
+      getHisAppointments()
+      console.log("hisAppointments", hisAppointments)
+    }
+    , [patient])
+
+    useEffect(() => {
+      //filter appointmnts that doesn't match the doc username
+
+      const getFamAppointments = () => {
+        setFamAppointments([])
+        {
+        patient.BookedAppointments &&
+        patient.BookedAppointments.map((app, index) => {
+          
+          if (app.DoctorUsername !== docUsername) {
+            setFamAppointments(prev => [...prev, app])
+          }
+        }
+        )
+      }
+      }
+      getFamAppointments()
+      console.log("famAppointments", famAppointments)
+    }
+    , [patient])
+
+
   return (
     <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
-        {/* <MDBRow>
-          <MDBCol>
-            <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
-              <MDBBreadcrumbItem>
-                <a href='#'>Home</a>
-              </MDBBreadcrumbItem>
-              <MDBBreadcrumbItem>
-                <a href="#">User</a>
-              </MDBBreadcrumbItem>
-              <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
-            </MDBBreadcrumb>
-          </MDBCol>
-        </MDBRow> */}
 
         <MDBRow>
           <MDBCol lg="4">
@@ -100,38 +113,41 @@ export default function MyPatientFull() {
                   className="rounded-circle"
                   style={{ width: '150px' }}
                   fluid />
-                <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                <p className="text-muted mb-1">Patient</p>
+                {/* <p className="text-muted mb-4">Bay Area, San Francisco, CA</p> */}
                 <div className="d-flex justify-content-center mb-2">
-                  <MDBBtn>Follow</MDBBtn>
-                  <MDBBtn outline className="ms-1">Message</MDBBtn>
+                  <HStack>
+                  <Button colorScheme='teal'
+                  onClick={() => {
+                    Navigate(`/doctor/prescriptions/${patientUser}`)
+                  }
+                  }
+                   > Manage Prescriptions</Button>
+                  <Button colorScheme='teal' variant={'outline'} > Chat</Button>
+                  </HStack>
                 </div>
               </MDBCardBody>
             </MDBCard>
 
-            <MDBCard className="mb-4 mb-lg-0">
-              <MDBCardBody className="p-0">
-                <MDBListGroup flush className="rounded-3">
+            <MDBCard className="mb-4 mb-lg-0" >
+              <MDBCardBody className="p-0 " >
+                <MDBListGroup flush className="rounded-3 p-3" 
+>
                   <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fas icon="globe fa-lg text-warning" />
-                    <MDBCardText>https://mdbootstrap.com</MDBCardText>
+                    <Text fontSize={'3xl'}>Health Records</Text>
                   </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                    <MDBCardText>@mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
+                  <Box h={'450px'} overflowY={'scroll'} rounded={4}>
+                  {patient.HealthRecords &&
+                    patient.HealthRecords.map((record, index) => {
+                      return (
+                        <MDBListGroupItem className="d-flex justify-content-between align-items-center p-2" key={index}>
+                          <MDBCardText>{record.RecordDetails}</MDBCardText>
+                          <MDBCardText>{new Date(record.RecordDate).toLocaleDateString()}</MDBCardText>
+                        </MDBListGroupItem>
+                      )
+                    })
+                  }
+                  </Box>
                 </MDBListGroup>
               </MDBCardBody>
             </MDBCard>
@@ -182,32 +198,28 @@ export default function MyPatientFull() {
             <MDBRow>
               <MDBCol md="6">
                 <MDBCard className="mb-4 mb-md-0">
-                  <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status</MDBCardText>
-                    <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                    </MDBProgress>
+                  <MDBCardBody  >
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1 teal-text" style={{fontSize:"1.3em"}} >  
+                        {patient.Name}'s Appointments
+                      </span> with me
+                    </MDBCardText>
+                    <Box h={'515px'} overflowY={'scroll'} rounded={4} className=''>
+                    {
+                      hisAppointments &&
+                      hisAppointments.map((app, index) => {
+                        return (
+                          <>
+                          {/*thick teal line */}
+                          <hr class="hr hr-blurry " style={{ borderColor: 'teal'}}/>
 
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
-                    </MDBProgress>
+                          <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
+                          <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                          </>
+                        )
+                      })
+                    }
+                    </Box>
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
@@ -215,31 +227,28 @@ export default function MyPatientFull() {
               <MDBCol md="6">
                 <MDBCard className="mb-4 mb-md-0">
                   <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status</MDBCardText>
-                    <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                    </MDBProgress>
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1 teal-text" style={{fontSize:"1.3em"}}>
+                        Family Members'
+                      </span>
+                      Appointments
+                    </MDBCardText>
 
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
-                    </MDBProgress>
+                    <Box h={'515px'} overflowY={'scroll'} rounded={4}>
+                    {
+                      famAppointments &&
+                      famAppointments.map((app, index) => {
+                        return (
+                          <>
+                          <hr class="hr hr-blurry " style={{ borderColor: 'teal'}}/>
 
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
-                    </MDBProgress>
+                          <Text as='abbr' fontSize={'lg'} key={index}>{new Date(app.StartDate).toLocaleDateString()} </Text>
+                          <MDBCardText>{new Date(app.StartDate).toLocaleTimeString()} to {new Date(app.EndDate).toLocaleTimeString()}</MDBCardText>
+                          </>
+                        )
+                      })
+                    }
+                    </Box>  
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>

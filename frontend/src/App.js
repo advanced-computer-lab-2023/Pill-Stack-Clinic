@@ -82,7 +82,7 @@ function App() {
         <Route path="home/prescriptions" element={<PrescriptionViewer/>} />
         <Route path="doctor-home/myAvailability" element={<ViewAvailability/>} />  
         <Route path="doctor-home/apptsD" element={<ViewAppointments/>} />
-        <Route path="doctor-home/myPatients" element={<DoctorPatientsTable/>} />  
+        <Route path="doctor-home/myPatients/:docUsername" element={<DoctorPatientsTable/>} />  
         <Route path="Unsigned-doctor-home/contract" element={<DoctorContract/>} />  
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/PasswordReset" element={<PasswordReset/>} />
@@ -97,7 +97,7 @@ function App() {
         <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />
         <Route path="/follow-up-request2" element={<RequestFollowUp />} />
         {/* /doctor/myPatients/${patient.PatientUsername} */}
-        <Route path="/doctor/myPatients/:patientUser" element={<MyPatientFull/>} />
+        <Route path="/doctor/myPatients/:docUsername/:patientUser" element={<MyPatientFull/>} />
 
         {/* pharmacy */}
         <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />

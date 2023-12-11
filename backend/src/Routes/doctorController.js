@@ -14,11 +14,14 @@ const sendEmail = require("../Utilities/SendEmail");
 
 
  const viewProfile= async(req,res)=>{
-  const username = req.user.Username;
+  const username = req.user._id;
+  console.log("lalal", username);
   const profile = await doctorModel.findOne({Username:username});
+  console.log("profile", profile);
      res.send(profile);
  
   }
+  
  
   const editView=async(req,res)=>{
     const { id } = req.params;

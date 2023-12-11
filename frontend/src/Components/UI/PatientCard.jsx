@@ -31,9 +31,6 @@ function PatientCard({patient}) {
             >
             
             <CardHeader>
-                {
-                    console.log(patient)
-                }
             {/* <Flex justifyContent={'flex-end'}>
             {doctor.availability[0] ? <Badge colorScheme='green'
             >Available</Badge> : <Badge colorScheme='red'>Unavailable</Badge>}
@@ -41,7 +38,7 @@ function PatientCard({patient}) {
             <Flex>
             <Avatar name={patient.PatientName} />
             <Box ml='3'>
-                <Text fontWeight='bold'>
+                <Text fontWeight='bold' mb={0}>
                 {patient.PatientName}
                 </Text>
                 <Text fontSize='sm'>{patient.PatientUsername}</Text>

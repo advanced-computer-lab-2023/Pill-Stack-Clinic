@@ -46,6 +46,7 @@ router.get('/getPatientUsername/:username',getPatientUsername);
 router.post('/ChatDoctor/:doctorUsername/:username',join);
 router.post('/sendMessage/:patientUsername/:doctorUsername',sendMessage);
 router.put('/editPrescription/:username/:presId', userVerification, editPrescription);
+router.get('/myUsername', viewProfile);
 
 
 module.exports = router;
