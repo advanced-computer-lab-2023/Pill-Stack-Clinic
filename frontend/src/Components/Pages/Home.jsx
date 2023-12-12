@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { saveAs } from 'file-saver';
 import { Link } from "react-router-dom";
 import { ChatIcon, Icon } from "@chakra-ui/icons";
+import '../UI/Styles/home.css';
 
 import { Box, Flex, Modal,
   ModalOverlay,
@@ -462,7 +463,8 @@ export const Home = () => {
     </div>
     <Sidebar/>
  
-      <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
+      <div className="home_page">
+      <div className="home_page_content" >
         <h4>
           Welcome 3ayan  <span>{username}</span>
         </h4> 
@@ -487,7 +489,7 @@ export const Home = () => {
 </Box>
 
           <Box style={{ margin: "0 10px", flex: 1 }}>
-            <PatientShortcuts openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
+            <PatientShortcuts class="patientsshortcut" openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
             setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal} openAddDeliveryModal={openAddDeliveryModal}
             navigate={navigate} username={username} name={patientData.Name} style={{ height: "100%" }} />
           </Box>
@@ -914,7 +916,7 @@ export const Home = () => {
         </motion.div>
 
 
-
+        </div>     
       </div>
       <ToastContainer />
     </>

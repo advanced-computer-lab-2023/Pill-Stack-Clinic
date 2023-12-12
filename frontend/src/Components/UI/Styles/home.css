@@ -1,0 +1,27 @@
+body {
+    zoom: 70%; /* Set your desired default zoom level */
+    padding-right: 0;
+  }
+
+  .home_page {
+    background: linear-gradient(45deg, #1E9AFE, #60DFCD);
+    padding-right: 0;
+  }
+  .home_page_content {
+    margin-top: 90px;
+    margin-left: 17%;
+    padding-right: 30px;
+    padding-left: 30px;
+    width: 83%;
+  }
+
+  .patientsshortcut{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: yellow;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
