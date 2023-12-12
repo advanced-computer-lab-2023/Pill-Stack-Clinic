@@ -450,12 +450,16 @@ export const Home = () => {
   return (
     <> 
     
-    <WithSubnavigation
-    username={patientData.Name}
-    onOpenModal={onOpen}
-    onLogout={Logout}
-    notifications={patientData.Notifications}
-    />
+     <div style={{ position: 'fixed', top: '0', left: '0', right: '0', zIndex: '1000'}}>
+
+      <WithSubnavigation
+        username={patientData.Name}
+        onOpenModal={onOpen}
+        onLogout={Logout}
+        notifications={patientData.Notifications}
+        mb={5}
+      />
+    </div>
     <Sidebar/>
  
       <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>

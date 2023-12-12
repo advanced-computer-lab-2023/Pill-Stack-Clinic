@@ -3,6 +3,9 @@ import '../UI/Styles/Sidebar.css';
 import { accordionTheme } from '../UI/Styles/theme.js';
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { extendTheme } from '@chakra-ui/react'; // Add this import
+import pillstackLogo from '../UI/Images/pillstackLogo.png';
+import pillstackMini from '../UI/Images/pillstackMini.png';  
+
 import {
     Accordion,
     AccordionItem,
@@ -25,7 +28,10 @@ function Sidebar() {
 
   const sidebarStyle = {
     width: isExpanded ? '17%' : '65px',
-    marginTop: '70px'
+    // marginTop: '70px'
+    paddingTop: '7px',
+    borderTopRightRadius: '30px', 
+     borderBottomRightRadius: '30px', 
   };
 
   const customAccordionTheme = extendTheme({
@@ -41,6 +47,20 @@ function Sidebar() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+         <Box textAlign="center" p={4} mb={4}>
+        {isExpanded ? (
+          <img src={pillstackLogo} alt="Logo" width="300" height="15" />
+        ) : (
+            <img
+            src={pillstackMini}
+            alt="Mini Logo"
+            width="60"
+            height="15"
+            style={{ transform: 'rotate(-90deg) scale(1.5, 1.5)' }}
+          />
+        )}
+      </Box>
+
    <Accordion defaultIndex={[0]} allowToggle={true} allowMultiple={false} theme={customAccordionTheme}>
    <AccordionItem>
     <h2>

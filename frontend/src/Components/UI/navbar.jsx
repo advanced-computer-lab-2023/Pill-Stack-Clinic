@@ -1,5 +1,6 @@
 import React from 'react';
 import pill from'./Images/PillGradient.png';
+import pillstack from'./Images/pillstackLogo.png';
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
 import {
   Box,
@@ -45,18 +46,22 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+         bg={`rgba(255, 255, 255, 0.0)`} 
+
         color={useColorModeValue('gray.600', 'white')}
         minH={'70px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
+        ml={ '300px' }
+        mb={ '30px'}
+        pt={'25px'}
+        pr={'35px'}
+        
         align={'center'}>
         <Flex
           flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
+          
           display={{ base: 'flex', md: 'none' }}>
           <IconButton
             onClick={onToggle}
@@ -70,7 +75,7 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
             color={useColorModeValue('gray.800', 'white')}>
-            PILLSTACK
+            {/* <img src={pillstack} alt="Logo" width="300" height="100" /> */}
           </Text>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -272,42 +277,42 @@ const MobileNavItem = ({ label, children, href }) => {
 };
 
 const NAV_ITEMS = [
-  {
-    label: 'Pharmacy',
-    children: [
-      {
-        label: 'Shop',
-        href: '/medicine',
-      },
-      {
-        label: 'View Orders',
-        href: '/orderDetails',
-      },
-    ],
-  },
-  {
-    label: 'Find Work',
-    children: [
-      {
-        label: 'Job Board',
-        subLabel: 'Find your dream design job',
-        href: '#',
-      },
-      {
-        label: 'Freelance Projects',
-        subLabel: 'An exclusive list for contract work',
-        href: '#',
-      },
-    ],
-  },
-  {
-    label: 'Learn Design',
-    href: '#',
-  },
-  {
-    label: 'Hire Designers',
-    href: '#',
-  },
+  // {
+  //   label: 'Pharmacy',
+  //   children: [
+  //     {
+  //       label: 'Shop',
+  //       href: '/medicine',
+  //     },
+  //     {
+  //       label: 'View Orders',
+  //       href: '/orderDetails',
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: 'Find Work',
+  //   children: [
+  //     {
+  //       label: 'Job Board',
+  //       subLabel: 'Find your dream design job',
+  //       href: '#',
+  //     },
+  //     {
+  //       label: 'Freelance Projects',
+  //       subLabel: 'An exclusive list for contract work',
+  //       href: '#',
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: 'Learn Design',
+  //   href: '#',
+  // },
+  // {
+  //   label: 'Hire Designers',
+  //   href: '#',
+  // },
 ];
 
 export default WithSubnavigation;
