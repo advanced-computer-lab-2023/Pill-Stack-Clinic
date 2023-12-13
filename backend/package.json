@@ -35,6 +35,7 @@
     "nodemailer": "^6.9.6",
     "pdfkit": "^0.14.0",
     "pug": "^3.0.2",
+    "socket-io": "^1.0.0",
     "socket.io": "^4.7.2",
     "stripe": "^14.1.0",
     "uuid": "^9.0.1"

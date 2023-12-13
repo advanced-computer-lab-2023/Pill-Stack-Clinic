@@ -939,7 +939,7 @@ const deleteContract = async (req, res) => {
   
  
  
-          return { room, message: messageData };
+          return { room:specificRoom, message: messageData };
         } else {
           console.error('Chat room not found for the selected doctor');
           return null;
