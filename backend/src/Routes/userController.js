@@ -423,9 +423,10 @@ const viewPrescriptions = async (req, res) => {
       const doc = new PDFDocument;
       let i=0;
       let date=new Date(prescription.PrecriptionDate);
+      console.log(prescription._id);
       // console.log(prescription.PrecriptionDate);
       let month=date.getMonth()+1;
-      doc.pipe(fs.createWriteStream(username+prescription.DocUsername+".pdf"));
+      doc.pipe(fs.createWriteStream(username+prescription.DocUsername+prescription._id+".pdf"));
       doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
    date.getFullYear());
    doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
@@ -464,6 +465,7 @@ const viewPrescriptions = async (req, res) => {
          DocUsername:prescription.DocUsername,
          Date:prescription.PrecriptionDate,
          Status: prescription.Status,
+         _id:prescription._id,
        };
      });
  
@@ -1383,12 +1385,14 @@ const famRescheduleAppointment = async (req, res) => {
  const convertToPDF=async(req,res)=>{
    const userUsername=req.user.Username;
    const prescriptions=req.body.prescription;
-  console.log(prescriptions);
    let i=0;
-   let date=new Date(prescriptions.PrecriptionDate);
+   let date=new Date(prescriptions.Date);
+   let day=date.getDay();
+   console.log(day);
    let month=date.getMonth()+1;
    const doc = new PDFDocument;
-   doc.pipe(fs.createWriteStream(userUsername+prescriptions.DocUsername+".pdf"));
+   console.log(prescriptions.Date);
+   doc.pipe(fs.createWriteStream(userUsername+prescriptions.DocUsername+prescriptions._id+".pdf"));
    doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
    date.getFullYear());
    doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
@@ -1415,12 +1419,10 @@ const famRescheduleAppointment = async (req, res) => {
      doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
    }
    doc.end();
-   const filePath = path.join(__dirname,'../',userUsername+prescriptions.DocUsername+".pdf");
+   const filePath = path.join(__dirname,'../',userUsername+prescriptions.DocUsername+prescriptions._id+".pdf");
    const fileData = fs.readFileSync(filePath);
    const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
-   res.json({ file: base64File ,filename:userUsername+prescriptions.DocUsername+".pdf"});
-
-
+   res.json({ file: base64File ,filename:userUsername+prescriptions.DocUsername+prescriptions._id+".pdf"});
 
  }
  const requestFollowUp = async (req, res) => {

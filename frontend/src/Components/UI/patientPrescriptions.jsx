@@ -195,7 +195,7 @@ const PrescriptionViewer = () => {
                   {/* <a href='../../../backend/src/Nadatest3Dr.DS0.pdf' download="Prescription PDF"
         target="_blank"
         rel="noreferrer"> */}
-        {console.log(prescription)}
+        {console.log(prescription._id)}
                   <Button colorScheme="teal" onClick={() => Download(prescription)}>Download</Button></Td>
               </Tr>
             ))}

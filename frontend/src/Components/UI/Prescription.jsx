@@ -104,6 +104,7 @@ function Prescription(
                 onClick={() => onOpen()}
               />
             }
+            {console.log(data)}
             <Button colorScheme="teal" left="5%" onClick={() => download(data)}>Download</Button>
          <Spacer></Spacer>
 

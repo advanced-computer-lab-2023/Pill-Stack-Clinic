@@ -715,7 +715,7 @@ const deleteContract = async (req, res) => {
     let date=new Date(prescriptions.PrecriptionDate);
     let month=date.getMonth()+1;
     const doc = new PDFDocument;
-    doc.pipe(fs.createWriteStream(prescriptions.DocUsername+userUsername+".pdf"));
+    doc.pipe(fs.createWriteStream(prescriptions.DocUsername+userUsername+prescriptions._id+".pdf"));
     doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
     date.getFullYear());
     doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
@@ -737,15 +737,16 @@ const deleteContract = async (req, res) => {
     for(let j=0;j<prescriptions.Medicine.length;j++){
       doc.translate(0,10);
       doc.fontSize(13).fillColor('black').text("Medicine: "+prescriptions.Medicine[j].MedicineName).translate(0,10+20*i);
-      doc.fontSize(13).fillColor('black').text("Dosage: "+prescriptions.Medicine[j].MedicineDose).translate(0,10);
+      doc.fontSize(13).fillColor('black').text("Dosage: "+prescriptions.Medicine[j].Dose).translate(0,10);
       doc.fontSize(13).fillColor('black').text("Quantity: "+prescriptions.Medicine[j].Quantity).translate(0,10);
       doc.fontSize(13).fillColor('black').text("Instruction: "+prescriptions.Medicine[j].Instructions).translate(0,10+20*i);
     }
     doc.end();
-    const filePath = path.join(__dirname,'../',prescriptions.DocUsername+userUsername+".pdf");
+    const filePath = path.join(__dirname,'../',prescriptions.DocUsername+userUsername+prescriptions._id+".pdf");
     const fileData = fs.readFileSync(filePath);
     const base64File = `data:application/pdf;base64,${fileData.toString('base64')}`;
-    res.json({ file: base64File ,filename:prescriptions.DocUsername+userUsername+".pdf"});
+    res.json({ file: base64File ,filename:prescriptions.DocUsername+userUsername+prescriptions._id+".pdf"});
+ 
  
  
  
@@ -753,7 +754,7 @@ const deleteContract = async (req, res) => {
   
   
   const getFullAccount = async (req, res) => {
-    try {
+      try {
       const user = req.params.username;
       console.log(user);
       const patient = await userModel.findOne({ Username: user });
@@ -762,10 +763,9 @@ const deleteContract = async (req, res) => {
       prescriptions.map((prescription) => {
         const doc = new PDFDocument;
         let i=0;
-        console.log(prescription);
         let date=new Date(prescription.PrecriptionDate);
         let month=date.getMonth()+1;
-        doc.pipe(fs.createWriteStream(prescription.DocUsername+user+".pdf"));
+        doc.pipe(fs.createWriteStream(prescription.DocUsername+user+prescription._id+".pdf"));
         doc.fontSize(9).translate(450,0).text(date.getDate()+"-"+month+"-"+
      date.getFullYear());
      doc.fontSize(9).translate(-10,10).text("PillStack Clinic");
@@ -788,6 +788,7 @@ const deleteContract = async (req, res) => {
        doc.translate(0,10);
        doc.fontSize(13).fillColor('black').text("Medicine: "+prescription.Medicine[j].MedicineName).translate(0,10+20*i);
        doc.fontSize(13).fillColor('black').text("Dosage: "+prescription.Medicine[j].Dose).translate(0,10);
+       console.log(prescription.Medicine[j].Dose);
        doc.fontSize(13).fillColor('black').text("Quantity: "+prescription.Medicine[j].Quantity).translate(0,10);
        doc.fontSize(13).fillColor('black').text("Instruction: "+prescription.Medicine[j].Instructions).translate(0,10+20*i);
      }
@@ -800,6 +801,7 @@ const deleteContract = async (req, res) => {
     } catch (error) {
       res.status(500).send({ error: 'Internal server error' });
     }
+
   }
 
   const addPrescription = async (req, res) => {

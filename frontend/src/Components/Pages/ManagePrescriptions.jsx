@@ -169,6 +169,7 @@ const ManagePrescriptions = () => {
                 <>
                 {console.log("presss", prescription)}
                 <Prescription data={prescription} keyId={prescription._id} callback={handleEdit}  download={()=>Download(prescription)}/>
+
                 </>
               ))
               : 
