@@ -1,8 +1,3 @@
-body {
-    zoom: 70%; /* Set your desired default zoom level */
-    padding-right: 0;
-  }
-
   .home_page {
     background: linear-gradient(45deg, #1E9AFE, #60DFCD);
     padding-right: 0;
