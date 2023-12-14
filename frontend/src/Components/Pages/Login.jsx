@@ -126,21 +126,6 @@ export const Login = () => {
 
       <Grid templateColumns={{ base: '1fr', sm: 'repeat(7, 1fr)' }} gap={6} h={{ base: 'auto', sm: '100vh' }}>
         <GridItem colSpan={{ base: 'auto', sm: 4 }} p={10} h={'100%'} >
-        {/* <Flex flexDirection={'column'} w={'100%'} h={'100%'} alignItems={'center'} >
-          <Image src={Logo} alt="Logo" w={'70%'} m={10} />
-          <Box alignSelf={'flex-start'} mx={3}>
-            <Text fontSize={'6xl'} mb={0}> Your Health, <br />  One Click Away</Text>
-            <Text fontSize={'2xl'}> "Join our platform for access to top-tier doctors and hassle-free appointments. Your wellness journey starts here." </Text>
-          </Box>
-          <AvatarGroup size='md' max={5}>
-            <Avatar name='Ryan Florence' src='https://bit.ly/ryan-florence' />
-            <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
-            <Avatar name='Kent Dodds' src='https://bit.ly/kent-c-dodds' />
-            <Avatar name='Prosper Otemuyiwa' src='https://bit.ly/prosper-baba' />
-            <Avatar name='Christian Nwamba' src='https://bit.ly/code-beast' />
-          </AvatarGroup>
-
-          </Flex> */}
         <Stack direction="column" spacing={7} alignItems="center" w="100%" h="100%" justify="center">
           <Image src={Logo} alt="Logo" w="70%" mb={10} />
           <Box alignSelf="flex-start" mx={3} textAlign='start'>
@@ -162,16 +147,13 @@ export const Login = () => {
         </Stack>
 
         </GridItem>
-        <GridItem colSpan={{ base: 'auto', sm: 3 }} h={'100%'} bg={'#4fbbf3'} >
+        <GridItem colSpan={{ base: 'auto', sm: 3 }} h={'100%'} bg={'#4fbbf3'} borderLeftRadius={{ base: 'none', sm: 'xl' }} >
           <Flex w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'} >
           <Box
-          // py={{ base: '0', sm: '8' }}
-          // px={{ base: '4', sm: '100' }}
           p={10}
           bg={'white'}
           boxShadow={{ base: 'none', sm: 'md' }}
           borderRadius={{ base: 'none', sm: 'xl' }}
-          // bg={'#ff1dd1'}
         >
         <Stack spacing="6">
         {/* <Logo /> */}

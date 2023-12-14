@@ -253,7 +253,7 @@ export default function MyPatientFull() {
                   
                   // go to chatwithPatient/doctorTesting with direct href
                   onClick={() => {
-                    Navigate(`/chatwithpatient/${docUsername}`)
+                    Navigate(`/chatwithpatient/${docUsername}/${patientUser}`)
                   }
                   }
                   > Chat</Button>

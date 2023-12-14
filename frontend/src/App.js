@@ -91,7 +91,7 @@ function App() {
         <Route path="/patient-register" element={<PatientRegisterForm />} />
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
         <Route path="/chatwithdoctor/:username" element={<ChatMessages socket={socket} />} />
-        <Route path="/chatwithpatient/:username" element={<ChatMessagesDoctor socket={socket} />} />
+        <Route path="/chatwithpatient/:username/:patientUsername" element={<ChatMessagesDoctor socket={socket} />} />
         {/* /doctor/prescriptions/${patient._id} */}
         <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
         <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />

@@ -196,7 +196,7 @@ export const Doctor = () => {
 
           }}
         > 
-          <Link to={`/chatwithPatient/${username}`}>
+          <Link to={`/chatwithPatient/${username}/all`}>
             <Center>
               <Icon as={ChatIcon} boxSize={6} m={5}/>
             </Center>
