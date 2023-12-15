@@ -19,11 +19,16 @@ import { Box,
     useDisclosure,
     Button,
     Input,
-    Spacer
+    Spacer,
+    Stack,
+
+    
 
   
  } from '@chakra-ui/react';
-import { EditIcon } from '@chakra-ui/icons';
+import { EditIcon,
+    DeleteIcon
+ } from '@chakra-ui/icons';
 import { m } from 'framer-motion';
 
 
@@ -134,20 +139,29 @@ function Prescription(
        <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay/>
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Edit Prescription</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          <Flex justifyContent={'space-between'} mx={5}>
-            <Text>Med Name</Text>
-            <Text>Quantity</Text>
-            <Text>Dose</Text>
-            <Text>Instructions</Text>
-          </Flex>
+          <Stack>
           {
-            data.Medicine.map((med, index) => (
+            inputList.map((med, index) => (
               <>
-              <Flex justifyContent={'space-between'} alignItems={'center'} mx={5} my={2}>
-                <Text mx={2} fontSize={'lg'} fontWeight={'bold'}>{med.MedicineName}</Text>
+              <HStack  mx={5} my={2} spacing={2}
+                alignItems={'flex-end'}
+              >
+                <Box>
+                <Text mb={0} >Med Name</Text>
+                  <Input 
+                    placeholder={med.MedicineName} 
+                    name="MedicineName"
+                    key={index+"m"}
+                    onChange={e => {
+                      handleChange(e, index);
+                    }}
+                  />
+                </Box>
+                <Box>
+                <Text mb={0} as={'sub'}>Quantity</Text>
                 <Input 
                   // value={med.Quantity}
                   key={index+"q"}
@@ -157,6 +171,9 @@ function Prescription(
                     handleChange(e, index);
                   }}
                  />
+                 </Box>
+                 <Box>
+                <Text mb={0} as={'sub'}>Dose</Text>
                 <Input 
                   placeholder={med.Dose} 
                   name="Dose"
@@ -166,6 +183,9 @@ function Prescription(
                     handleChange(e, index);
                   }}
                 />
+                </Box>
+                <Box>
+                <Text mb={0} as={'sub'}>Instructions</Text>
                 <Input 
                   placeholder={med.Instructions} 
                   name="Instructions"
@@ -174,12 +194,28 @@ function Prescription(
                     handleChange(e, index);
                   }}
                 />
-              </Flex>
-               
+                </Box>
+                <IconButton title='remove' colorScheme='red' variant={'outline'}  icon={<DeleteIcon />}
+                  onClick={() => {
+                    // const list = inputList;
+                    // list.splice(index, 1);
+                    // setinputList(list);
+                    const updatedList = inputList.filter((_, idx) => idx !== index);
+                    setinputList(updatedList);
+                    console.log("list", updatedList);
+                  }}
+                />
+              </HStack>
               </>
             ))
-
           }
+
+          <Button m={5} colorScheme={'teal'} variant={'outline'} rounded={10} 
+          onClick={() => {
+            setinputList([...inputList, {MedicineName: '', Quantity: '', Dose: '', Instructions: ''}]);
+          }}
+          > Add Medicine </Button>
+          </Stack>
 
           </ModalBody>
           <ModalFooter>
@@ -187,6 +223,7 @@ function Prescription(
               onClick={() => {
                 console.log("inputList", inputList);
                 callback(inputList, keyId);
+                setinputList([]);
                 onClose();
               }}
             >
