@@ -31,13 +31,24 @@ function Prescription(
     {data, keyId, callback, download}
 ) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [inputList, setinputList]= useState([data.Medicine]);
+  const [inputList, setinputList]= useState(data.Medicine);
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = inputList;
+    console.log("list", list);
+    console.log("index", index);
+    console.log("name", name);
+    console.log("value", value);
+
+    list[index][name] = value;
+    setinputList(list);
+  };
 
   return (
     <>
     {console.log("initial", inputList)}
         <Box
-            w={'40%'}
             rounded={20}
             minH={'200px'}
             bg={'#eeeeee'}
@@ -63,7 +74,7 @@ function Prescription(
               //map through prescriptions
               data.Medicine.map((med, index) => (
                 <>
-                <HStack m={2}>
+                {/* <HStack m={2}> */}
                 <Text
                     fontSize={'xl'}
                     fontWeight={'bold'}
@@ -71,18 +82,19 @@ function Prescription(
                 >
                   {med.MedicineName}
                 </Text>
+                <HStack>
                 <Text
                     fontSize={'md'}
                     textAlign={'left'}
                 >
-                  Quantity: {med.Quantity}
+                  Quantity: {med.Quantity}, 
                 </Text>
                 <Text
                     ml={1}
                     fontSize={'md'}
                     textAlign={'left'}
                 >
-                  , {med.Dose} {' '}  {med.Instructions}
+                  Dose: {med.Dose} , Instructions:  {med.Instructions}
                 </Text>
 
                 </HStack>
@@ -136,25 +148,30 @@ function Prescription(
               <>
               <Flex justifyContent={'space-between'} alignItems={'center'} mx={5} my={2}>
                 <Text mx={2} fontSize={'lg'} fontWeight={'bold'}>{med.MedicineName}</Text>
-                <Input value={med.Quantity}
+                <Input 
+                  // value={med.Quantity}
+                  key={index+"q"}
+                  name="Quantity"
+                  placeholder= {med.Quantity}
                   onChange={e => {
-                    const list = [...inputList];
-                    med.Quantity = e.target.value;
-                    setinputList(list);
+                    handleChange(e, index);
                   }}
                  />
-                <Input value={med.Dose} 
+                <Input 
+                  placeholder={med.Dose} 
+                  name="Dose"
+                  key={index+"d"}
+
                   onChange={e => {
-                    const list = [...inputList];
-                    med.Dose = e.target.value;
-                    setinputList(list);
+                    handleChange(e, index);
                   }}
                 />
-                <Input value={med.Instructions} 
+                <Input 
+                  placeholder={med.Instructions} 
+                  name="Instructions"
+                  key={index+"i"}
                   onChange={e => {
-                    const list = [...inputList];
-                    med.Instructions = e.target.value;
-                    setinputList(list);
+                    handleChange(e, index);
                   }}
                 />
               </Flex>

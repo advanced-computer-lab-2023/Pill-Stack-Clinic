@@ -821,7 +821,9 @@ const deleteContract = async (req, res) => {
         const { medName, quantity, instructions, dose } = prescription;
         const med = await medModel.findOne({ Name: medName });
         if (!med) {
-          res.send('med not found')
+          // res.send('med not found')
+          return {  MedicineName:medName, Quantity:quantity, Instructions:instructions, Dose: dose };
+
         }
         const medId = med._id;
         return { MedicineID: medId, MedicineName:medName, Quantity:quantity, Instructions:instructions, Dose: dose };
@@ -844,6 +846,7 @@ const deleteContract = async (req, res) => {
 
   const editPrescription = async (req, res) => {
     try {
+      console.log("la");
       const doctorId = req.user.id; 
       const doctor = await doctorModel.findById(doctorId);
       const docUsername = doctor.Username;
@@ -854,47 +857,73 @@ const deleteContract = async (req, res) => {
       const presId = req.params.presId;
       console.log("presId", presId , "patientUsername", patientUsername);
 
-
       const { prescription } = req.body;
-      console.log("prescription", ...prescription);
-      console.log("prescription", prescription);
+      // console.log("...prescription", ...prescription);
+      console.log("prescription this", prescription);
       const presDate  = patient.Prescriptions.id(presId).PrecriptionDate;
-      patient.Prescriptions.id(presId).remove();
+      // patient.Prescriptions.id(presId).remove();
 
       console.log("patient.Prescriptions", patient.Prescriptions);
-      console.log("nanana" , prescription);
-      const meds = await Promise.all(prescription[0].map(async (pre) => {
+      // console.log("nanana" , flatPres);
+      // const meds = await Promise.all(...prescription.map(async (pre) => { //line 865
+      //   const { MedicineName, Quantity, Instructions, Dose } = pre;
+      //   console.log("medName", MedicineName);
+      //   const med = await medModel.findOne({ Name: MedicineName });
+      //   const medId = med._id;
+      //   console.log("medId", medId);
+      //   console.log("medName", MedicineName);
+      //   console.log("quantity", Quantity);
+      //   console.log("instructions", Instructions);
+      //   console.log("dose", Dose);
+      //   if (!med) {
+      //     console.log("med not found");
+      //     return {MedicineName:MedicineName, Quantity:Quantity, Instructions:Instructions, Dose: Dose };
+      //   }
+      //   else{
+      //     return { MedicineID: medId, MedicineName:MedicineName, Quantity:Quantity, Instructions:Instructions, Dose: Dose };
+      //   }
+
+        
+      // }));
+
+      const meds = await Promise.all(prescription.map(async (pre) => {
         const { MedicineName, Quantity, Instructions, Dose } = pre;
         console.log("medName", MedicineName);
         const med = await medModel.findOne({ Name: MedicineName });
-        if (!med) {
-          console.log("med not found");
-          throw new Error('med not found');
-        }
-        const medId = med._id;
+        const medId = med ? med._id : null; // Handle if med is not found
+      
         console.log("medId", medId);
         console.log("medName", MedicineName);
         console.log("quantity", Quantity);
         console.log("instructions", Instructions);
         console.log("dose", Dose);
-        
-        return { MedicineID: medId, MedicineName:MedicineName, Quantity:Quantity, Instructions:Instructions, Dose: Dose };
+      
+        if (!med) {
+          console.log("med not found");
+          return { MedicineName: MedicineName, Quantity: Quantity, Instructions: Instructions, Dose: Dose };
+        } else {
+          return { MedicineID: medId, MedicineName: MedicineName, Quantity: Quantity, Instructions: Instructions, Dose: Dose };
+        }
       }));
 
-      console.log("patient.Prescriptions", patient.Prescriptions[0]);
-      patient.Prescriptions.push({
-        DocUsername: docUsername, 
-        PrecriptionDate: presDate,
-        Medicine: meds, 
-        Status: 'Unfilled' 
-      });
+      console.log("meds new ", meds);
 
+      //override existing medicine list with meds
+      patient.Prescriptions.id(presId).Medicine = meds;
+      patient.Prescriptions.id(presId).PrecriptionDate = presDate;
+      patient.Prescriptions.id(presId).DocUsername = docUsername;
+      patient.Prescriptions.id(presId).Status = 'Unfilled';
+      console.log("patient.Prescriptions", patient.Prescriptions);
       await patient.save();
+
       res.send({ message: 'Prescription edited successfully' });
-    } catch (error) {
-      res.status(400).send( 'problema' );
+    }catch (error) {
+      console.error(error); // Log the error for debugging
+      res.status(400).send('There was a problem editing the prescription');
     }
     }
+
+  
 
 
 

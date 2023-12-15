@@ -24,7 +24,8 @@ import { Box,
     NumberDecrementStepper,
     Center,
     Divider,
-    Grid
+    Grid,
+    SimpleGrid
 
 
  } from '@chakra-ui/react';
@@ -98,10 +99,10 @@ const ManagePrescriptions = () => {
             onClose();
         }
 
-        const handleEdit = async (prescription, id) => {
 
+        const handleEdit = async (prescription, id) => {
             const { data } = await axios.put(`http://localhost:8000/doctor/editPrescription/${patientUser}/${id}`, {
-                prescription,
+              prescription,
             }, {
                 withCredentials: true,
             });
@@ -160,7 +161,7 @@ const ManagePrescriptions = () => {
             </Button>
             </Flex>
             <Divider my={5}/>
-            <Flex my={7} justifyContent={'space-evenly'}>
+            <SimpleGrid  minChildWidth="30%" columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
             {
             //if prescriptions > 0 
                 patient.Prescriptions &&
@@ -177,7 +178,7 @@ const ManagePrescriptions = () => {
                 <Text>No current prescriptions found</Text>
               </Box>
             }
-            </Flex>
+            </SimpleGrid>
         </Box>
 
     <   Modal onClose={onClose} size={'2xl'} isOpen={isOpen}>
