@@ -192,7 +192,6 @@ export const Login = () => {
               </HStack>
               <Stack direction="row" spacing="4" align="center" justify="center">
               <Link to="/doctor-register" style={{color:'#4fbbf3', textDecoration:'underline'}}> Register as a doctor</Link>
-              <Link href="#" style={{color:'#4fbbf3', textDecoration:'underline'}}> Register as a pharmacist</Link>
               </Stack>
 
               {/* <OAuthButtonGroup /> */}
