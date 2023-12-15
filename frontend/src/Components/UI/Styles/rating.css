@@ -1,0 +1,304 @@
+.rating-guage{
+    position: relative;
+    margin: auto;
+    display: flex;
+    /* text-align: center; */
+    align-items: center;
+    justify-content: center;
+}
+p.Unlikely {
+    position: absolute;
+    bottom: -40px;
+    /* left: 0; */
+    /* right: 0; */
+    margin-left: -200px;
+    color:#4F4F4F;
+}
+p.likely {
+    position: absolute;
+    bottom: -40px;
+    /* left: 0; */
+    /* right: 0; */
+    margin-right: -200px;
+    color:#4F4F4F;
+}
+.rating-circle {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    overflow: hidden;
+    transform: translate(0%, 125%);
+  }
+
+  .selected-rating{
+    position: absolute;
+    display: flex;
+    z-index: 1;
+    font-size: 50px;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #999999;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .rating-scale {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rating-tab {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    border:1px solid #fff;
+    transition: all 0.2s ease-in-out;
+  }
+
+
+  .rating-tab:hover,.rating-tab.active {
+    filter: drop-shadow(4px 2px 7px black);
+    border: 2px solid #fff;
+    transition: all 0.2s ease-in-out;
+    font-weight: 700;
+  }
+
+  .rating-tab span{
+    position: absolute;
+    top: 50%;
+    left: 55%;
+  }
+
+  .one {
+    background-color: #3EAEE0;
+    color: #fff;
+    }
+    
+  .two {
+    background-color: #3EAEE0;
+    color: #fff;
+    }
+    
+  .three {
+    background-color: #3EAEE0;
+    color: #fff;
+  }
+
+  .four {
+    background-color: #3EAEE0;
+    color: #fff;
+  }
+  .five {
+    background-color: #3EAEE0;
+    color: #fff;
+  }
+
+.transparent {
+ background-color: #fff;
+ color: #fff;
+}
+
+.rating-tab.transparent {
+   pointer-events: none;
+ }
+
+ /* Add this rule to exclude the transparent tabs from hover effects */
+ .rating-tab:not(.transparent):hover, .rating-tab.active:not(.transparent) {
+   filter: drop-shadow(4px 2px 7px black);
+   border: 2px solid #fff;
+   transition: all 0.2s ease-in-out;
+   font-weight: 700;
+ }
+
+
+  /*Child 1*/
+  .rating-tab:nth-child(1) {
+    transform: rotate(130deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(1):hover,.rating-tab.active:nth-child(1) {
+    transform: rotate(130deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(1):hover span {
+    transform: translate(-50%,-100%) rotate(250deg) scale(1.1);
+  }
+  .rating-tab:nth-child(1) span{
+    transform: translate(-50%,-100%) rotate(250deg);
+  }
+
+  /*Child 2*/
+  .rating-tab:nth-child(2) {
+    transform: rotate(155deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(2):hover,.rating-tab.active:nth-child(2) {
+    transform: rotate(155deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(2):hover span {
+    transform: translate(-50%,-100%) rotate(230deg) scale(1.1);
+  }
+  .rating-tab:nth-child(2) span{
+    transform: translate(-50%,-100%) rotate(230deg);
+  }
+
+
+  /*Child 3*/
+  .rating-tab:nth-child(3) {
+    transform: rotate(183deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(3):hover,.rating-tab.active:nth-child(3) {
+    transform: rotate(183deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(3):hover span {
+    transform: translate(-50%,-100%) rotate(205deg) scale(1.1);
+  }
+  .rating-tab:nth-child(3) span{
+    transform: translate(-50%,-100%) rotate(205deg);
+  }
+
+
+  /*Child 4*/
+  .rating-tab:nth-child(4) {
+    transform: rotate(213deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(4):hover,.rating-tab.active:nth-child(4) {
+    transform: rotate(213deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(4):hover span {
+    transform: translate(-50%,-100%) rotate(170deg) scale(1.1);
+  }
+  .rating-tab:nth-child(4) span{
+    transform: translate(-50%,-100%) rotate(170deg);
+  }
+
+  /*Child 5*/
+  .rating-tab:nth-child(5) {
+    transform: rotate(240deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(5):hover,.rating-tab.active:nth-child(5) {
+    transform: rotate(240deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(5):hover span {
+    transform: translate(-50%,-100%) rotate(140deg) scale(1.1);
+  }
+  .rating-tab:nth-child(5) span{
+    transform: translate(-50%,-100%) rotate(140deg);
+  }
+
+  /*Child 6*/
+  .rating-tab:nth-child(6) {
+    transform: rotate(270deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(6):hover,.rating-tab.active:nth-child(6) {
+    transform: rotate(270deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(6):hover span {
+    transform: translate(-50%,-100%) rotate(110deg) scale(1.1);
+  }
+  .rating-tab:nth-child(6) span{
+    transform: translate(-50%,-100%) rotate(110deg);
+  }
+
+  /*Child 7*/
+  .rating-tab:nth-child(7) {
+    transform: rotate(300deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(7):hover,.rating-tab.active:nth-child(7) {
+    transform: rotate(300deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(7):hover span {
+    transform: translate(-50%,-100%) rotate(80deg) scale(1.1);
+  }
+  .rating-tab:nth-child(7) span{
+    transform: translate(-50%,-100%) rotate(80deg);
+  }
+
+  /*Child 8*/
+  .rating-tab:nth-child(8) {
+    transform: rotate(330deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(8):hover,.rating-tab.active:nth-child(8) {
+    transform: rotate(330deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(8):hover span {
+    transform: translate(-50%,-100%) rotate(50deg) scale(1.1);
+  }
+  .rating-tab:nth-child(8) span{
+    transform: translate(-50%,-100%) rotate(50deg);
+  }
+  /*Child 9*/
+  .rating-tab:nth-child(9) {
+    transform: rotate(0deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(9):hover,.rating-tab.active:nth-child(9) {
+    transform: rotate(0deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(9):hover span {
+    transform: translate(-50%,-100%) rotate(20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(9) span{
+    transform: translate(-50%,-100%) rotate(20deg);
+  }
+
+  /*Child 10*/
+  .rating-tab:nth-child(10) {
+    transform: rotate(30deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(10):hover,.rating-tab.active:nth-child(10) {
+    transform: rotate(30deg) translate(125px) rotate(-20deg) scale(1.1);
+  }
+  .rating-tab:nth-child(10):hover span {
+    transform: translate(-50%,-100%) rotate(-10deg) scale(1.1);
+  }
+  .rating-tab:nth-child(10) span{
+    transform: translate(-50%,-100%) rotate(-10deg);
+  }
+
+  /*Child 11*/
+  .rating-tab:nth-child(11) {
+    transform: rotate(60deg) translate(125px) rotate(-20deg);
+  }
+  .rating-tab:nth-child(11):hover,.rating-tab.active:nth-child(11) {
+    transform: rotate(60deg) translate(125px) rotate(-20deg) scale(1.1);
+    filter: drop-shadow(30px 2px 7px black);
+  }
+  .rating-tab:nth-child(11):hover span {
+    transform: translate(-50%,-100%) rotate(-40deg) scale(1.1);
+  }
+  .rating-tab:nth-child(11) span{
+    transform: translate(-50%,-100%) rotate(-40deg);
+  }
+
+  /*Child 12*/
+  .rating-tab:nth-child(12) {
+    transform: rotate(82deg) translate(125px) rotate(-10deg);
+    border: 0;
+    width: 40%;
+    height: 15%;
+    cursor: default;
+    pointer-events: none;
+  }
+  .rating-tab:nth-child(12):hover{
+    filter:none;
+    border: 0px solid #fff;
+  }

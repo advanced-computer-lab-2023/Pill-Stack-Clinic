@@ -5,6 +5,7 @@ import MyForm from './Components/UI/MyForm.js';
 import { Box , Flex,  Button, ButtonGroup } from "@chakra-ui/react"
 import { Route, Routes } from "react-router-dom";
 import { Login, Home} from "./Components/Pages";
+import RR from "./Components/Pages/RR.jsx";
 import { Doctor} from './Components/Pages/Doctor.jsx';
 import { UnsignedDoctor} from './Components/Pages/DoctorUnsigned.jsx';
 import  AdminHome from "./Components/Pages/AdminHome";
@@ -62,6 +63,7 @@ function App() {
     <div >
       <Routes>
         <Route path="/home" element={<Home />} />
+        <Route path="/rating" element={<RR />} />
         <Route path="/doctor-home" element={<Doctor />} />
         <Route path="/pharma-home" element={<PharmaHome />} />
         <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />

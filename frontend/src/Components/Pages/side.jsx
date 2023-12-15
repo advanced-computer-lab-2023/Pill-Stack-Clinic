@@ -5,7 +5,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import { extendTheme } from '@chakra-ui/react'; // Add this import
 import pillstackLogo from '../UI/Images/pillstackLogo.png';
 import pillstackMini from '../UI/Images/pillstackMini.png';  
-
+import { Link } from "react-router-dom";
 import {
   Accordion,
   AccordionItem,
@@ -15,9 +15,22 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react';
 
-function Sidebar() {
+function Sidebar(props) {
+  const {
+    openSecondModal,
+    openAddFamilyModal,
+    openViewFamilyModal,
+    openUploadDocModal,
+    navigate,
+    username,
+    name,
+    setTab,
+    setInputs,
+    openAddDeliveryModal,
+  } = props;
+
   const sidebarStyle = {
-    width: '17%',
+    width: '15%',
     paddingTop: '7px',
     borderTopRightRadius: '30px', 
     borderBottomRightRadius: '30px', 
@@ -31,10 +44,10 @@ function Sidebar() {
 
   return (
     <div className="sidebar" style={sidebarStyle}>
-      <Box textAlign="center" p={4} mb={4}>
+      <Box textAlign="center" p={4} mb={8}>
         <img src={pillstackLogo} alt="Logo" width="300" height="15" />
       </Box>
-
+      <br />
       <Accordion defaultIndex={[0]} allowToggle={true} allowMultiple={false} theme={customAccordionTheme}>
         <AccordionItem>
           <h2>
@@ -47,16 +60,23 @@ function Sidebar() {
             </AccordionButton>
           </h2>
           <AccordionPanel p={0}>
+          <Link to="prescriptions" style={{ textDecoration: 'none', color: 'inherit' }}> 
             <AccordionButton>
               <Box as="span" flex='1' textAlign='left' ml={10}>
+              
                 My Prescriptions 
+                
               </Box>
             </AccordionButton>
+            </Link>
+            <Link to={`/my-health-records/${username}/${name}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <AccordionButton>
+              
               <Box as="span" flex='1' textAlign='left' ml={10}>
                 My Health Records 
               </Box>
             </AccordionButton>
+            </Link>
           </AccordionPanel>
         </AccordionItem>
 
@@ -70,14 +90,17 @@ function Sidebar() {
               <AccordionIcon />
             </AccordionButton>
           </h2>
+
           <AccordionPanel p={0}>
+          <Link to={`/home/viewPackages/${username}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <AccordionButton>
               <Box as="span" flex='1' textAlign='left' ml={10}>
                 Subscribe
               </Box>
             </AccordionButton>
+            </Link>
             <AccordionButton>
-              <Box as="span" flex='1' textAlign='left' ml={10}>
+              <Box as="span" flex='1' textAlign='left' ml={10} onClick={openSecondModal}>
                 My Packages
               </Box> 
             </AccordionButton>
@@ -96,21 +119,29 @@ function Sidebar() {
     </AccordionButton>
   </h2>
   <AccordionPanel p={0}>
+  <Link to="viewDoctors">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Book
       </Box>
     </AccordionButton>
+    </Link>
+    <Link to="apptsP">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         My Appointments
       </Box>
     </AccordionButton>
+    </Link>
+
+    
+    <Link to="familyAppointments">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Family Appointments
       </Box>
     </AccordionButton>
+    </Link>
   </AccordionPanel>
 </AccordionItem>
 
@@ -125,12 +156,12 @@ function Sidebar() {
     </AccordionButton>
   </h2>
   <AccordionPanel p={0}>
-    <AccordionButton>
+    <AccordionButton onClick={openAddFamilyModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Manage 
       </Box>
     </AccordionButton>
-    <AccordionButton>
+    <AccordionButton onClick={openViewFamilyModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         View Members
       </Box>
@@ -149,12 +180,12 @@ function Sidebar() {
     </AccordionButton>
   </h2>
   <AccordionPanel p={0}>
-    <AccordionButton>
+    <AccordionButton onClick={openUploadDocModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Upload 
       </Box>
     </AccordionButton>
-    <AccordionButton>
+    <AccordionButton onClick={openUploadDocModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         View 
       </Box>
@@ -171,18 +202,23 @@ function Sidebar() {
       <AccordionIcon />
     </AccordionButton>
   </h2>
+
   <AccordionPanel p={0}>
+
+  
+  <Link to="viewDoctors">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         View Available Doctors 
       </Box>
     </AccordionButton>
+    </Link>
   </AccordionPanel>
 </AccordionItem>
 
 <AccordionItem>
   <h2>
-    <AccordionButton>
+    <AccordionButton >
       <HamburgerIcon w={7} h={7} mr={3}></HamburgerIcon>
       <Box as="span" flex='1' textAlign='left'>
         Address
@@ -191,7 +227,7 @@ function Sidebar() {
     </AccordionButton>
   </h2>
   <AccordionPanel p={0}>
-    <AccordionButton>
+    <AccordionButton onClick={openAddDeliveryModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Add Delivery Address
       </Box>

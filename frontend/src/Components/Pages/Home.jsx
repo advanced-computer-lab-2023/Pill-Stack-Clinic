@@ -8,8 +8,9 @@ import { AddIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import { saveAs } from 'file-saver';
 import { Link } from "react-router-dom";
-import { ChatIcon, Icon } from "@chakra-ui/icons";
+import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon } from "@chakra-ui/icons";
 import '../UI/Styles/home.css';
+import RR from './RR'
 
 import { Box, Flex, Modal,
   ModalOverlay,
@@ -69,7 +70,11 @@ export const Home = () => {
   const [floor, setFloor] = useState("");
   const [apartment, setApartment] = useState("");
   const [addressName, setAddressName] = useState("");
+  const [selectedTab, setSelectedTab] = useState("one");
 
+  const handleRatingTabClick = (tabNumber) => {
+    setSelectedTab(tabNumber);
+  };
 
 
    const openAddFamilyModal = () => {
@@ -461,37 +466,183 @@ export const Home = () => {
         mb={5}
       />
     </div>
-    <Sidebar/>
- 
+    <Sidebar
+        openSecondModal={openSecondModal}
+        openAddFamilyModal={openAddFamilyModal}
+        openViewFamilyModal={openViewFamilyModal}
+        openUploadDocModal={openUploadDocModal}
+        navigate={navigate}
+        username={username}
+        name={patientData.Name}
+        // setTab={/* Your setTab function */}
+        // setInputs={/* Your setInputs function */}
+        openAddDeliveryModal={openAddDeliveryModal}
+      />
+      
       <div className="home_page">
       <div className="home_page_content" >
+        
         <h4>
-          Welcome 3ayan  <span>{username}</span>
+          {/* Welcome 3ayan  <span>{username}</span> */}
         </h4> 
         <Flex>
-        <Box style={{ margin: "0 10px", flex: 1 }}>
+        {/* <Box style={{ margin: "0 10px", flex: 1 }}>
   
             <PatientInfoCard
             title={`Masa2 el anwar ya ${username}`}
             username={patientData.Username}
             name={patientData.Name}
             email={patientData.Email}
-            DateOfBirth={patientData.DateOfBirth}
+            DateOfBirth={patientData.DateOfBirth} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             Gender={patientData.Gender}
             MobileNumber={patientData.MobileNumber}
-            EmergencyContact_Name={patientData.EmergencyContact_Name}
+            EmergencyContact_Name={patientData.EmergencyContact_Name} <<<<<<<<<<<<<<<<<<<<<<<<<<<
             EmergencyContact_MobileNumber = {patientData.EmergencyContact_MobileNumber}
             WalletBalance = {patientData.WalletBalance}
-            DeliveryAddress={patientData. DeliveryAddress}
+            DeliveryAddress={patientData. DeliveryAddress}   <<<<<<<<<<<<<<<<<<<<<<<<<<<
 
            
             />
-</Box>
+</Box> */}
+        <div className="BigContainer">
+          <div className="Container1">
+            <Box className="boxW" >
+               <div className="boxT">Wallet</div>
+               <div className="square">$</div>
+                <div className="balance">{`$ ${patientData.WalletBalance}`}</div>
+                {/* <div className="square2"></div> */}
+            </Box>
+            <Box className="box1" >
+              <div className="boxT">Information</div>
+            <div className="line">
+              <EmailIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Email:  ${patientData.Email}`}</div>
+            </div>
+            <div className="line">
+              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Mobile:  ${patientData.MobileNumber}`}</div>
+            </div>
+            <div className="line">
+              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Emergency Mobile:  ${patientData.EmergencyContact_MobileNumber}`}</div>
+            </div>
+            </Box>
 
+            <Box className="box1" >
+            <div className="boxT">Recent</div>
+            <div className="line" style={{ marginTop: '0px' }}>
+          <BellIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+          <div className="info1" style={{ margin: '0px 0px 0px 33px', padding: 0, display: "inline-block", transform: 'translateY(-45px)' }}>
+            {patientData.Notifications && patientData.Notifications.length > 0 ? `${patientData.Notifications[0]}` : "None"}
+          </div>
+        </div>
+
+        <div className="line" style={{ marginTop: '-50px'}}>
+          <BellIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+          <div className="info1" style={{ margin: '0px 0px 0px 33px', padding: 0, display: "inline-block", transform: 'translateY(-45px)' }}>
+            {patientData.Notifications && patientData.Notifications.length > 1 ? `${patientData.Notifications[1]}` : "None"}
+          </div>
+        </div>
+
+
+    
+            </Box>
+          </div>
+          <div className="Container2">
+            <Box className="box3" ></Box>
+            <Box className="pp" ></Box>
+            <Box className="Details" style={{ overflow: 'hidden' }}>
+            <Box style={{ textAlign: 'center' }}>{patientData.Name}</Box>
+              <Box className="GenderB">
+              {patientData.Gender && (patientData.Gender.toLowerCase() === 'male' ? (
+                <Box className="Male">
+                  Male
+                </Box>
+              ) : patientData.Gender.toLowerCase() === 'female' ? (
+                <Box className="Female">
+                  Female
+                </Box>
+              ) : (
+                <Box className="Male"> 
+                  Male
+                </Box>
+              ))}
+            </Box>
+            <Box className='infoI' style={{ transform: 'translate(-30%, 395%)' }}>
+              Username
+            </Box>
+            <Box className="RoundBox" style={{ marginTop: '5px' }}>
+            {patientData.Username}
+            </Box>
+            {selectedTab === 'one' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-35%, 750%)' , textAlign: 'center' }}>
+            Email
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {patientData.Email}
+          </Box>
+        </div>
+      )}
+            {selectedTab === 'two' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-28%, 750%)' }}>
+            Date Of Birth
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {patientData.DateOfBirth}
+          </Box>
+        </div>
+      )}
+
+      {selectedTab === 'three' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-16%, 750%)' }}>
+            Emergency Contact Name
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {patientData.EmergencyContact_Name}
+          </Box>
+        </div>
+      )}
+
+      {selectedTab === 'four' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-25%, 750%)' }}>
+            Delivery Address
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {patientData.DeliveryAddress}
+          </Box>
+        </div>
+      )}
+      {selectedTab === 'five' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-34%, 750%)' }}>
+            Mobile
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {patientData.MobileNumber}
+          </Box>
+        </div>
+      )}
+      {/* <Box style={{ textAlign: 'center',  transform: 'translate(0%, 900%)'}}>More</Box> */}
+<RR onRatingTabClick={handleRatingTabClick} setSelectedTab={setSelectedTab} style={{ marginTop: '-10px',transform: 'translate(-35%, 345%)' }}></RR>
+
+            </Box>
+            
+          </div>
+          <div className="Container3">
+            <Box className="box2" onClick={openSecondModal}>Packages</Box>
+            <Link to="apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+            <Box className="box22" onClick={openViewFamilyModal}>Family</Box>
+
+          </div>
+        </div>
           <Box style={{ margin: "0 10px", flex: 1 }}>
-            <PatientShortcuts class="patientsshortcut" openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
+            {/* <PatientShortcuts class="patientsshortcut" openAddFamilyModal={openAddFamilyModal} openSecondModal={openSecondModal} setTab={setTab}
             setInput={setInputs} openViewFamilyModal= {openViewFamilyModal} openUploadDocModal= {openUploadDocModal} openAddDeliveryModal={openAddDeliveryModal}
-            navigate={navigate} username={username} name={patientData.Name} style={{ height: "100%" }} />
+            navigate={navigate} username={username} name={patientData.Name} style={{ height: "100%" }} /> */}
           </Box>
         </Flex>
 
@@ -502,6 +653,7 @@ export const Home = () => {
   initialFocusRef={initialRef}
   finalFocusRef={finalRef}
   size="7xl"
+  
 >
   <ModalOverlay />
   <ModalContent h="800px">

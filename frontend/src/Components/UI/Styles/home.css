@@ -1,13 +1,73 @@
-  .home_page {
-    background: linear-gradient(45deg, #1E9AFE, #60DFCD);
+
+
+body {
     padding-right: 0;
+    height: 100%;
+    /* zoom: 70%; */
+    overflow-x: hidden;
+    
+  }
+  @font-face {
+    font-family: 'poppinsregular';
+    src: url('../fonts/Poppins otf/Poppins-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Franklin Gothic Book Regular';
+    src: url('../fonts/Franklin/Franklin Gothic Book Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'poppinsmedium';
+    src: url('../fonts/Poppins otf/Poppins-Medium.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Futura Maxi CG Bold';
+    src: url('../fonts/Futura/Futura Maxi CG Bold Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+  .home_page {
+    background: #F5F7F9; 
+    height: 190vh;
   }
   .home_page_content {
+    /* background: red;  */
+    text-transform: none;
     margin-top: 90px;
-    margin-left: 17%;
+    margin-left: 20%;
     padding-right: 30px;
     padding-left: 30px;
+    height: 100%;
     width: 83%;
+    zoom: 65%;
+  }
+
+ 
+
+  .Container1 {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+  .Container2 {
+    position: relative;
+  }
+  .Container3 {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+  .BigContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
   }
 
   .patientsshortcut{
@@ -17,6 +77,279 @@
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 10px;
-    background-color: yellow;
+    background-color: yellow !important;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
   }
+  .box1 {
+    background-color: white !important;
+    position: relative;
+    width: 650px;
+    height: 285px;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease-in-out;
+  }
+
+  .boxW {
+    background-image: url('../Images/WalletBg.png');
+    background-position: center !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    width: 650px;
+    height: 285px;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  .box1:hover, .boxW:hover, .box2:hover, .box21:hover,.box22:hover {
+    transform: scale(1.005); /* Adjust the values for the desired diagonal movement */
+  }
+
+  .box2:hover, .box21:hover,.box22:hover {
+    cursor: pointer;
+  }
+  .box2{
+    background-image: url('../Images/Packages.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 65%;
+    font-size: 25px;
+    top: 40%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+
+  .box21 {
+    background-image: url('../Images/Appointments.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 63%;
+    font-size: 25px;
+    top: 38%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+
+  .box22 {
+    background-image: url('../Images/Family.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 63%;
+    font-size: 25px;
+    top: 38%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+ 
+  .box3 {
+    background-color: white !important;
+    width: 550px;
+    height: 850px;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+  
+  .pp {
+    position: absolute;
+    top: -5%;
+    left: 20%;
+    background-image: url('../Images/hardy.png');
+    background-position: center 15% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 325px;
+    height: 300px;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .pp:hover{
+    transform: translateY(-5px);
+  }
+
+  .boxT{
+    
+    color: #2CAED8;
+    font-family: 'Futura Maxi CG Bold';
+    font-size: 35px;
+    margin: 25px 0px -5px 33px;
+  }
+
+  .balance{
+    color: black;
+    font-family: 'poppinsregular';
+    font-size: 50px;
+    margin: -33px 0px 0px 33px;
+    position: relative;
+  }
+  
+  .square {
+    width: 65px;
+    height: 65px;
+    font-family: 'Franklin Gothic Book Regular', 'Arial Narrow', Arial, sans-serif;
+    font-size: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    transform: translateX(550px) translateY(-50px);
+    background-color: black;
+    border-radius: 17px;
+    transition: transform 0.8s;
+
+  }
+  
+  .square:hover {
+    background-color: #232323;
+    color: white;
+    cursor: pointer;
+    transform: translateX(550px) translateY(-50px) scaleX(-1); /* Horizontal flip */
+  }
+
+  .square2 {
+    width: 46px;
+    height: 50px;
+    font-family: 'Franklin Gothic Book Regular', 'Arial Narrow', Arial, sans-serif;
+    font-size: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    transform: translateX(50px) translateY(20px);
+    background-color: black;
+    border-radius: 17px;
+  }
+  
+  .square2:hover {
+    background-color: darkgray;
+    color: white;
+    cursor: pointer;
+  }
+
+  .info1{
+    color: black;
+    font-family: 'poppinsregular';
+    font-size: 20px;
+    margin-left: 0;
+    /* margin: 25px 0px 0px 0px; */
+    /* position: relative; */
+  }
+  .line{
+    width: 85%;
+    gap: 60px;
+    margin-left: 38px;
+    margin-bottom: -15px;
+  }
+ 
+  .GenderB {
+    background-color: #E8E8E8 !important;
+    position: absolute;
+    top: 10%;
+    left: 7%;
+    width: 470px;
+    height: 70px;
+    border-radius: 40px;
+    display: flex; 
+  }
+
+  .Male {
+    background: linear-gradient(45deg, #1E9AFE, #60DFCD);
+    position: relative;
+    color: white;
+    top: 0%;
+    left: 0%;
+    width: 255px;
+    height: 70px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-family: 'poppinsregular';
+
+  }
+
+  .Female {
+    background: linear-gradient(45deg, #1E9AFE, #60DFCD);
+    margin-left: auto;
+    color: white; 
+    top: 0%;
+    left: 100%;
+    width: 255px;
+    height: 70px;
+    border-radius: 40px;
+    display: flex;
+    align-self: right;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-family: 'poppinsregular';
+  }
+
+  .RoundBox {
+    background-color: #E8E8E8 !important;
+    position: absolute;
+    top: 35%;
+    left: 7%;
+    width: 470px;
+    height: 70px;
+    border-radius: 40px;
+    margin-top: 110px;
+    display: flex;
+    align-self: right;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-family: 'poppinsregular';
+    color: black;
+  }
+
+  .Details {
+    /* background-color: yellow; */
+    width: 550px;
+    height: 570px !important;
+    height: auto; /* Adjusted to auto */
+    top: 58%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    gap: 50px;
+    font-size: 25px;
+    font-family: 'poppinsmedium';
+    color: black;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.infoI{
+  font-family: 'poppinsregular';
+  color: black;
+  font-size: 20px;
+}
