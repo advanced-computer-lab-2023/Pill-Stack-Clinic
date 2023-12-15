@@ -216,11 +216,10 @@ export const Doctor = () => {
           </Box>
 
           <Box style={{ margin: "0 10px", flex: 1 }}>
-            <DoctorShortcuts style={{ height: "100%" }} username= {username}  />
+            
           </Box>
         </Flex> */}
         
-
 <div className="BigContainer">
           <div className="Container1">
             <Box className="boxW" >
@@ -410,7 +409,7 @@ export const Doctor = () => {
           <Link to="/doctor-home/myAvailability" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
        
           
-            <Link to="apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+            <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
             <Link to={`myPatients/${doctorData.Username}`}>
             <Box className="box22" >My Patients</Box>
             </Link>
