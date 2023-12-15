@@ -85,6 +85,36 @@ function ChatMessages({ socket}) {
     });
   }, [socket]);
 
+  useEffect(() => {
+    // Function to fetch messages
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/patient/getMessages/${username}/${selectedDoctor}`);
+        setMessageList(response.data.messages);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    // Fetch messages initially
+    if (chatOpen && selectedDoctor) {
+      fetchMessages();
+    }
+
+    // Setup interval to fetch messages every 1 second
+    const intervalId = setInterval(() => {
+      if (chatOpen && selectedDoctor) {
+        fetchMessages();
+      }
+    }, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+
+  }, [chatOpen, selectedDoctor, username]);
+
+  
+
   return (
     <div className="chat-container">
       <div className="doctor-list-container">

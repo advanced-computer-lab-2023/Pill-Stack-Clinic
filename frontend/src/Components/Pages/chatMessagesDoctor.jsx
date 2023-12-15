@@ -139,11 +139,8 @@ function ChatMessages({ socket }) {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="pharmacist-list-container">
         <h2>Pharmacists</h2>
-        <ul className="pharmacist-list">
+        <ul className="doctor-list">
           {pharmacistList.map((pharmacistUsername) => (
             <li
               key={pharmacistUsername}
@@ -156,6 +153,7 @@ function ChatMessages({ socket }) {
           ))}
         </ul>
       </div>
+
 
       {activeChatType === 'patient' &&chatOpen && (
         <div className="chat-window">
