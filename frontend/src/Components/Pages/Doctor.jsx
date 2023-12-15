@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import Sidebar from './side';
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input, Center } from "@chakra-ui/react";
 import DoctorShortcuts from "../UI/DoctorShortcuts";
 import DoctorInfoCard from "../UI/DoctorInfoCard";
+import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon } from "@chakra-ui/icons";
 import WithSubnavigation from "../UI/navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ChatIcon, Icon } from "@chakra-ui/icons";
 import '../UI/Styles/home.css';
 import RR from './RR'
 
@@ -22,6 +23,12 @@ export const Doctor = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
+  const [selectedTab, setSelectedTab] = useState("one");
+
+  const handleRatingTabClick = (tabNumber) => {
+    setSelectedTab(tabNumber);
+  };
+
 
   useEffect(() => {
     const verifyCookie = async () => {
@@ -118,13 +125,21 @@ export const Doctor = () => {
 
   return (
     <>
-      <WithSubnavigation username={doctorData.Name} 
-      onOpenModal={onOpen} 
-      onLogout={Logout}
-      notifications={doctorData.Notifications}
-      />
-      <div className="home_page" style={{ background: "linear-gradient(45deg, #1E9AFE, #60DFCD)" }}>
-        <h4>
+    
+    <div style={{ position: 'fixed', top: '0', left: '0', right: '0', zIndex: '1000'}}>
+
+<WithSubnavigation
+  username={doctorData.Name}
+  onOpenModal={onOpen}
+  onLogout={Logout}
+  notifications={doctorData.Notifications}
+  mb={5}
+/>
+</div>
+      <Sidebar/>
+      <div className="home_page">
+      <div className="home_page_content" >
+        {/* <h4>
           Welcome Docc {doctorData[0]?.Email} <span>{username}</span>
         </h4>
         <Flex>
@@ -146,7 +161,158 @@ export const Doctor = () => {
           <Box style={{ margin: "0 10px", flex: 1 }}>
             <DoctorShortcuts style={{ height: "100%" }} username= {username}  />
           </Box>
-        </Flex>
+        </Flex> */}
+        
+
+<div className="BigContainer">
+          <div className="Container1">
+            <Box className="boxW" >
+               <div className="boxT">Wallet</div>
+               <div className="square">$</div>
+                <div className="balance">{`$ ${doctorData.WalletBalance}`}</div>
+                <div className="square2">Total Balance</div>
+            </Box>
+            <Box className="box1" >
+              <div className="boxT">Information</div>
+            <div className="line">
+              <EmailIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Email:  ${doctorData.Email}`}</div>
+            </div>
+            <div className="line">
+              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Hourly Rate:  ${doctorData.HourlyRate}`}</div>
+            </div>
+            <div className="line">
+              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+              <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Affiliation:  ${doctorData.Affiliation}`}</div>
+            </div>
+            </Box>
+
+            <Box className="box1" >
+            <div className="boxT">Recent</div>
+            <div className="line" style={{ marginTop: '0px' }}>
+          <BellIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+          <div className="info1" style={{ margin: '0px 0px 0px 33px', padding: 0, display: "inline-block", transform: 'translateY(-45px)' }}>
+            {doctorData.Notifications && doctorData.Notifications.length > 0 ? `${doctorData.Notifications[0]}` : "None"}
+          </div>
+        </div>
+
+        <div className="line" style={{ marginTop: '-50px'}}>
+          <BellIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+          <div className="info1" style={{ margin: '0px 0px 0px 33px', padding: 0, display: "inline-block", transform: 'translateY(-45px)' }}>
+            {doctorData.Notifications && doctorData.Notifications.length > 1 ? `${doctorData.Notifications[1]}` : "None"}
+          </div>
+        </div>
+
+
+    
+            </Box>
+          </div>
+
+          
+          <div className="Container2">
+            <Box className="box3" ></Box>
+            {/* {doctorData.Gender && (doctorData.Gender.toLowerCase() === 'male' ? (
+              <Box className="ppM" ></Box>
+            ) : doctorData.Gender.toLowerCase() === 'female' ? (
+              <Box className="ppF" ></Box>
+            ) : (
+              <Box className="ppM"></Box>
+            ))} */}
+              <Box className="ppM"></Box>
+
+            <Box className="Details" style={{ overflow: 'hidden' }}>
+            <Box style={{ textAlign: 'center' }}>{doctorData.Name}</Box>
+              <Box className="GenderB">
+              {/* {doctorData.Gender && (doctorData.Gender.toLowerCase() === 'male' ? (
+                <Box className="Male">
+                  Male
+                </Box>
+              ) : doctorData.Gender.toLowerCase() === 'female' ? (
+                <Box className="Female">
+                  Female
+                </Box>
+              ) : (
+                <Box className="Male"> 
+                  Male
+                </Box>
+              ))} */}
+              <Box className="Male"> 
+                  Doctor
+                </Box>
+            </Box>
+            <Box className='infoI' style={{ transform: 'translate(-30%, 395%)' }}>
+              Username
+            </Box>
+            <Box className="RoundBox" style={{ marginTop: '5px' }}>
+            {doctorData.Username}
+            </Box>
+            {selectedTab === 'one' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-35%, 750%)' , textAlign: 'center' }}>
+            Email
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {doctorData.Email}
+          </Box>
+        </div>
+      )}
+            {selectedTab === 'two' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-28%, 750%)' }}>
+            Date Of Birth
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {doctorData.DateOfBirth}
+          </Box>
+        </div>
+      )}
+
+      {selectedTab === 'three' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-17%, 750%)' }}>
+          Educational Background
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {doctorData.EducationalBackground}
+          </Box>
+        </div>
+      )}
+
+      {selectedTab === 'four' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-31%, 750%)' }}>
+            Affiliation
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {doctorData.Affiliation}
+          </Box>
+        </div>
+      )}
+      {selectedTab === 'five' && (
+        <div>
+          <Box className='infoI' style={{ transform: 'translate(-28%, 750%)' }}>
+            Hourly Rate
+          </Box>
+          <Box className="RoundBox" style={{ marginTop: '5px', transform: 'translate(0%, 195%)' }}>
+            {doctorData.HourlyRate}
+          </Box>
+        </div>
+      )}
+      <Box style={{ position: 'fixed', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, textAlign: 'center' }}>More</Box>
+
+<RR onRatingTabClick={handleRatingTabClick} setSelectedTab={setSelectedTab} style={{ marginTop: '-10px',transform: 'translate(-35%, 345%)' }}></RR>
+
+            </Box>
+            
+          </div>
+          <div className="Container3">
+            <Box className="box2" >Packages</Box>
+            <Link to="apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+            <Box className="box22" >Family</Box>
+
+          </div>
+        </div>
 
         
 
@@ -208,6 +374,7 @@ export const Doctor = () => {
             </Center>
           </Link>
        </motion.div>
+      </div>
       </div>
       <ToastContainer />
     </>
