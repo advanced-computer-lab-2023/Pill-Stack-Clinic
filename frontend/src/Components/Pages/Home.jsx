@@ -508,7 +508,7 @@ export const Home = () => {
                <div className="boxT">Wallet</div>
                <div className="square">$</div>
                 <div className="balance">{`$ ${patientData.WalletBalance}`}</div>
-                {/* <div className="square2"></div> */}
+                <div className="square2">Total Balance</div>
             </Box>
             <Box className="box1" >
               <div className="boxT">Information</div>
@@ -633,7 +633,8 @@ export const Home = () => {
           </Box>
         </div>
       )}
-      {/* <Box style={{ textAlign: 'center',  transform: 'translate(0%, 900%)'}}>More</Box> */}
+      <Box style={{ position: 'fixed', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, textAlign: 'center' }}>More</Box>
+
 <RR onRatingTabClick={handleRatingTabClick} setSelectedTab={setSelectedTab} style={{ marginTop: '-10px',transform: 'translate(-35%, 345%)' }}></RR>
 
             </Box>
@@ -1062,15 +1063,15 @@ export const Home = () => {
             position: "fixed",
             bottom: "20px",
             right: "20px",
-            background: "#28a745",
+            background: "#005660",
             borderRadius: "100px",
             cursor: "pointer",
           }}
         >
           <Link to={`/chatwithdoctor/${username}`}>
           <Center>
-              <Icon as={ChatIcon} boxSize={6} m={5}/>
-            </Center>          
+          <Icon as={ChatIcon} boxSize={6} m={5} style={{ color: 'white' }} />  
+          </Center>          
           </Link>
         </motion.div>
 

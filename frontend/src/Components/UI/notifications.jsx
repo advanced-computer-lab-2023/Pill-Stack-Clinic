@@ -30,14 +30,33 @@ const Notifications = ({ notifications }) => {
   return (
     <Popover isOpen={isPopoverOpen} onClose={() => setIsPopoverOpen(false)}>
       <PopoverTrigger>
-        <IconButton
-          aria-label="Notifications"
-          icon={<BellIcon />}
-          variant="ghost"
-          colorScheme="gray"
-          onClick={() => setIsPopoverOpen(!isPopoverOpen)} // Toggle popover on icon click
+      <IconButton
+  aria-label="Notifications"
+  icon={<BellIcon />}
+  variant="ghost"
+  colorScheme="blackwhite"
+  _hover={{
+    backgroundColor: 'black !important',
+    color: 'white !important',
+    cursor: 'pointer',
+    transition: 'background-color 0.5s ease-in-out',
+  }}
+  onClick={() => setIsPopoverOpen(!isPopoverOpen)} // Toggle popover on icon click
+  style={{
+    margin: 'auto',
+    borderRadius: '18px',
+    backgroundColor: 'white',
+    height: '47px',
+    marginRight: '10px',
+    color: 'black',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxSizing: 'border-box',
+    padding: '17px',
+  }}
+/>
 
-        />
       </PopoverTrigger>
       <PopoverContent
         width="300px"

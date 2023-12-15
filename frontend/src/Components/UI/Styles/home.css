@@ -5,6 +5,7 @@ body {
     height: 100%;
     /* zoom: 70%; */
     overflow-x: hidden;
+    overflow-y: hidden;
     
   }
   @font-face {
@@ -225,7 +226,7 @@ body {
   }
 
   .balance{
-    color: black;
+    color: #005660;
     font-family: 'poppinsregular';
     font-size: 50px;
     margin: -33px 0px 0px 33px;
@@ -241,37 +242,38 @@ body {
     align-items: center;
     display: flex;
     transform: translateX(550px) translateY(-50px);
-    background-color: black;
+    background-color: #005660;
     border-radius: 17px;
     transition: transform 0.8s;
 
   }
   
   .square:hover {
-    background-color: #232323;
     color: white;
     cursor: pointer;
     transform: translateX(550px) translateY(-50px) scaleX(-1); /* Horizontal flip */
   }
 
   .square2 {
-    width: 46px;
-    height: 50px;
+    width: 146px;
+    height: 40px;
     font-family: 'Franklin Gothic Book Regular', 'Arial Narrow', Arial, sans-serif;
     font-size: 45px;
     justify-content: center;
     align-items: center;
     display: flex;
-    transform: translateX(50px) translateY(20px);
-    background-color: black;
-    border-radius: 17px;
+    transform: translateX(40px) translateY(34px);
+    font-family: 'poppinsregular';
+    font-size: 15px;
+    background-color: #005660;
+    border-radius: 13px;
   }
   
-  .square2:hover {
+  /* .square2:hover {
     background-color: darkgray;
     color: white;
     cursor: pointer;
-  }
+  } */
 
   .info1{
     color: black;

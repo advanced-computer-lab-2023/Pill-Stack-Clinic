@@ -89,29 +89,32 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
           justify={'flex-end'}
           direction={'row'}
           spacing={6}>
-          <Button onClick={onLogout} as='a' fontSize='md' fontWeight={400} variant='link' _hover={{ cursor: 'pointer', textDecoration: 'underline' }}>
+          {/* <Button onClick={onLogout} as='a' fontSize='md' fontWeight={400} variant='link' _hover={{ cursor: 'pointer', textDecoration: 'underline' }}>
             Log Out
-            </Button>
+            </Button> */}
 
           <Menu>
   
           <MenuButton
   as={Avatar}
   name={username}
-  _hover={{ backgroundColor: 'grey', cursor: 'pointer' }}
+  _hover={{
+    backgroundColor: 'black !important',
+    color: 'white',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease-in-out',
+  }}
   style={{
     margin: 'auto',
-    borderRadius: 'full',
-    border: '2px solid white',
+    borderRadius: '18px',
+    backgroundColor: 'white',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxSizing: 'border-box', // Ensure padding and border are included in total width and height
-    padding: '17px', // Adjust padding as needed
+    boxSizing: 'border-box',
+    padding: '17px',
   }}
->
-  {/* Content goes here */}
-</MenuButton>
+/>
 
   <MenuList>
     <MenuGroup title="Profile">
@@ -119,9 +122,9 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
       <MenuItem>Payments</MenuItem>
     </MenuGroup>
     <MenuDivider />
-    <MenuGroup title="Help">
+    <MenuGroup title="Settings">
   <MenuItem onClick={onOpenModal}>Change Password</MenuItem>
-  <MenuItem>FAQ</MenuItem>
+  <MenuItem onClick={onLogout}>Log Out</MenuItem>
 </MenuGroup>
 
   </MenuList>
