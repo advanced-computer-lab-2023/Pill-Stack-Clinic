@@ -26,7 +26,7 @@ const sendEmail = require("../Utilities/SendEmail");
  
   const editView=async(req,res)=>{
     const { id } = req.params;
- 
+    
    try {
      // Find the profile by _id and email
      const profile = await doctorModel.findOne({ _id: id});
@@ -90,7 +90,7 @@ const updateContractStatus=async(req,res)=>{
   const editProfile=async(req,res)=>{
     
        const { id } = req.params;
-     
+
        try {
          const profile = await doctorModel.findById(id);
          if (!profile) {

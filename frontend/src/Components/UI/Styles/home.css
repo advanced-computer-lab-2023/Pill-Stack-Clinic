@@ -4,8 +4,7 @@ body {
     padding-right: 0;
     height: 100%;
     /* zoom: 70%; */
-    overflow-x: hidden;
-    overflow-y: hidden;
+    
     
   }
   @font-face {
@@ -37,10 +36,13 @@ body {
   .home_page {
     background: #F5F7F9; 
     height: 190vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
   .home_page_content {
     /* background: red;  */
     text-transform: none;
+    
     margin-top: 90px;
     margin-left: 20%;
     padding-right: 30px;

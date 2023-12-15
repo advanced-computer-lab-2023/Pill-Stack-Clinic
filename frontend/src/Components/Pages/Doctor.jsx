@@ -7,10 +7,11 @@ import { ToastContainer, toast } from "react-toastify";
 import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input, Center } from "@chakra-ui/react";
 import DoctorShortcuts from "../UI/DoctorShortcuts";
 import DoctorInfoCard from "../UI/DoctorInfoCard";
-import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon } from "@chakra-ui/icons";
+import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon,EditIcon } from "@chakra-ui/icons";
 import WithSubnavigation from "../UI/navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { LinkBox, LinkOverlay } from '@chakra-ui/react'
 import '../UI/Styles/home.css';
 import RR from './RR'
 
@@ -24,6 +25,13 @@ export const Doctor = () => {
   const initialRef = useRef(null);
   const finalRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("one");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState({
+    email: doctorData.Email,
+    HourlyRate: doctorData.HourlyRate,
+    Affiliation: doctorData.Affiliation,
+  });
+
 
   const handleRatingTabClick = (tabNumber) => {
     setSelectedTab(tabNumber);
@@ -123,6 +131,55 @@ export const Doctor = () => {
     }
   };
 
+
+
+  useEffect(() => {
+    setEditedData({
+      Email: doctorData.Email,
+      HourlyRate: doctorData.HourlyRate,
+      Affiliation: doctorData.Affiliation,
+    });
+  }, [doctorData.Email, doctorData.HourlyRate, doctorData.Affiliation]);
+
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+
+  const handleSaveClick = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/doctor/profile/edit/${doctorData._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editedData),
+      });
+  
+      if (response.ok) {
+        toast.success('Information Updated Successfully', {
+          position: 'top-right',
+          autoClose: 3000, // 3 seconds
+        });
+        setIsEditing(false);
+      } else {
+        // Handle error response
+        console.error('Error:', response.status, response.statusText);
+      }
+    } catch (error) {
+      // Handle network-related errors
+      console.error('Network Error:', error.message);
+    }
+  };
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData({
+      ...editedData,
+      [name]: value,
+    });
+  };
+
   return (
     <>
     
@@ -172,21 +229,61 @@ export const Doctor = () => {
                 <div className="balance">{`$ ${doctorData.WalletBalance}`}</div>
                 <div className="square2">Total Balance</div>
             </Box>
-            <Box className="box1" >
-              <div className="boxT">Information</div>
-            <div className="line">
-              <EmailIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
-              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Email:  ${doctorData.Email}`}</div>
-            </div>
-            <div className="line">
-              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
-              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Hourly Rate:  ${doctorData.HourlyRate}`}</div>
-            </div>
-            <div className="line">
-              <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
-              <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Affiliation:  ${doctorData.Affiliation}`}</div>
-            </div>
-            </Box>
+
+
+            <Box className="box1">
+  <div className="boxT">Information</div>
+  
+  <div className="line">
+    <EmailIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+    {isEditing ? (
+      <input
+        type="text"
+        name="email"
+        value={editedData.email}
+        onChange={handleInputChange}
+        style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
+      />
+    ) : (
+      <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Email:  ${doctorData.Email}`}</div>
+    )}
+  </div>
+
+  <div className="line">
+    <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+    {isEditing ? (
+      <input
+        type="text"
+        name="HourlyRate"
+        value={editedData.HourlyRate}
+        onChange={handleInputChange}
+        style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
+      />
+    ) : (
+      <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Hourly Rate:  ${doctorData.HourlyRate}`}</div>
+    )}
+  </div>
+
+  <div className="line">
+    <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
+    {isEditing ? (
+      <input
+        type="text"
+        name="affiliation"
+        value={editedData.Affiliation}
+        onChange={handleInputChange}
+        style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
+      />
+    ) : (
+      <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Affiliation:  ${doctorData.Affiliation}`}</div>
+    )}
+  </div>
+
+  <div className="square" style={{transform: 'translateX(550px) translateY(-220px)'}} onClick={isEditing ? handleSaveClick : handleEditClick}>
+    <EditIcon boxSize={8} />
+  </div>
+</Box>
+
 
             <Box className="box1" >
             <div className="boxT">Recent</div>
@@ -307,10 +404,16 @@ export const Doctor = () => {
             
           </div>
           <div className="Container3">
-            <Box className="box2" >Packages</Box>
-            <Link to="apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
-            <Box className="box22" >Family</Box>
 
+     
+         
+          <Link to="/doctor-home/myAvailability" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
+       
+          
+            <Link to="apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+            <Link to={`myPatients/${doctorData.Username}`}>
+            <Box className="box22" >My Patients</Box>
+            </Link>
           </div>
         </div>
 
