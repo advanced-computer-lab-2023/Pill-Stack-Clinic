@@ -176,7 +176,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
   }
   
-  .pp {
+  .ppM {
     position: absolute;
     top: -5%;
     left: 20%;
@@ -193,6 +193,26 @@ body {
   }
 
   .pp:hover{
+    transform: translateY(-5px);
+  }
+
+  .ppF {
+    position: absolute;
+    top: -5%;
+    left: 20%;
+    background-image: url('../Images/Jenna.png');
+    background-position: center 0% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 325px;
+    height: 300px;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .ppF:hover{
     transform: translateY(-5px);
   }
 

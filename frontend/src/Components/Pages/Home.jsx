@@ -451,8 +451,6 @@ export const Home = () => {
     }
   };
 
-
-
   return (
     <> 
     
@@ -474,8 +472,8 @@ export const Home = () => {
         navigate={navigate}
         username={username}
         name={patientData.Name}
-        // setTab={/* Your setTab function */}
-        // setInputs={/* Your setInputs function */}
+        onOpenModal={onOpen}
+        onLogout={Logout}
         openAddDeliveryModal={openAddDeliveryModal}
       />
       
@@ -548,9 +546,18 @@ export const Home = () => {
     
             </Box>
           </div>
+
+          
           <div className="Container2">
             <Box className="box3" ></Box>
-            <Box className="pp" ></Box>
+            {patientData.Gender && (patientData.Gender.toLowerCase() === 'male' ? (
+              <Box className="ppM" ></Box>
+            ) : patientData.Gender.toLowerCase() === 'female' ? (
+              <Box className="ppF" ></Box>
+            ) : (
+              <Box className="ppM"></Box>
+            ))}
+
             <Box className="Details" style={{ overflow: 'hidden' }}>
             <Box style={{ textAlign: 'center' }}>{patientData.Name}</Box>
               <Box className="GenderB">
