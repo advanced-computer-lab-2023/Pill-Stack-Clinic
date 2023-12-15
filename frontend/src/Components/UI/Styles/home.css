@@ -1,5 +1,4 @@
 
-
 body {
 
   }
@@ -67,6 +66,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 60px;
+    
   }
 
   .patientsshortcut{

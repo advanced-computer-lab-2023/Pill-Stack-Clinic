@@ -155,7 +155,7 @@ export const AdminHome = () => {
             <Box className="boxW" >
                <div className="boxT">Wallet</div>
                <div className="square">$</div>
-                <div className="balance">{`$ ${adminData.WalletBalance}`}</div>
+                <div className="balance">To Be Updated</div>
                 <div className="square2">Total Balance</div>
             </Box>
             <Box className="box1" >
@@ -166,11 +166,11 @@ export const AdminHome = () => {
             </div>
             <div className="line">
               <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
-              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Mobile:  ${adminData.MobileNumber}`}</div>
+              <div className="info1" style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Mobile: Private Number`}</div>
             </div>
             <div className="line">
               <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
-              <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Emergency Mobile:  ${adminData.EmergencyContact_MobileNumber}`}</div>
+              <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Emergency Mobile: Private Number`}</div>
             </div>
             </Box>
 
