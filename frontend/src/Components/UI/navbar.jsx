@@ -100,7 +100,7 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
   name={username}
   _hover={{
     backgroundColor: 'black !important',
-    color: 'white',
+    color: 'white !important' ,
     cursor: 'pointer',
     transition: 'background-color 0.3s ease-in-out',
   }}
@@ -108,6 +108,7 @@ const WithSubnavigation = ({ username, onOpenModal, onLogout,notifications }) =>
     margin: 'auto',
     borderRadius: '18px',
     backgroundColor: 'white',
+    color: 'black',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

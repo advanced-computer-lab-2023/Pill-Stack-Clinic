@@ -89,6 +89,17 @@ body {
     transition: transform 0.1s ease-in-out;
   }
 
+  .boxL1 {
+    position: relative;
+    width: 650px;
+    height: 285px;
+    gap: 40px;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
   .boxW {
     background-image: url('../Images/WalletBg.png');
     background-position: center !important;
@@ -103,11 +114,11 @@ body {
     transition: transform 0.1s ease-in-out;
   }
   
-  .box1:hover, .boxW:hover, .box2:hover, .box21:hover,.box22:hover {
+  .box1:hover, .boxW:hover, .box2:hover, .box21:hover,.box22:hover,.box23:hover,.box24:hover {
     transform: scale(1.005); /* Adjust the values for the desired diagonal movement */
   }
 
-  .box2:hover, .box21:hover,.box22:hover {
+  .box2:hover, .box21:hover,.box22:hover,.box23:hover,.box24:hover {
     cursor: pointer;
   }
   .box2{
@@ -166,6 +177,45 @@ body {
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
   }
+
+  .box23 {
+    background-image: url('../Images/Family.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 265px;
+     justify-content: center;
+    display: flex;
+    text-align: center;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 29%; 
+    font-size: 21px; 
+    top: 38%;
+    color: #4C4C4C; 
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+  .box24 {
+    background-image: url('../Images/Family.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 265px;
+     justify-content: center;
+     font-family: 'Futura Maxi CG Bold';
+     display: flex;
+    padding-top: 29%; 
+    font-size: 23px; 
+    top: 38%;
+    color: #4C4C4C; 
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+ 
  
   .box3 {
     background-color: white !important;

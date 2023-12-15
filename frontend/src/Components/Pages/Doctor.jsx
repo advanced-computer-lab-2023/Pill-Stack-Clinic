@@ -220,7 +220,7 @@ export const Doctor = () => {
           </Box>
         </Flex> */}
         
-<div className="BigContainer">
+        <div className="BigContainer">
           <div className="Container1">
             <Box className="boxW" >
                <div className="boxT">Wallet</div>
