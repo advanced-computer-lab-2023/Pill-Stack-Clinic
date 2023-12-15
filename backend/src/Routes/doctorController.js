@@ -15,9 +15,9 @@ const sendEmail = require("../Utilities/SendEmail");
 
 
  const viewProfile= async(req,res)=>{
-  const username = req.user._id;
+  const userID = req.user._id;
   console.log("lalal", username);
-  const profile = await doctorModel.findOne({Username:username});
+  const profile = await doctorModel.findOne({_id:userID});
   console.log("profile", profile);
      res.send(profile);
  

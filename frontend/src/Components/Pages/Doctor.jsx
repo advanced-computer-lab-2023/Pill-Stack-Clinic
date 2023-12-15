@@ -10,6 +10,9 @@ import WithSubnavigation from "../UI/navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChatIcon, Icon } from "@chakra-ui/icons";
+import '../UI/Styles/home.css';
+import RR from './RR'
+
 
 export const Doctor = () => {
   const navigate = useNavigate();
@@ -54,7 +57,10 @@ export const Doctor = () => {
   useEffect(() => {
     // Check if doctorData is not null and log it
     if (doctorData !== null) {
-      console.log("Doctor Data:", doctorData);
+      console.log("Doctor Data hena:", doctorData);
+    }
+    else{
+      console.log("Doctor Data msw mwgoda:", doctorData);
     }
   }, [doctorData]);
 
