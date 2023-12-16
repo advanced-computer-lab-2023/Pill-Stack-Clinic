@@ -17,18 +17,28 @@ This project serves as a learning opportunity to collaborate effectively within 
 - Login Page
 ![Alt text](screenshots/image-13.png)
 - Patient home page
+![Alt text](screenshots/Patient_Home.png)
 - View all doctors on the platform
+![Alt text](screenshots/View_Doctors.png)
 - Book an appointment
 - chat with a doctor 
+![Alt text](Chat_With_Doc.png)
 - Add a family member
+![Alt text](AddFam_New.png) ![Alt text](AddFam_Link.png)
 - View linked family members
-- View my appointments
+![Alt text](View_Fam.png) 
+- View my appointments 
+![Alt text](View_Appointments.png)
 - View my family's appointments
 - View my health packages
+![Alt text](View_MyPacks.png)
 - Subscribe to a health package
-- Doctor's home page
+![Alt text](Subscribe_Pack.png)
+- Doctor's home page 
+![Alt text](Doc_Home.png)
 - View doctor's patients
 - chat with a patient
+![Alt text](Chat_With_PatPharm.png)
 - Add an appoinmment to my bookings
 - Accept/Reject a follow up requested by a patient
 - Schedule a follow up for a patient
