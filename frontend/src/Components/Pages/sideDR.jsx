@@ -71,6 +71,15 @@ function SidebarDR(props) {
               </Box>
             </AccordionButton>
             </Link>
+            <Link to="/followuprequestdoc" style={{ textDecoration: 'none', color: 'inherit' }}> 
+            <AccordionButton>
+              <Box as="span" flex='1' textAlign='left' ml={10}>
+              
+                Follow Ups
+                
+              </Box>
+            </AccordionButton>
+            </Link>
           </AccordionPanel>
         </AccordionItem>
 

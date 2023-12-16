@@ -14,6 +14,10 @@ import {
 } from '@chakra-ui/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
+
  // 2bl el useeffect
 export const ViewDocFollowup = () => {
   const [followUps, setFollowUps] = useState([]);
@@ -86,10 +90,17 @@ export const ViewDocFollowup = () => {
 
   return (
     <>
-      <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <Navigation
+      pagetitle={'Doctor Follow-ups'}/>
+       <SidebarDR
+      />
+
+      {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
         <Text fontSize={'3xl'} color={'white'}>Doctor Follow-ups</Text>
-      </Box>
+      </Box> */}
+
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+      <div className="content">
         {loading ? (
           <Spinner />
         ) : (
@@ -124,6 +135,7 @@ export const ViewDocFollowup = () => {
             </Tbody>
           </Table>
         )}
+        </div>
       </Box>
       <ToastContainer />
     </>
