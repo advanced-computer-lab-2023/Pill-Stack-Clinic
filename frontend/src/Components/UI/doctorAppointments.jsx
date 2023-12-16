@@ -179,6 +179,14 @@ const handleReschedule = async () => {
   setRescheduleFormData({ ...rescheduleFormData, appointmentDate: null });
   refreshAppointments();
 };
+const handleVideoAppointment = async (patientUsername) => {
+  const { data } = await axios.post("http://localhost:8000", {}, { withCredentials: true });
+  const { user } = data;
+  navigate(`/videoChat/${user}/${patientUsername}`);
+
+
+
+}
 
 
 return (
@@ -306,7 +314,7 @@ return (
                     <Button
                       colorScheme="red"
                       size="sm"
-                      onClick={() => handleCancelAppointment(appointment._id, appointment.Status)}
+                      onClick={() => handleVideoAppointment(appointment.PatientUsername)}
                       isDisabled={appointment.Status !== 'upcoming'}
                     >
                       Go appointment
