@@ -10,7 +10,7 @@ import WithSubnavigation from "../UI/navbar";
 import { Link } from "react-router-dom";
 import '../UI/Styles/home.css';
 import RR from './RR'
-import Sidebar from './side';
+import SidebarDRU from './sideDRU';
 import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon,EditIcon } from "@chakra-ui/icons";
 
 
@@ -138,7 +138,7 @@ export const UnsignedDoctor = () => {
   mb={5}
 />
 </div>
-      <Sidebar/>
+      <SidebarDRU/>
       <div className="home_page">
       <div className="home_page_content" >
         {/* <h4>
