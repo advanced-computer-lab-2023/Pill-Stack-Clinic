@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../UI/button.css'
 import { useNavigate } from "react-router-dom";
+import Navigation from "./Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
+
 import {
   Box,
   Table,
@@ -114,11 +118,17 @@ export const ViewAvailability = () => {
   }
 
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <>
+    <Navigation
+      pagetitle={'My Available Slots'}/>
+       <SidebarDR
+      />
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>My Available Slots</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
+    </Box> */}
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    <div className="content">
         {isSuccess && (
           <Alert status="success">
             <AlertIcon />
@@ -203,6 +213,7 @@ export const ViewAvailability = () => {
             )}
           </Tbody>
         </Table>
+        </div>
         <Modal isOpen={isModalOpen} onClose={() => {
           setIsModalOpen(false); setIsError(false);
           setNewAppointment({
@@ -240,7 +251,7 @@ export const ViewAvailability = () => {
                 onChange={(e) => setNewAppointment({ ...newAppointment, endTime: e.target.value })} />
 
 
-
+            
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="teal" onClick={() => handleAdd()}>

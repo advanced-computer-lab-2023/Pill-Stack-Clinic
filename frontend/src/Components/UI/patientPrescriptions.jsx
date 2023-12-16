@@ -26,6 +26,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import '../UI/button.css'
 import Prescription from '../UI/Prescription';
+import Navigation from "./Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
+
 
 const PrescriptionViewer = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -129,12 +133,18 @@ const PrescriptionViewer = () => {
     // link.click();
   }
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <>
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Prescription</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
+    </Box> */}
+    <Navigation
+      pagetitle={'Prescriptions'}/>
+       <Sidebar
+      />
+      
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-        <h1>Prescriptions</h1>
+    <div className="content">
         <Box mb={4}>
           <Text mb="2">Filter by Date Time Range:</Text>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb="4">
@@ -194,6 +204,7 @@ const PrescriptionViewer = () => {
             
             </SimpleGrid>
             </Box>
+            </div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
           <ModalOverlay />

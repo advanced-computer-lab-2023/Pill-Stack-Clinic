@@ -36,6 +36,7 @@ import FollowUpRegisterForm from './Components/Pages/FollowUpRegisterForm.jsx';
 import RequestFollowUp from './Components/Pages/RequestFollowUp.jsx';
 import ChatMessages from './Components/Pages/chatMessagesPatient.jsx';
 import ChatMessagesDoctor from './Components/Pages/chatMessagesDoctor.jsx';
+import ViewDocFollowup from './Components/Pages/ViewDocFollowup.jsx';
 ///Pharmacy add ons
 import PharmacistRegisterPage from './Components/Pages/PharmacistRegisterPage';
 import{MedicineList} from "./Components/UI/MedicineList";
@@ -102,6 +103,7 @@ function App() {
         <Route path="/follow-up-request2" element={<RequestFollowUp />} />
         {/* /doctor/myPatients/${patient.PatientUsername} */}
         <Route path="/doctor/myPatients/:docUsername/:patientUser" element={<MyPatientFull/>} />
+        <Route path="/followuprequestdoc" element={<ViewDocFollowup />} />
 
         {/* pharmacy */}
         <Route path="/pharmacist-register" element={<PharmacistRegisterPage />} />

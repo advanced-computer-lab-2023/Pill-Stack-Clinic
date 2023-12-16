@@ -12,21 +12,33 @@ This project serves as a learning opportunity to collaborate effectively within 
 - For reporting bugs or offering contributions or enhancements please check our Contributions section below.  
 
 # Screenshots
+- Landing Page
+![Alt text](screenshots/Landing.png)
 - Login Page
 ![Alt text](screenshots/image-13.png)
 - Patient home page
+![Alt text](screenshots/Patient_Home.png)
 - View all doctors on the platform
+![Alt text](screenshots/View_Doctors.png)
 - Book an appointment
 - chat with a doctor 
+![Alt text](Chat_With_Doc.png)
 - Add a family member
+![Alt text](AddFam_New.png) ![Alt text](AddFam_Link.png)
 - View linked family members
-- View my appointments
+![Alt text](View_Fam.png) 
+- View my appointments 
+![Alt text](View_Appointments.png)
 - View my family's appointments
 - View my health packages
+![Alt text](View_MyPacks.png)
 - Subscribe to a health package
-- Doctor's home page
+![Alt text](Subscribe_Pack.png)
+- Doctor's home page 
+![Alt text](Doc_Home.png)
 - View doctor's patients
 - chat with a patient
+![Alt text](Chat_With_PatPharm.png)
 - Add an appoinmment to my bookings
 - Accept/Reject a follow up requested by a patient
 - Schedule a follow up for a patient
@@ -179,6 +191,280 @@ Your default browser should automatically open on the web application's address.
 
 
 # API Refrences 
+Our APIs is divided into four APIs :
+
+### Authentication Router
+#### Patient register
+- route: /patientRegister
+- request type: POST
+- body: `{username :'ahned' ,name:'ahmed', password : 'Ahmed@123' , email : 'ahmed@gmail.com',DateOfBirth:'2001/2/18',gender:'Male',mobile:012345678 , EmergencyContact_name,:'ahmed' , EmergencyContact_mobileNumber:'mohmaed',EmergencyContact_Relation:'child}`  
+#### Add admin
+- route: /administration
+- request type:POST  
+- body: `{username :'ahmed' , password : 'Ahmed@123' , email : 'ahmed@gmail.com'}`  
+#### Login
+- route : (/)
+- type : POST 
+- body : `{username :'ahned' , password : 'Ahmed@123'}`
+#### Logout
+- route : (/logOut)
+- type : POST  
+-middleware : userVerfication
+- header : is handled using the authentication middleware session which contains logged user token 
+#### Change password
+- route : (/changePassword)
+- type : POST 
+- body : `{oldPassword :'Ahned34-' , newPassword : 'Ahmed39-'}`
+#### Send OTP
+- route : (/sendOTP)
+- type : POST  
+- body : `{email :'ah@gmail.com'}`
+#### Send OTP
+- route : (/checkOTP)
+- type : POST  
+- body : `{email :'ah@gmail.com',otp:'1234'}`
+#### Reset Password
+- route : (/resetPass)
+- type : POST  
+- body : `{email :'ah@gmail.com',newPassword:'ahmedA1234-'}`
+### User Router (/patient)
+#### View profile
+- route : (/profile)
+- type : GET 
+- middleware: userVerification
+#### Add a family member
+- route : (/addFamMem)
+- type : POST  
+- middle : userVerification
+- body : `{username :'ah',nationalID:'1234',age=20, gender='Male',relation='child'}`
+#### link a family member
+- route : (/linkPatientAsFamilyMember/:Username/:emailOrPhone/:relation)
+- type : POST  
+- middleware : userVerification
+- header : `{username: 'ah',emailOrPhone:'01234567',relation:'child'}`  
+#### View family members  
+- route : (/viewFamily)
+- type : GET 
+- middleware: userVerification  
+#### View family appointtments
+- route : (/viewFamilyAppointments)
+- type : GET 
+- middleware: userVerification  
+#### View doctor details
+- route : (/selectedDoctorDetails/:username)
+- type : GET 
+- header : `{username: 'doctor'}`  
+#### Calculate session amount of a specific doctor
+- route : (/getAmount)
+- type : POST  
+- middleware : userVerification
+- body : `{doctor :'doctor'}`
+#### View available appointments of a specific doctor
+- route : (/viewDoctorAppointments/:username)
+- type : GET
+- header : `{username: 'doctor'}`
+#### Pay for an appointment via wallet
+- route : (/payWallet)
+- type : POST  
+- middleware : userVerification
+- body : `{appid: 'mongoose.type.objectId()',doctorUsername:'doctor', amount:30 , linkedFamMember:'ah', manualFamMember:'Na}` 
+#### Get Packages
+- route : (/packages)
+- type : GET
+#### Pay for an appointment via wallet
+- route : (/subscribeWallet)
+- type : POST  
+- middleware : userVerification
+- body : `{packageID: 'mongoose.type.objectId()',username:'ahmed'}` 
+- type : GET
+#### Cancel package subscription
+- route : (/cancelSubs)
+- type : POST  
+- middleware : userVerification
+- body : `{userId: 'mongoose.type.objectId()',packageID: 'mongoose.type.objectId()'}` 
+#### Cancel appointment
+- route : (/cancelAppointments)
+- type : POST  
+- middleware : userVerification
+- body : `{appointmentId: 'mongoose.type.objectId()'}`
+#### Cancel family appointment
+- route : (/cancelFamAppointments)
+- type : POST  
+- middleware : userVerification
+- body : `{appointmentId: 'mongoose.type.objectId()'}`
+#### Convert prescription to pdf
+- route : (/cancelFamAppointments)
+- type : POST  
+- middleware : userVerification
+- body : `{prescription: 'mongoose.type.object()'}`
+#### Join chat room
+- route : (/Chat/:username/:doctorUsername)
+- type : POST
+- header : `{username: 'ah',doctorUsername:'doctor'}`
+#### Send message to a doctor 
+- route : (/Chat/:username/:doctorUsername)
+- type : POST
+- header : `{username: 'ah',doctorUsername:'doctor'}`
+#### Reschedule appointment 
+- route : (/rescheduleAppointment)
+- type : POST  
+- middleware : userVerification
+- body : `{appointmentId: 'mongoose.type.objectId()',newDate:'2023-11-24T09:00:00.000+00:00'}`
+#### Reschedule family appointment 
+- route : (/famRescheduleAppointment)
+- type : POST  
+- middleware : userVerification
+- body : `{appointmentId: 'mongoose.type.objectId()',newDate:'2023-11-24T09:00:00.000+00:00'}`
+### Stripe Router (/stripe)
+#### Create a payment intent via stripe for an appointment payment 
+- route : (/pay)
+- type : POST  
+- middleware : userVerification
+- body : `{appid: 'mongoose.type.objectId()',doctorUsername:'doctor',amount:30}`
+#### Confirm appointment payment 
+- route : (/pay/confirm)
+- type : POST  
+- middleware : userVerification
+- body : `{appid: 'mongoose.type.objectId()',doctorUsername:'doctor',amount:30,member:'',manualMem:'ahm'}`
+#### Create a payment intent via stripe for a package payment 
+- route : (/payPack)
+- type : POST  
+- middleware : userVerification
+- body : `{packid: 'mongoose.type.objectId()'}`
+#### Confirm appointment payment 
+- route : (/pay/confirm)
+- type : POST  
+- middleware : userVerification
+- body : `{packid: 'mongoose.type.objectId()'}`
+
+### Doctor Router (/doctor)
+#### View profile
+- route : (/profile)
+- type : GET 
+- middleware: userVerification
+#### Edit profile info 
+- route : (/profile/edit/:id)
+- type : POST
+- header : `{id:'mongoose.type.objectId()'}
+- body :`{email:'doc@gmail.com',HourlyRate:12,Affiliation:'NMC'}`
+#### Accept Contract 
+- route : (/updateContractStatus)
+- type : POST
+- middleware : userVerification
+- body :`{username:'doctor'}`
+#### Get my patients 
+- route : (/myPatients)
+- type : GET
+- middleware : userVerification
+#### Get availability 
+- route : (/availability)
+- type : GET
+- middleware : userVerification
+#### Add availability 
+- route : (/availability)
+- type : POST
+- middleware : userVerification
+- body :`{date:'2023-3-2',startTime='10:30',endTime='11:30'}`
+#### Schedule follow up for a patient
+- route : (/scheduleFollowUp)
+- type : POST
+- middleware : userVerification
+- body :`{oldAppointment: 'mongoose.type.objectId()',newAppointment: 'mongoose.type.objectId()'}`
+#### add health record
+- route : (/addHealthRecord)
+- type : POST  
+- middleware : userVerification
+- body : `{patientUsername: 'ah',patientName:'ah',recordDetails:'Constant follow up is needed'}`
+#### Cancel patient appointment
+- route : (/cancelAppointments)
+- type : POST  
+- middleware : userVerification
+- body : `{appointmentId: 'mongoose.type.objectId()'}`
+#### Convert prescription to pdf
+- route : (/PDF/:username)
+- type : POST  
+- middleware : userVerification
+- header : `{username:'ah'}`
+- body : `{prescription: 'mongoose.type.object()'}`
+#### Add prescription
+- route : (/addPrescription/:username)
+- type : POST  
+- middleware : userVerification
+- header : `{username:'ah'}`
+- body : `{prescriptions: 'mongoose.type.object()'}`
+#### Edit prescription
+- route : (/editPrescription/:username/:presId)
+- type : PUT 
+- middleware : userVerification
+- header : `{username:'ah',presId:'mongoose.type.objectId()'}`
+- body : `{prescription: 'mongoose.type.object()'}`
+#### Join chat room with a patient
+- route : (/ChatDoctor/:doctorUsername/:username)
+- type : POST
+- header : `{username: 'ah',doctorUsername:'doctor'}`
+#### Send message to a patient 
+- route : (/sendMessage/:patientUsername/:doctorUsername)
+- type : POST
+- header : `{patientUsername: 'ah',doctorUsername:'doctor'}`
+#### Join chat room with a pharmacist
+- route : (/ChatDoctor2/:doctorUsername/:pharmacistUsername)
+- type : POST
+- header : `{pharmacistUsername: 'pharm',doctorUsername:'doctor'}`
+#### Send message to a pharmacist 
+- route : (/sendMessage2/:pharmacistUsername/:doctorUsername)
+- type : POST
+- header : `{pharmacistUsername: 'pharm',doctorUsername:'doctor'}`
+### Admin Router (/admin)
+#### View profile
+- route : (/profile)
+- type : GET 
+- middleware: userVerification
+#### View doctor's applications
+- route : (/applications)
+- type : GET 
+#### View doctor's applications
+- route : (/applications/view/:id)
+- type : GET 
+- header : `{id:'mongoose.type.objectId()'}`
+#### Accept doctor's applications
+- route : (/applications/accept-registeration/:id)
+- type : POST 
+- header : `{id:'mongoose.type.objectId()'}`
+#### Reject doctor's applications
+- route : (/applications/accept-registeration/:id)
+- type : POST 
+- header : `{id:'mongoose.type.objectId()'}`
+#### View packages
+- route : (/packages)
+- type : GET 
+#### Add packages
+- route : (/packages)
+- type : POST 
+- body : `{packagename:'PackName',price:20,session_dis:20,pharmacy_dis:20,family_dis:20}`
+#### Edit package
+- route : (/editPack/:id)
+- type : POST 
+- header : `{id:'mongoose.type.objectId()'}`
+- body : `{price:20,session_dis:20,pharmacy_dis:20,family_dis:20}`
+#### Delete package
+- route : (/deletePack/:id)
+- type : POST 
+- header : `{id:'mongoose.type.objectId()'}`
+#### View all users on the system
+- route : (/allUsers)
+- type : GET
+#### Remove user from system
+- route : (/removeUser)
+- type : POST 
+- body : `{id:'mongoose.type.objectId()',role:'doctor'}` 
+
+
+
+
+
+
+
+
 
 # Postman Testing
 Patient's Wallet  

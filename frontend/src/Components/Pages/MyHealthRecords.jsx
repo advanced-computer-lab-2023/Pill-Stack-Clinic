@@ -14,6 +14,10 @@ import {
   TableCaption,
   Text,
 } from '@chakra-ui/react';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
+
 
 const MyHealthRecords = () => {
   const { patientUsername, patientName } = useParams();
@@ -38,13 +42,21 @@ const MyHealthRecords = () => {
   }, [patientUsername]);
 
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <>
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Health Records</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box><Box p={4}>
-        <Text fontSize="xl" fontWeight="bold">
-          Health Records for {patientUsername}
-        </Text>
+    </Box> */}
+
+      <Navigation
+      pagetitle={`Health Records for ${patientUsername}`}/>
+       <Sidebar
+      />
+
+
+    <Box p={4}>
+    <div className="content">
+ 
         <Table variant="simple" mt={4}>
           <Thead>
             <Tr>
@@ -61,6 +73,7 @@ const MyHealthRecords = () => {
             ))}
           </Tbody>
         </Table>
+      </div>
       </Box></>
   );
 };

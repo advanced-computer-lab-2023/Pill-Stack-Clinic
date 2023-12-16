@@ -16,7 +16,7 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react';
 
-function SidebarDR(props) {
+function SidebarAdmin(props) {
   const {
     openSecondModal,
     openAddFamilyModal,
@@ -56,26 +56,26 @@ function SidebarDR(props) {
             <AccordionButton>
               <HamburgerIcon w={7} h={7} mr={3}></HamburgerIcon>
               <Box as="span" flex='1' textAlign='left'>
-                Personal
+                Manage
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel p={0}>
-          <Link to="/doctor-home/myAvailability" style={{ textDecoration: 'none', color: 'inherit' }}> 
+          <Link to="/admin-home/admin-users" style={{ textDecoration: 'none', color: 'inherit' }}> 
             <AccordionButton>
               <Box as="span" flex='1' textAlign='left' ml={10}>
               
-                My Availabilty 
+                Users
                 
               </Box>
             </AccordionButton>
             </Link>
-            <Link to="/followuprequestdoc" style={{ textDecoration: 'none', color: 'inherit' }}> 
+            <Link to="/admin-home/admin-packs" style={{ textDecoration: 'none', color: 'inherit' }}> 
             <AccordionButton>
               <Box as="span" flex='1' textAlign='left' ml={10}>
               
-                Follow Ups
+                Packages
                 
               </Box>
             </AccordionButton>
@@ -91,7 +91,7 @@ function SidebarDR(props) {
     <AccordionButton>
       <HamburgerIcon w={7} h={7} mr={3}></HamburgerIcon>
       <Box as="span" flex='1' textAlign='left'>
-        Appointments
+        Requests
       </Box>
       <AccordionIcon />
     </AccordionButton>
@@ -101,7 +101,14 @@ function SidebarDR(props) {
     <Link to="apptsD">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
-        My Appointments
+        Doctor Requests
+      </Box>
+    </AccordionButton>
+    </Link>
+    <Link to="apptsD">
+    <AccordionButton>
+      <Box as="span" flex='1' textAlign='left' ml={10}>
+        Pharmacists Requests
       </Box>
     </AccordionButton>
     </Link>
@@ -114,7 +121,7 @@ function SidebarDR(props) {
     <AccordionButton >
       <HamburgerIcon w={7} h={7} mr={3}></HamburgerIcon>
       <Box as="span" flex='1' textAlign='left'>
-        Patients
+        Control
       </Box>
       <AccordionIcon />
     </AccordionButton>
@@ -124,7 +131,7 @@ function SidebarDR(props) {
   <Link to={`myPatients/${username}`}>
     <AccordionButton onClick={openAddDeliveryModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
-        My Patients
+        Medicine Control
       </Box>
     </AccordionButton>
     </Link>
@@ -150,4 +157,4 @@ function SidebarDR(props) {
   );
 }
 
-export default SidebarDR;
+export default SidebarAdmin;

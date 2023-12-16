@@ -43,6 +43,9 @@ import { useDisclosure } from "@chakra-ui/react";
 import Prescription from './Prescription';
 import PatientCard from './PatientCard';
 import { motion } from 'framer-motion';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
 
 
 
@@ -281,11 +284,16 @@ const DoctorPatientsTable = () => {
 
   return (
     <>
-    <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <Navigation
+      pagetitle={'My Patients'}/>
+       <SidebarDR
+      />
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>My Patients</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
-    <Box m={10} p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    </Box> */}
+    <Box m={5} p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    <div className="content">
       {confirmationMessage && (
         <Alert status="success">
           <AlertIcon />
@@ -293,7 +301,6 @@ const DoctorPatientsTable = () => {
           <AlertDescription>{confirmationMessage}</AlertDescription>
         </Alert>
       )}
-      <h1>My Patients</h1>
       {/* <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
         <option value="All">All</option>
         <option value="upcoming">Upcoming</option>
@@ -475,6 +482,7 @@ size="2xl"
           </ModalFooter>
         </ModalContent>
       </Modal>
+      </div>
     </Box>
     </>
   );
