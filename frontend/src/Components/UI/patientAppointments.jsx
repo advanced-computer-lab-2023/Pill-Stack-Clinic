@@ -27,6 +27,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navigation from "./Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
 
 const AppointmentSearchAndTable = () => {
   const [appointments, setAppointments] = useState([]);
@@ -178,15 +181,22 @@ const AppointmentSearchAndTable = () => {
   return (
     <>
       <ToastContainer />
-      <Box bg={'linear-gradient(45deg, #1E9AFE, #60DFCD)'} p={5} boxShadow="2xl" mb={10}>
+      {/* <Box bg={'linear-gradient(45deg, #1E9AFE, #60DFCD)'} p={5} boxShadow="2xl" mb={10}>
         <Text fontSize={'3xl'} color={'white'}>
           My Appointments
         </Text>
         <Button className="btn" onClick={() => navigate(-1)}>
           Back
         </Button>
-      </Box>
+      </Box> */}
+      <Navigation
+      pagetitle={'Appointments'}/>
+       <Sidebar
+
+      />
+      
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md" bg="white" color="black">
+      <div className="content">
       <FormControl mb={4}>
           <Flex alignItems="center" mb={2}>
             <Text mr={2} fontSize="sm">Filter by Status:</Text>
@@ -296,6 +306,7 @@ const AppointmentSearchAndTable = () => {
             ))}
           </Tbody>
         </Table>
+      </div>
         <Modal isOpen={isModalOpen} onClose={() => {
           setIsModalOpen(false);
           handleCancelReschedule();

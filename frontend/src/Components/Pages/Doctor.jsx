@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import Sidebar from './side';
+import SidebarDR from './sideDR';
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input, Center } from "@chakra-ui/react";
@@ -193,7 +193,9 @@ export const Doctor = () => {
   mb={5}
 />
 </div>
-      <Sidebar/>
+      <SidebarDR
+      username={doctorData.Username}
+      />
       <div className="home_page">
       <div className="home_page_content" >
         {/* <h4>
@@ -412,11 +414,10 @@ export const Doctor = () => {
 
           {/* uncomment da w7ot el link hena*/}
           
-          {/* <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>FollowUP</Link> */}
-
+          <Link to="/followuprequestdoc" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>FollowUP</Link> 
 
             {/* comment elline el t7t da*/}
-            <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+           { /*<Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>*/}
 
 
 
