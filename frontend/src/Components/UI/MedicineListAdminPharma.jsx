@@ -4,6 +4,9 @@ import { Buffer } from 'buffer';
 import { SimpleGrid, Box, Heading, Input,Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import '../UI/button.css'
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarAdmin from '../Pages/sideAdmin';
 
 export function MedicineListControl() {
   const [medicines, setMedicines] = useState([]);
@@ -38,11 +41,19 @@ export function MedicineListControl() {
     );
 
   return (
-    <><Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
+    <>
+    <Navigation
+      pagetitle={'Available Medicines'}/>
+       <SidebarAdmin
+      />
+    {/* <Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
     <Text fontSize={'3xl'} color={'white'} >Available Medicines</Text>
     <button className="btn" onClick={back}>back</button>
-</Box>
-    <Box className="med_page">
+</Box> */}
+
+
+<div className="content">
+    <Box className="med_page" mr={10} mt={8}>
 
     
       <MedicinalUseFilter
@@ -80,7 +91,9 @@ export function MedicineListControl() {
           </Box>
         ))}
       </SimpleGrid>
-    </Box></>
+    </Box>
+    </div>
+    </>
   );
 }
 

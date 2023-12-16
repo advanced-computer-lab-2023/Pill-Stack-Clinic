@@ -29,6 +29,8 @@ import Navigation from "../UI/Navigation";
 import '../UI/Styles/innerPages.css';
 import SidebarDR from '../Pages/sideDR';
 import { AddIcon } from '@chakra-ui/icons';
+import SidebarAdmin from '../Pages/sideAdmin';
+
 
 function AdminPacks() {
     const [packs, setPacks] = useState([]);
@@ -194,7 +196,7 @@ function AdminPacks() {
 
     <Navigation
       pagetitle={'Manage Packages'}/>
-       <SidebarDR
+       <SidebarAdmin
       />
 
     <Box >

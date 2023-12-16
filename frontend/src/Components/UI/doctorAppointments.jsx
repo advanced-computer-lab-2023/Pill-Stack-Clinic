@@ -30,6 +30,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
 
 
 export const ViewAppointments = () => {
@@ -176,14 +179,24 @@ const handleReschedule = async () => {
   setRescheduleFormData({ ...rescheduleFormData, appointmentDate: null });
   refreshAppointments();
 };
+const handleVideoAppointment = async (patientUsername) => {
+  const { data } = await axios.post("http://localhost:8000", {}, { withCredentials: true });
+  const { user } = data;
+  navigate(`/videoChat/${user}/${patientUsername}`);
+
+
+
+}
 
 
 return (
   <>
-    <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
-      <Text fontSize={'3xl'} color={'white'}>Appointments</Text>
-      <button className="btn" onClick={back}>back</button>
-    </Box>
+  <Navigation
+      pagetitle={'Appointments'}/>
+       <SidebarDR
+      />
+   <div className="content">
+    
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
       <FormControl mb={4}>
         <Flex alignItems="center" mb={2}>
@@ -257,6 +270,7 @@ return (
             <Th>Appointment Date</Th>
             <Th>Actions</Th>
             <Th>Action</Th>
+            <Th>Go Appointments</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -295,6 +309,18 @@ return (
                     </Button>
                 {/* /)} */}
                 </Td>
+                <Td>
+                  
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleVideoAppointment(appointment.PatientUsername)}
+                      isDisabled={appointment.Status !== 'upcoming'}
+                    >
+                      Go appointment
+                    </Button>
+                
+                </Td>
               </Tr>
             ))
           ) : (
@@ -304,6 +330,7 @@ return (
           )}
         </Tbody>
       </Table>
+      
       <Modal isOpen={isModalOpen} onClose={() => {
           setIsModalOpen(false);
           handleCancelReschedule();
@@ -337,7 +364,9 @@ return (
         </ModalFooter>
       </ModalContent>
     </Modal>
+    
     </Box>
+  </div>   
   </>
 );
 };

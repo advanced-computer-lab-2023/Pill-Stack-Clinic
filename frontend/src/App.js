@@ -37,6 +37,7 @@ import RequestFollowUp from './Components/Pages/RequestFollowUp.jsx';
 import ChatMessages from './Components/Pages/chatMessagesPatient.jsx';
 import ChatMessagesDoctor from './Components/Pages/chatMessagesDoctor.jsx';
 import ViewDocFollowup from './Components/Pages/ViewDocFollowup.jsx';
+import VideoApp from './Components/Pages/videoChat.jsx';
 ///Pharmacy add ons
 import PharmacistRegisterPage from './Components/Pages/PharmacistRegisterPage';
 import{MedicineList} from "./Components/UI/MedicineList";
@@ -97,6 +98,7 @@ function App() {
         <Route path="/doctor-register" element={<DoctorRegisterPage />} />
         <Route path="/chatwithdoctor/:username" element={<ChatMessages socket={socket} />} />
         <Route path="/chatwithpatient/:username/:patientUsername" element={<ChatMessagesDoctor socket={socket} />} />
+        <Route path="/videoChat/:doctorUsername/:patientUsername" element={<VideoApp />} />
         {/* /doctor/prescriptions/${patient._id} */}
         <Route path="/doctor/prescriptions/:patientUser" element={<ManagePrescriptions/>} />
         <Route path="/follow-up-request" element={<FollowUpRegisterForm />} />
