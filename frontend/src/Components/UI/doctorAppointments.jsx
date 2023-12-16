@@ -16,6 +16,13 @@ import {
   Flex,
   Button,
   FormControl,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { MdClear } from 'react-icons/md';
@@ -23,18 +30,20 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navigation from "../UI/Navigation";
-import '../UI/Styles/innerPages.css';
-import SidebarDR from '../Pages/sideDR';
 
 
 export const ViewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([appointments]);
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [editedAppointmentId, setEditedAppointmentId] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rescheduleFormData, setRescheduleFormData] = useState({
+    appointmentDate: null
+  });
   const navigate = useNavigate();
   const back =()=>  navigate(-1);
   useEffect(() => {
@@ -113,21 +122,69 @@ export const ViewAppointments = () => {
     }
 };
 
+const handleCancelReschedule = () => {
+  setEditedAppointmentId(null);
+  // setIsModalOpen(false);
+};
+
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  //rescheduleFormData.appointmentDate=(value);
+  setRescheduleFormData({
+    ...rescheduleFormData,
+    [name]: new Date(value),
+  });
+};
+
+const openModal = async (appointmentId) => {
+  setEditedAppointmentId(appointmentId);
+  setIsModalOpen(true);
+};
+
+const refreshAppointments = async () => {
+  try {
+    const response = await axios.post("http://localhost:8000/doctor/allApp", {}, {
+      withCredentials: true,
+    });
+    setAppointments(response.data);
+    setFilteredAppointments(response.data);
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+  }
+};
+
+
+const handleReschedule = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/doctor/rescheduleAppointment",
+      {
+        appointmentId: editedAppointmentId,
+        newDate: rescheduleFormData.appointmentDate.toISOString(),
+      },
+      { withCredentials: true }
+    );
+
+    console.log("After rescheduling - API response:", response.data);
+
+    // Update the state or perform other actions as needed
+  } catch (error) {
+    console.error('Errorrrrrrrrrrrrrr rescheduling appointment:', error);
+    // Handle error (e.g., show an error message to the user)
+  }
+  setIsModalOpen(false);
+  setRescheduleFormData({ ...rescheduleFormData, appointmentDate: null });
+  refreshAppointments();
+};
 
 
 return (
   <>
-  <Navigation
-      pagetitle={'Appointments'}/>
-       <SidebarDR
-      />
-    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Appointments</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box> */}
-
+    </Box>
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
-    <div className="content">
       <FormControl mb={4}>
         <Flex alignItems="center" mb={2}>
           <Text mr={2} fontSize="sm">
@@ -199,6 +256,7 @@ return (
             <Th>Status</Th>
             <Th>Appointment Date</Th>
             <Th>Actions</Th>
+            <Th>Action</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -226,6 +284,17 @@ return (
                     </Button>
                   )}
                 </Td>
+                <Td>
+                    <Button
+                      colorScheme="teal"
+                      onClick={() => openModal(appointment._id)}
+                      //size="sm"
+                      //fontSize="sm"
+                    >
+                      Reschedule
+                    </Button>
+                {/* /)} */}
+                </Td>
               </Tr>
             ))
           ) : (
@@ -235,7 +304,39 @@ return (
           )}
         </Tbody>
       </Table>
-      </div>
+      <Modal isOpen={isModalOpen} onClose={() => {
+          setIsModalOpen(false);
+          handleCancelReschedule();
+        }}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Reschedule Appointment</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {/* Reschedule form */}
+          <DatePicker
+            selected={rescheduleFormData.appointmentDate}
+            onChange={(date) => handleInputChange({ target: { name: "appointmentDate", value: date } })}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            placeholderText="Select Date & Time"
+            style={{ width: '100%', height: '2.5rem' }}
+            minDate={new Date()}
+          />
+          {/* Add other reschedule form inputs here */}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="teal" size="sm" onClick={() => handleReschedule()}>
+            Save
+          </Button>
+          {/* <Button variant="ghost" size="sm" onClick={handleCancelReschedule}>
+            Cancel
+          </Button> */}
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
     </Box>
   </>
 );
