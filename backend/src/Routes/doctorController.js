@@ -1241,6 +1241,142 @@ const deleteContract = async (req, res) => {
       throw error;
     }
   };
+  const getDoctorFollowUps = async (req, res) => {
+  
+    const username = req.user.Username; // Ensure you have the username from the authenticated user
+    const profile = await doctorModel.findOne({ Username: username });
+    const followUps = profile.followup;
+    const currDate = new Date();
+  
+    // Optionally update follow-up statuses based on current date
+   /* for (const followUp of followUps) {
+      if (new Date(followUp.StartDate) < currDate) {
+        followUp.Status = 'expired'; // For example, if you want to mark past follow-ups as 'expired'
+      }
+    }*/
+    await profile.save();
+  
+    res.send(followUps); // Send the follow-ups to the frontend
+  };
+  const handleFollowUp = async (req, res) => {
+    try {
+      const doctorId = req.params.doctorId; // Retrieve doctor ID from URL parameter
+        const followUpId = req.body.followUpId; // The ID of the follow-up appointment
+        const userDecision = req.body.accepted;// true if accepted, false otherwise
+
+        // Find the doctor by ID
+        const doctor = await doctorModel.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).send('Doctor not found');
+        }
+
+        // Find the follow-up appointment
+        const followUpIndex = doctor.followup.findIndex(fu => fu._id.toString() === followUpId);
+        if (followUpIndex === -1) {
+            return res.status(404).send('Follow-up appointment not found');
+        }
+
+        if (userDecision) {
+            // If accepted, transfer to booked appointments
+            const followUp = doctor.followup[followUpIndex];
+            doctor.BookedAppointments.push({ ...followUp.toObject(), Status: 'upcoming' });
+        }
+
+        // Remove from follow-up appointments
+        doctor.followup.splice(followUpIndex, 1);
+
+        // Save the changes
+        await doctor.save();
+
+        res.status(200).send('Follow-up appointment processed successfully');
+    } catch (error) {
+        res.status(500).send('Server error: ' + error.message);
+    }
+};
+// In doctorController.js
+
+// Method to handle follow-up acceptance
+const acceptFollowUp = async (req, res) => {
+  const { patientUsername, patientName, startDate, endDate } = req.body;
+  const doctorId = req.user._id; // Make sure req.user is populated with the authenticated user's info
+
+  try {
+    const doctor = await doctorModel.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Find the follow-up by username, name, start date, and end date
+    const followUpIndex = doctor.followup.findIndex(fu =>
+      (fu.PatientUsername === patientUsername || fu.PatientName === patientName) &&
+      new Date(fu.StartDate).getTime() === new Date(startDate).getTime() &&
+      new Date(fu.EndDate).getTime() === new Date(endDate).getTime()
+    );
+
+    if (followUpIndex === -1) {
+      return res.status(404).json({ message: 'Follow-up not found' });
+    }
+
+    const followUp = doctor.followup[followUpIndex];
+
+    // Add follow-up to BookedAppointments
+    doctor.BookedAppointments.push({
+      _id: new mongoose.Types.ObjectId(),
+      PatientUsername: followUp.PatientUsername,
+      PatientName: followUp.PatientName,
+      StartDate: followUp.StartDate,
+      EndDate: followUp.EndDate,
+      Price: followUp.Price,
+      Status: 'upcoming'
+    });
+
+    // Remove the follow-up from the followup array
+    doctor.followup.splice(followUpIndex, 1);
+
+    await doctor.save();
+
+    res.status(200).json({ message: 'Follow-up accepted' });
+  } catch (error) {
+    console.error(error); // Log the full error for debugging
+    res.status(500).json({ message: 'Error processing follow-up', error: error.message });
+  }
+};
+
+
+// Method to handle rejection of a follow-up appointment
+const rejectFollowUp = async (req, res) => {
+  const { patientUsername, patientName, startDate, endDate } = req.body;
+  const doctorId = req.user._id; // Assuming you have the doctor's ID from the authenticated user
+
+  try {
+    const doctor = await doctorModel.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).send('Doctor not found');
+    }
+
+    // Find the follow-up by username, name, start date, and end date
+    const followUpIndex = doctor.followup.findIndex(fu =>
+      (fu.PatientUsername === patientUsername || fu.PatientName === patientName) &&
+      new Date(fu.StartDate).getTime() === new Date(startDate).getTime() &&
+      new Date(fu.EndDate).getTime() === new Date(endDate).getTime()
+    );
+
+    if (followUpIndex === -1) {
+      return res.status(404).send('Follow-up not found');
+    }
+
+    // Remove the follow-up from the followup array
+    doctor.followup.splice(followUpIndex, 1);
+
+    await doctor.save();
+
+    res.status(200).send('Follow-up rejected');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,convertToPDF,
@@ -1251,4 +1387,5 @@ module.exports = {
    scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus, getFullAccount,
     addPrescription, editPrescription, sendMessage, join, getPatientUsername,generateRoom,getpharmacistUsername,sendMessagePharmacist,sendMessage2,joinPharmacist
+    ,handleFollowUp,getDoctorFollowUps,acceptFollowUp,rejectFollowUp
 }

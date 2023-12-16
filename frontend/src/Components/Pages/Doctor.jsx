@@ -414,11 +414,10 @@ export const Doctor = () => {
 
           {/* uncomment da w7ot el link hena*/}
           
-          {/* <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>FollowUP</Link> */}
-
+          <Link to="/followuprequestdoc" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>FollowUP</Link> 
 
             {/* comment elline el t7t da*/}
-            <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+           { /*<Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>*/}
 
 
 
