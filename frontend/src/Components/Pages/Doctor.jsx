@@ -408,8 +408,12 @@ export const Doctor = () => {
          
           <Link to="/doctor-home/myAvailability" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
        
-          
+          {/* ahmedaliiiiii */}
             <Link to="apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+
+
+
+
             <Link to={`myPatients/${doctorData.Username}`}>
             <Box className="box22" >My Patients</Box>
             </Link>
