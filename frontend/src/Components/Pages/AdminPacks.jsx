@@ -22,6 +22,9 @@ import {
     Input,
     Flex
 } from "@chakra-ui/react";
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
 
 
 function AdminPacks() {
@@ -108,12 +111,20 @@ function AdminPacks() {
 
 
   return (
+    <>
+
+    <Navigation
+      pagetitle={'Manage Packages'}/>
+       <SidebarDR
+      />
+
     <Box >
-        {console.log(packs)}    
-        <Box bg={"linear-gradient(90deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl'>
+         
+        {/* <Box bg={"linear-gradient(90deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl'>
             <Text fontSize={'3xl'} color={'white'} >Manage Packages</Text>
             <button className="btn" onClick={back}>back</button>
-        </Box>
+        </Box> */}
+        <div className="content">
         <Box m={10} mb={5}  >
         <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
             <Button  size="md" bg={'grey'} 
@@ -167,7 +178,9 @@ function AdminPacks() {
             </ModalFooter>
             </ModalContent>
         </Modal>
+        </div>
     </Box>
+    </>
   );
 }
 

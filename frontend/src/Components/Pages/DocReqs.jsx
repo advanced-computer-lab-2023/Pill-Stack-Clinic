@@ -43,6 +43,9 @@ import {
     
 } from "@chakra-ui/react";
 import axios from 'axios';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarAdmin from '../Pages/sideAdmin';
 
 function DocReqs() {
     const [reqs, setReqs] = useState([]);
@@ -140,6 +143,10 @@ function DocReqs() {
 
   return (
     <>
+      <Navigation
+      pagetitle={'Doctor Requests'}/>
+       <SidebarAdmin
+      />
         <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
             <Text fontSize={'3xl'} color={'white'} > Doctor Requests </Text>
             <button className="btn" onClick={back}>back</button>

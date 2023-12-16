@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon } from "@chakra-ui/icons";
 import '../UI/Styles/home.css';
 import RR from './RR'
-import Sidebar from './side';
+import SidebarAdmin from './sideAdmin';
 
 
 export const AdminHome = () => {
@@ -125,7 +125,7 @@ export const AdminHome = () => {
     <>
      <div style={{ position: 'fixed', top: '0', left: '0', right: '0', zIndex: '1000'}}>
       <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} onLogout={Logout} />
-      <Sidebar
+      <SidebarAdmin
       />
       </div>
       <div className="home_page">
@@ -155,7 +155,7 @@ export const AdminHome = () => {
             <Box className="boxW" >
                <div className="boxT">Wallet</div>
                <div className="square">$</div>
-                <div className="balance">To Be Updated</div>
+                <div className="balance">Private Account</div>
                 <div className="square2">Total Balance</div>
             </Box>
             <Box className="box1" >
