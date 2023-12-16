@@ -9,7 +9,7 @@ const {viewALLAppointments,searchDoctors,
     filterPrescriptions, viewPatientWallet,viewUpcomPastAppointments,payAppointmentWallet,linkPatientAsFamilyMember,uploadMedicalDocument,
     removeMedicalDocument,getAmount,viewAllAvailableAppointments,
     viewFamilyAppointments,viewMyHealthRecords,getAddresses,convertToPDF,
-    orderDetails,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage, rescheduleAppointment, famRescheduleAppointment} = require('../Routes/userController.js');
+    orderDetails,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage, rescheduleAppointment, famRescheduleAppointment,viewAvailDoctorAppointmentsforReschedule} = require('../Routes/userController.js');
 const {  userVerification } = require('../Middleware/AuthMiddleware')
 
 
@@ -62,5 +62,5 @@ router.post('/famRescheduleAppointment',userVerification,famRescheduleAppointmen
 router.get('/Address',userVerification,getAddresses)
 router.get('/orderDetails',userVerification,orderDetails)
 router.post('/addDeliveryAddress/:username',addDeliveryAddress)
-
+router.post('/getFreeAppointments',viewAvailDoctorAppointmentsforReschedule)
 module.exports = router;

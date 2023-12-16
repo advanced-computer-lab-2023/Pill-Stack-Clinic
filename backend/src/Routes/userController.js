@@ -606,6 +606,22 @@ const viewAvailDoctorAppointments = async (req, res) => {
    }
  };
 
+ const viewAvailDoctorAppointmentsforReschedule = async (req, res) => {
+   try {
+     const selectedDoctorUsername = req.body.DoctorUsername;  
+     const selectedDoctor = await doctorModel.findOne({ Username: selectedDoctorUsername });
+     if (!selectedDoctor) {
+       return res.status(404).json({ message: 'Doctor not found' });
+     }
+     const doctorAppointments = selectedDoctor.Availability;
+     console.log(doctorAppointments);
+     res.status(200).json(doctorAppointments);
+   } catch (error) {
+     console.error('Error viewing doctor appointments:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   }
+ };
+
  const viewUpcomPastAppointments = async (req, res) => {
    try {
      const PatientUsername = req.params.username; 
@@ -1272,7 +1288,6 @@ const viewMyHealthRecords = async (req, res) => {
       const username = req.user.Username;
       console.log(String(newDate));
       const patient=await userModel.findOne({Username:username});
-
       if (!patient) {
          return res.status(404).json({ message: 'Patient not found' });
       }
@@ -1664,7 +1679,7 @@ module.exports = {selectedDoctorDetails,addFamilyMem,
    linkPatientAsFamilyMember, uploadMedicalDocument,checkSubscribed,
     removeMedicalDocument,viewFamilyAppointments,viewMyHealthRecords,
     orderDetails,getAddresses,addDeliveryAddress,requestFollowUp,requestFollowUp2,generateRoom,joinChatRoomPatient,getDoctorUsername,sendMessage,
-    rescheduleAppointment, famRescheduleAppointment
+    rescheduleAppointment, famRescheduleAppointment ,viewAvailDoctorAppointmentsforReschedule
    
    
    
