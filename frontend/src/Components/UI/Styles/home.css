@@ -1,7 +1,4 @@
 
-body {
-
-  }
   @font-face {
     font-family: 'poppinsregular';
     src: url('../fonts/Poppins otf/Poppins-Regular.otf') format('opentype');
@@ -293,7 +290,11 @@ body {
     background-color: #005660;
     border-radius: 17px;
     transition: transform 0.8s;
-
+  }
+  .square-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .square:hover {
