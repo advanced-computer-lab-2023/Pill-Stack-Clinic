@@ -29,6 +29,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
 
 const  FamilyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -180,11 +183,16 @@ const  FamilyAppointments = () => {
 
   return (
     <>
-      <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+      <Navigation
+      pagetitle={'Family Appointments'}/>
+       <Sidebar
+      />
+      {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
         <Text fontSize={'3xl'} color={'white'}>Family Appointments</Text>
         <button className="btn" onClick={() => navigate(-1)}>Back</button>
-      </Box>
+      </Box> */}
       <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+      <div className="content">
         <FormControl mb={4}>
           <Flex alignItems="center" mb={2}>
             <Text mr={2} fontSize="sm">Filter by Status:</Text>
@@ -330,7 +338,9 @@ const  FamilyAppointments = () => {
         </ModalFooter>
         </ModalContent>
         </Modal>
+        </div>
       </Box>
+      
       <ToastContainer /> {/* Toast container for displaying notifications */}
     </>
   );
