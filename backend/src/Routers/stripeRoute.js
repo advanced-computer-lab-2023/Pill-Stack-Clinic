@@ -144,7 +144,7 @@ const emailText = `Hello, Your new appointment is scheduled for ${formattedDate}
 await sendEmail(user.Email, "New Appointment ",emailText );
 await sendEmail(doctor.Email,"New Appointment",emailText)
  }
-res.json({ success: true });
+res.json({ success: true,app:userApp });
 
 
 });
