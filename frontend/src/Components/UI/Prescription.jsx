@@ -33,7 +33,7 @@ import { m } from 'framer-motion';
 
 
 function Prescription(
-    {data, keyId, callback, download}
+    {data, keyId, callback,openModal, download}
 ) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [inputList, setinputList]= useState(data.Medicine);
@@ -72,7 +72,8 @@ function Prescription(
                 textAlign={'right'}
                 mb={10}
             >
-              {new Date(data.PrecriptionDate).toLocaleDateString()}
+              {console.log(data.Date)}
+              {data.PrescriptionDate && new Date(data.PrecriptionDate).toLocaleDateString()}{data.Date && new Date(data.Date).toLocaleDateString()}
             </Text>
           </Flex> 
             {
@@ -99,7 +100,7 @@ function Prescription(
                     fontSize={'md'}
                     textAlign={'left'}
                 >
-                  Dose: {med.Dose} , Instructions:  {med.Instructions}
+                  Dose: {med.Dose || med.MedicineDose} , Instructions:  {med.Instructions}
                 </Text>
 
                 </HStack>
@@ -110,7 +111,7 @@ function Prescription(
 
             <Flex mt={10} alignItems={'center'}>
             {
-              data.Status === 'Unfilled' && 
+              data.Status === 'Unfilled' && callback&&
               <IconButton
               isRound={true}
               variant='solid'
@@ -122,7 +123,8 @@ function Prescription(
               />
             }
             {console.log(data)}
-            <Button colorScheme="teal" left="5%" onClick={() => download(data)}>Download</Button>
+            {callback && <Button colorScheme="teal" left="5%" onClick={() => download(data)}>Download</Button>}
+           {!callback && <Button colorScheme="teal"  onClick={() => download(data)}>Download</Button>}
          <Spacer></Spacer>
 
 

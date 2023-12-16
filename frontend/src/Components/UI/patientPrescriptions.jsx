@@ -20,9 +20,12 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Divider,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import '../UI/button.css'
+import Prescription from '../UI/Prescription';
 
 const PrescriptionViewer = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -167,40 +170,31 @@ const PrescriptionViewer = () => {
             <option value="Unfilled">Unfilled</option>
           </Select>
         </Box>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-            <Th>Doctor Username</Th>
-              <Th>Date</Th>
-              <Th>Status</Th>
-              <Th>Actions</Th>
-              <Th>Download PDF</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {filteredPrescriptions.map((prescription, index) => (
-              <Tr key={index}>
-                 <Td>{prescription.DocUsername}</Td>
-                <Td>{new Date(prescription.Date).toLocaleString('en-US', { timeZone: 'UTC' })}</Td>
-               
-                <Td>{prescription.Status}</Td>
-                <Td>
-                  <Tooltip label="View Details" hasArrow placement="top">
-                    <Button colorScheme="teal" onClick={() => openModal(prescription)}>
-                      Details
-                    </Button>
-                  </Tooltip>
-                </Td>
-                <Td>
-                  {/* <a href='../../../backend/src/Nadatest3Dr.DS0.pdf' download="Prescription PDF"
-        target="_blank"
-        rel="noreferrer"> */}
-        {console.log(prescription._id)}
-                  <Button colorScheme="teal" onClick={() => Download(prescription)}>Download</Button></Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+
+        <Box m={7}>
+        <Divider my={5}/>
+            <SimpleGrid  minChildWidth="30%" columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+            {
+            //if prescriptions > 0 
+            filteredPrescriptions &&
+            filteredPrescriptions[0] ?
+            filteredPrescriptions.map((prescription, index) => (
+                <>
+                {console.log("presss", prescription)}
+                <Prescription data={prescription} keyId={prescription._id} openModal={()=>openModal(prescription)} download={()=>Download(prescription)}/>
+
+                </>
+              ))
+              : 
+              <Box minH={'200px'}>
+                <Text>No current prescriptions found</Text>
+              </Box>
+              
+            }
+            
+            </SimpleGrid>
+            </Box>
+
         <Modal isOpen={isModalOpen} onClose={closeModal} size="lg">
           <ModalOverlay />
           <ModalContent>
