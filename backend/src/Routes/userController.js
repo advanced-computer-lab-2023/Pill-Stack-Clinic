@@ -1088,6 +1088,7 @@ const cancelSubscription=async(req,res)=>{
             End_Date: new Date(),
          });
          user.healthPackage.push(userPack);
+         await user.save();
       }}
    }
    if(bool ==false){
@@ -1106,6 +1107,7 @@ const cancelSubscription=async(req,res)=>{
                linkedFam.healthPackage[j].remove();
                console.log("Family pack deleted");
                await linkedFam.save();
+               remove=false;
             }
             else{
             linkedFam.healthPackage[j].remove();
