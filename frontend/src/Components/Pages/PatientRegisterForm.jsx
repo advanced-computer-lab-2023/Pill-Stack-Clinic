@@ -184,25 +184,6 @@ function PatientRegisterForm() {
     console.log(formData);
   }, [formData]);
 
-
-
-  // const onChange = e => {
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
-  //   console.log(e.target.value, e.target.name, formData);
-  //   //check if all fields are entered
-
-  //   username != '' || 
-  //   name != '' ||
-  //   email != '' ||
-  //   password != '' ||
-  //   dob != '' ||
-  //   gender != '' ||
-  //   mobile != '' ||
-  //   EmergencyContact_name != '' ||
-  //   EmergencyContact_mobileNumber != '' ||
-  //   EmergencyContact_Relation != '' ? setAllEntered(false) : setAllEntered(true);
-  // };
-
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
    
@@ -259,11 +240,12 @@ function PatientRegisterForm() {
     }
   };
   return (
+    <div className="container-fluid">
+  <div className="row justify-content-center">
     <MDBContainer fluid className=' d-flex justify-content-center'  
-    style={{height:'max-content', backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
+    style={{minHeight: '100vh', backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
      >
-      <MDBRow className=' d-flex justify-content-center align-items-center w-75' style={{height:'fit-content'}} >
-        <MDBCol >
+      <MDBRow className=' d-flex justify-content-center align-items-center w-75 g-0 col-sm-12' style={{height:'fit-content'}} >
           <MDBCard className='my-4' style={{    
             //frosty glass effect
             backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust opacity as needed
@@ -271,8 +253,8 @@ function PatientRegisterForm() {
            }}>
             <h3 className="text-uppercase fw-bold pt-5 ps-5">User Registration Form</h3>
 
-            <MDBRow className='g-0 '>
-              <MDBCol lg={'6'} md='12' sm={'12'} className="d-none d-md-block">
+            <MDBRow className='g-0 col-sm-12'>
+              <MDBCol lg={'6'} md='12' sm={'12'}>
               <MDBCardBody className='text-black d-flex flex-column justify-content-center'>
                   <Text> Personal Information </Text>
                   <MDBRow >
@@ -302,7 +284,7 @@ function PatientRegisterForm() {
                 {/* <MDBCardImage src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp' alt="Sample photo" className="rounded-start" fluid/> */}
               </MDBCol>
 
-              <MDBCol md='6'>
+              <MDBCol lg='6' md='6' sm='12' >
               <MDBCardBody className='text-black d-flex flex-column justify-content-center'>
               <Text> Emergency Contact </Text>
 
@@ -324,7 +306,7 @@ function PatientRegisterForm() {
                 </MDBCardBody>
               </MDBCol>
             </MDBRow>
-            <MDBRow className='g-0 p-2'>
+            <MDBRow className='g-0 p-2 col-sm-12'>
               <div className="d-flex justify-content-end pt-3">
               <div className="d-flex justify-content-end pt-3">
                                   
@@ -350,10 +332,12 @@ function PatientRegisterForm() {
             </MDBRow>
           </MDBCard>
 
-        </MDBCol>
       </MDBRow>
 
     </MDBContainer>
+</div>
+</div>
+
   );
 }
 
