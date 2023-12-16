@@ -262,6 +262,7 @@ return (
             <Th>Appointment Date</Th>
             <Th>Actions</Th>
             <Th>Action</Th>
+            <Th>Go Appointments</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -299,6 +300,18 @@ return (
                       Reschedule
                     </Button>
                 {/* /)} */}
+                </Td>
+                <Td>
+                  
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleCancelAppointment(appointment._id, appointment.Status)}
+                      isDisabled={appointment.Status !== 'upcoming'}
+                    >
+                      Go appointment
+                    </Button>
+                
                 </Td>
               </Tr>
             ))

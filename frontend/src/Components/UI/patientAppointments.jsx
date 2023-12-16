@@ -262,6 +262,7 @@ const AppointmentSearchAndTable = () => {
               <Th>Doctor Name</Th>
               <Th>Action</Th>
               <Th>Action</Th>
+              <Th>Go Appointments</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -302,6 +303,14 @@ const AppointmentSearchAndTable = () => {
                     </Button>
                 {/* /)} */}
                 </Td>
+                <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleCancelAppointment(appointment._id)}
+                      isDisabled={appointment.Status !== 'upcoming'}
+                    >
+                      Go Appointment
+                    </Button>
               </Tr>
             ))}
           </Tbody>
