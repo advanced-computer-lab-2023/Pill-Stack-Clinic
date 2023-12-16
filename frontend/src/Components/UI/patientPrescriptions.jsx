@@ -145,6 +145,7 @@ const PrescriptionViewer = () => {
       
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
     <div className="content">
+        <h1>Prescriptions</h1>
         <Box mb={4}>
           <Text mb="2">Filter by Date Time Range:</Text>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb="4">
