@@ -50,8 +50,11 @@ This project serves as a learning opportunity to collaborate effectively within 
 - Admin home page
 ![Alt text](Admin_Home.png)
 - Add a new admin to the system
+![Alt text](Add_Admin.png)  
 - Delete a user from the system
+![Alt text](Manage_Users.png)
 - View doctor's applications
+![Alt text](Doc_Request.png)
 
 
 
