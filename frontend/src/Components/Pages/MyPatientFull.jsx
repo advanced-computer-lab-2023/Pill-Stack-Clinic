@@ -52,6 +52,9 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarDR from '../Pages/sideDR';
 
 
 
@@ -224,7 +227,12 @@ export default function MyPatientFull() {
   
 
   return (
+    <>
+    <Navigation/>
+     <SidebarDR
+    />
     <section style={{ backgroundColor: '#eee' }}>
+    <div className="content">
       <MDBContainer className="py-5">
 
         <MDBRow>
@@ -513,6 +521,8 @@ export default function MyPatientFull() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      </div>
     </section>
+    </>
   );
 }
