@@ -19,6 +19,13 @@ import {
     CardBody,
 } from "@chakra-ui/react";
 import { toast,ToastContainer } from 'react-toastify';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
+
+
+
+
 const Package = () =>{
     const navigate=useNavigate();
     const [packs, setPacks] = useState([]);
@@ -72,12 +79,18 @@ const GoToStripe =async(packageID)=>{
     
     <Box >
         
-        {console.log(packs)}    
-        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+        
+        {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Available Packages</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
-        <Box m={10} mt={20} bg='#f9f9f9'>
+    </Box> */}
+
+<Navigation
+      pagetitle={'Available Packages'}/>
+       <Sidebar
+      />
+        <Box>
+        <div className="content">
             {
                 packs &&
                 // <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={5} rounded={5} flexDirection={'column'}>
@@ -101,6 +114,7 @@ const GoToStripe =async(packageID)=>{
             }
             <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
             </Flex>
+            </div>
         </Box>
         <ToastContainer />
         <div style={{textAlign:'center',justifyContent:"center"}} >
@@ -108,7 +122,9 @@ const GoToStripe =async(packageID)=>{
             <br></br>
             <label>If you want to Change Subscribtion,Kindly cancel current subscription</label>
         </div>
+        
     </Box>
+    
     );
 } 
 export default Package;

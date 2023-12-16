@@ -33,6 +33,10 @@ import {
 import { MdClear } from 'react-icons/md';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { BiLike, BiChat, BiShare } from 'react-icons/bi';
+import Navigation from "./Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
+
 
 
 import axios from 'axios';
@@ -128,11 +132,18 @@ const DoctorList = () => {
   // };
 
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <>
+    <Navigation
+      pagetitle={'Doctors'}/>
+       <Sidebar
+      />
+    
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Doctors</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
+    </Box> */}
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md" >
+    <div className="content">
           <FormControl mb={4} >
           <HStack alignItems="center" mb={2} justifyContent={'flex-end'} spacing={3}>
 
@@ -186,9 +197,12 @@ const DoctorList = () => {
                     <Flex justifyContent='center' alignItems='center' flexDirection={'column'}>
                         <Avatar mb={2} size={'2xl'} name={doctor.name} src='https://bit.ly/sage-adebayo' />
                         <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+                          
                         <Box>
                           <Heading size='sm'>{doctor.name}</Heading>
+                          
                         </Box>
+                       
                       </Flex>
                     </Flex>
                   </CardHeader>
@@ -223,7 +237,7 @@ const DoctorList = () => {
         </SimpleGrid>
 
 
-
+        </div>
 
 
 
