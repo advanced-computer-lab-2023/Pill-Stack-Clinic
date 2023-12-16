@@ -50,6 +50,7 @@ import{MedicineListwithSales} from "./Components/UI/MedicineListWithSales";
 import {AddMedicine} from "./Components/UI/AddMed";
 import ManagePrescriptions from "./Components/Pages/ManagePrescriptions.jsx";
 import MyPatientFull from "./Components/Pages/MyPatientFull.jsx";
+import LandingPage from './Components/Pages/LandingPage.jsx';
 
 
 import io from 'socket.io-client';
@@ -62,12 +63,13 @@ function App() {
   return (
     <div >
       <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/rating" element={<RR />} />
         <Route path="/doctor-home" element={<Doctor />} />
         <Route path="/pharma-home" element={<PharmaHome />} />
         <Route path="/Unsigned-doctor-home" element={<UnsignedDoctor />} />
-        <Route path="/" element={<Login />} />
         <Route path="/admin-home" element={<AdminHome />} />
         <Route path="/admin-home/admin-packs" element={<AdminPacks />} />
         <Route path="/admin-home/admin-users" element={<UserManagement/>} />
