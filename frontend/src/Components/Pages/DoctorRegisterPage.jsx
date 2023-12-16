@@ -175,10 +175,10 @@ const DoctorRegisterPage = () => {
     //   </VStack>
     // </Box>
     <MDBContainer fluid className=' d-flex justify-content-center'  
-    style={{height:'max-content', backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
+    style={{minHeight: '100vh', backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
      >
       <MDBRow className=' d-flex justify-content-center align-items-center w-75' style={{height:'fit-content'}} >
-        <MDBCol >
+        {/* <MDBCol > */}
           <MDBCard className='my-4' style={{    
             //frosty glass effect
             backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust opacity as needed
@@ -187,7 +187,7 @@ const DoctorRegisterPage = () => {
             <h3 className="text-uppercase fw-bold pt-5 ps-5">Doctor Registration Form</h3>
 
             <MDBRow className='g-0 '>
-              <MDBCol lg={'6'} md='12' sm={'12'} className="d-none d-md-block">
+              <MDBCol lg={'6'} md='12' sm={'12'} className="d-md-block">
               <MDBCardBody className='text-black d-flex flex-column justify-content-center'>
                   <Text> Personal Information </Text>
                   <MDBRow >
@@ -309,7 +309,7 @@ const DoctorRegisterPage = () => {
             </MDBRow>
           </MDBCard>
 
-        </MDBCol>
+        {/* </MDBCol> */}
       </MDBRow>
 
     </MDBContainer>
