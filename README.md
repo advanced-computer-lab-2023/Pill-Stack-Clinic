@@ -21,6 +21,7 @@ This project serves as a learning opportunity to collaborate effectively within 
 - View all doctors on the platform
 ![Alt text](screenshots/View_Doctors.png)
 - Book an appointment
+![Alt text](Book_Appointment.png) 
 - chat with a doctor 
 ![Alt text](Chat_With_Doc.png)
 - Add a family member
@@ -30,6 +31,7 @@ This project serves as a learning opportunity to collaborate effectively within 
 - View my appointments 
 ![Alt text](View_Appointments.png)
 - View my family's appointments
+![Alt text](Family_Appointments.png) 
 - View my health packages
 ![Alt text](View_MyPacks.png)
 - Subscribe to a health package
@@ -44,6 +46,7 @@ This project serves as a learning opportunity to collaborate effectively within 
 ![Alt text](Availibility_Slots.png)
 - Accept/Reject a follow up requested by a patient
 - Schedule a follow up for a patient
+![Alt text](View_PatientFull.png)
 - Admin home page
 ![Alt text](Admin_Home.png)
 - Add a new admin to the system

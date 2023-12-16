@@ -20,12 +20,15 @@ import {
     ModalCloseButton,
     useDisclosure,
     Input,
-    Flex
+    Flex,
+    Card,
+    Icon,
+    Stack
 } from "@chakra-ui/react";
 import Navigation from "../UI/Navigation";
 import '../UI/Styles/innerPages.css';
 import SidebarDR from '../Pages/sideDR';
-
+import { AddIcon } from '@chakra-ui/icons';
 
 function AdminPacks() {
     const [packs, setPacks] = useState([]);
@@ -33,6 +36,9 @@ function AdminPacks() {
     const [count,Setcount]=useState(0);
     const navigate = useNavigate();
     const back =()=>  navigate(-1);
+    const [up , setUp]= useState(false);
+    let message='A';
+
 
     useEffect(() => {
         const getPacks = async () => {
@@ -40,12 +46,14 @@ function AdminPacks() {
                 withCredentials: true,
             });
             setPacks(data);
+
+
         };
-        setTimeout(() => {
-            toast.success("added Succesfully");
-         }, 5000);
+        // setTimeout(() => {
+        //     toast.success("added Succesfully");
+        //  }, 5000);
          getPacks();
-    }, [packs]);
+    }, [up]);
 
     const handleModal = () => {
         onOpen()
@@ -85,11 +93,6 @@ function AdminPacks() {
         
         if(test){
         const packageData = {
-            //       Package_Name: req.body.packagename, 
-    //    Price: req.body.price, 
-    //    Session_Discount:req.body.session_dis, 
-    //    Pharmacy_Discount:req.body.pharmacy_dis,
-    //    Family_Discount: req.body.family_dis,   
             packagename: pName,
             price: pPrice,
             session_dis: pSessionDiscount,
@@ -105,7 +108,83 @@ function AdminPacks() {
         });
         onClose();
         toast.success("Package added");
+        setUp(!up);
         Setcount(count+1);
+        }
+        
+    }
+    const fetchPacks = async () => {
+        const { data } = await axios.get("http://localhost:8000/admin/packages", {
+            withCredentials: true,
+        });
+        setPacks(data);
+        setUp(!up);
+    };
+    const handleEdit = async (pack, newData) => {
+        // const { Package_Name, Price, Family_Discount,Pharmacy_Discount , Session_Discount } = pack;
+        const ID = pack._id;
+        const Price = newData.Price;
+        const Family_Discount = newData.Family_Discount;
+        const Pharmacy_Discount = newData.Pharmacy_Discount;
+        const Session_Discount = newData.Session_Discount;
+        let test=true;
+        
+        if(Price<0){
+            test=false;
+            toast.error("Price can not be negative");
+            message="Price can not be negative";
+        }
+        if(Family_Discount>100 || Family_Discount<0){
+            test=false;
+            toast.error("Family Discount must be between [0,100]");
+            message="Family Discount must be between [0,100]";
+        }
+        if(Session_Discount>100 || Session_Discount<0){
+            test=false;
+            toast.error("Session Discount must be between [0,100]");
+            message="Session Discount must be between [0,100]";
+        }
+        if(Pharmacy_Discount>100 || Pharmacy_Discount<0){
+            test=false;
+            toast.error("Pharmacy Discount must be between [0,100]");
+            message="Pharmacy Discount must be between [0,100]";
+        }
+        if(test){
+        try {
+            console.log("surprise");
+            axios.post("http://localhost:8000/admin/editPack/"+ ID, {
+                Price,
+                Family_Discount,
+                Pharmacy_Discount,
+                Session_Discount
+            }, {
+                withCredentials: true,
+            }); 
+            console.log("surprise2");
+            await fetchPacks();
+            toast.success("Edited Succesfully");
+            console.log("surprise");
+        }
+        catch (err) {
+            console.log(err);
+        }
+        // setUp(!up);
+
+    }
+}
+
+
+    const handleDelete = async (pack) => {
+        const ID = pack._id;
+        try {
+            axios.post("http://localhost:8000/admin/deletePack/"+ ID, null, {
+                withCredentials: true,
+            }); 
+            toast.success("Deleted Succesfully");
+            await fetchPacks();
+        }
+        catch (err) {
+            console.log(err);
         }
     }
 
@@ -127,17 +206,24 @@ function AdminPacks() {
         <div className="content">
         <Box m={10} mb={5}  >
         <Flex justifyContent={'end'} alignItems={'center'} p={5} rounded={5}>
-            <Button  size="md" bg={'grey'} 
-            onClick={handleModal}>
-                Add Package
-            </Button>
         </Flex>
             {
                 packs &&
-                <SimpleGrid  spacing={10} templateColumns='repeat(auto-fill, 30%)' as={'Flex'} justifyContent={'center'}>
+                <SimpleGrid  spacing={10} templateColumns='repeat(auto-fill, 30%)' as={'Flex'} justifyContent={'center'} alignItems={'center'}>
                 {packs.map((pack) => (
-                        <PackageCard key={pack.id} pack={pack} count={count}/>
+                        <PackageCard key={pack._id} pack={pack} count={count} callBackEdit = {handleEdit} 
+                        callBackDelete = {handleDelete}
+                        />
                     ))}
+                    <Button h={'50%'} variant={'outline'} colorScheme='teal' rounded={10} 
+                    onClick={handleModal}
+                    >
+                        <Stack alignItems={'center'}>
+                        <Icon as={AddIcon} fontSize={'6xl'} />
+                        <Text fontSize={'3xl'}>  Add Package </Text>
+                        </Stack>
+                    </Button>
+
                     </SimpleGrid>
                 // </Box>
             }
@@ -180,6 +266,8 @@ function AdminPacks() {
         </Modal>
         </div>
     </Box>
+
+    <ToastContainer/>
     </>
   );
 }
