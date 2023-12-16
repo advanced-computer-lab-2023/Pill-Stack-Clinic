@@ -12,6 +12,8 @@ This project serves as a learning opportunity to collaborate effectively within 
 - For reporting bugs or offering contributions or enhancements please check our Contributions section below.  
 
 # Screenshots
+- Landing Page
+![Alt text](screenshots/Landing.png)
 - Login Page
 ![Alt text](screenshots/image-13.png)
 - Patient home page
