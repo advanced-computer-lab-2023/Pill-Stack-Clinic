@@ -42,6 +42,9 @@ import {
 } from "@chakra-ui/react";
 import axios from 'axios';
 import { Buffer } from 'buffer';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarAdmin from '../Pages/sideAdmin';
 
 
 function PharmacistReqs() {
@@ -137,16 +140,20 @@ function PharmacistReqs() {
 
   return (
     <>
-        <Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
+    <Navigation
+      pagetitle={'Pharmacist Requests'}/>
+       <SidebarAdmin mb={10}
+      />
+        {/* <Box bg={'#4bbbf3'} p={5} boxShadow='2xl' mb={10}>
             <Text fontSize={'3xl'} color={'white'} > Pharmacist Requests </Text>
         <button className="btn" onClick={back}>back</button>
-        </Box>
-        
+        </Box> */}
+        <div className="content">
         <Center>
-        <TableContainer w={'90%'}>
+        <TableContainer w={'90%'}mt={14} >
             <Table size='lg'> 
               <Thead>
-                <Tr bg={'#2d2d2e'}>
+                <Tr bg={'#2CAED8'}>
                     <Th color={'white'}>Name</Th>
                     <Th color={'white'}>Userame</Th>
                     <Th color={'white'}><Center>Request Date </Center></Th>
@@ -328,7 +335,7 @@ function PharmacistReqs() {
 
         </DrawerContent>
         </Drawer>
-        
+        </div>
     </>
 
   )

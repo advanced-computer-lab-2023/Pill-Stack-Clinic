@@ -98,14 +98,14 @@ function SidebarAdmin(props) {
   </h2>
   <AccordionPanel p={0}>
 
-    <Link to="apptsD">
+    <Link to="/admin-home/admin-requests">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Doctor Requests
       </Box>
     </AccordionButton>
     </Link>
-    <Link to="apptsD">
+    <Link to="/admin-home/pharmaRequests">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Pharmacists Requests
@@ -128,7 +128,7 @@ function SidebarAdmin(props) {
 
   </h2>
   <AccordionPanel p={0}>
-  <Link to={`myPatients/${username}`}>
+  <Link to={"/medicineControl"}>
     <AccordionButton onClick={openAddDeliveryModal}>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Medicine Control

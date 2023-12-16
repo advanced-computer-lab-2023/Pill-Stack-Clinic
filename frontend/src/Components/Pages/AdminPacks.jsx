@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import Navigation from "../UI/Navigation";
 import '../UI/Styles/innerPages.css';
-import SidebarDR from '../Pages/sideDR';
+import SidebarAdmin from '../Pages/sideAdmin';
 
 
 function AdminPacks() {
@@ -115,7 +115,7 @@ function AdminPacks() {
 
     <Navigation
       pagetitle={'Manage Packages'}/>
-       <SidebarDR
+       <SidebarAdmin
       />
 
     <Box >
