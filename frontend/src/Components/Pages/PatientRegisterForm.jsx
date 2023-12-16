@@ -185,7 +185,6 @@ function PatientRegisterForm() {
   }, [formData]);
 
 
-  const { username, name, email, password, dob, gender, mobile, EmergencyContact_name, EmergencyContact_mobileNumber,EmergencyContact_Relation } = formData;
 
   // const onChange = e => {
   //   setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -206,34 +205,7 @@ function PatientRegisterForm() {
 
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-    // Check if all fields are filled
-    const {
-      username,
-      name,
-      email,
-      password,
-      dob,
-      gender,
-      mobile,
-      EmergencyContact_name,
-      EmergencyContact_mobileNumber,
-      EmergencyContact_Relation
-    } = formData;
-  
-    const allFieldsFilled =
-      username !== '' &&
-      name !== '' &&
-      email !== '' &&
-      password !== '' &&
-      dob !== '' &&
-      gender !== '' &&
-      mobile !== '' &&
-      EmergencyContact_name !== '' &&
-      EmergencyContact_mobileNumber !== '' &&
-      EmergencyContact_Relation !== '';
-  
-    setAllEntered(allFieldsFilled);
+   
   };
   
   const back =()=>  navigate(-1);
@@ -241,7 +213,7 @@ function PatientRegisterForm() {
     e.preventDefault();
     try {
       const response = await Axios.post('http://localhost:8000/Patientregister', formData);
-    
+      if(response.data.message!=='User already exists'){
       toast({
         title: 'Registration Successful',
         description: response.data.message,
@@ -250,6 +222,17 @@ function PatientRegisterForm() {
         isClosable: true,
       });
       navigate('/');
+    }
+      else{
+        toast({
+          title: 'Registration Failed',
+          description: "Username already exists",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+
+      }
     } catch (error) {
       let errorMessage = "Registration failed due to an unexpected error."; // Default error message
       toast({
@@ -301,7 +284,7 @@ function PatientRegisterForm() {
                   {/* <MDBInput wrapperClass='mb-4' label='Birthday' size='lg' id='form3' type='text'/> */}
                 <MDBRow>
                  <FormControl isRequired>
-                   <MDBInput wrapperClass='mb-4' label='Date of Birth' size='lg' id='form1' type='date' name="dob" value={dob} onChange={onChange}/>
+                   <MDBInput wrapperClass='mb-4' label='Date of Birth' size='lg' id='form1' type='date' name="dob"  onChange={onChange}/>
                  </FormControl>
                 </MDBRow>
                 <MDBInput wrapperClass='mb-4' name='mobile' label='Phone Number' size='lg' id='form10' type='number' onChange={onChange}/>
@@ -331,25 +314,38 @@ function PatientRegisterForm() {
 
                   </MDBRow>
                   <MDBRow >
-                  <Select  className='mb-4' name='EmergencyContact_Relation'  title='Relation To You' placeholder={`${EmergencyContact_name} Relation to you`} onChange={onChange}>
+                  <Select  className='mb-4' name='EmergencyContact_Relation'  title='Relation To You' placeholder={`${formData.EmergencyContact_name} Relation to you`} onChange={onChange}>
                     <option value='wife'>Wife</option>
                     <option value='husband'>Husband</option>
                     <option value='child'>Child</option>
                   </Select>
                   </MDBRow>
-                  <MDBInput wrapperClass='mb-4' name='EmergencyContact_mobileNumber' label='Emergency Phone Number' placeholder={`${EmergencyContact_name}'s phone number`} size='lg' id='form4' type='number' onChange={onChange}/>
+                  <MDBInput wrapperClass='mb-4' name='EmergencyContact_mobileNumber' label='Emergency Phone Number' placeholder={`${formData.EmergencyContact_name}'s phone number`} size='lg' id='form4' type='number' onChange={onChange}/>
                 </MDBCardBody>
               </MDBCol>
             </MDBRow>
             <MDBRow className='g-0 p-2'>
               <div className="d-flex justify-content-end pt-3">
-                <Button
-                isDisabled = {!allEntered}
-                variant={'solid'} colorScheme="teal" size={'lg'} type="submit"
-                onClick={onSubmit}
-                >
-                  {allEntered? 'Submit' : 'Please fill all fields'}
-                </Button>
+              <div className="d-flex justify-content-end pt-3">
+                                  
+                                  { formData.username !== '' &&
+                      formData.name !== '' &&
+                      formData.email !== '' &&
+                      formData.password !== '' &&
+                      formData.dob !== '' &&
+                      formData.gender !== '' &&
+                      formData.mobile !== '' &&
+                      formData.EmergencyContact_name !== '' &&
+                      formData.EmergencyContact_mobileNumber !== '' &&
+                      formData.EmergencyContact_Relation !== '' ? <Button
+                      variant={'solid'} colorScheme="teal" size={'lg'} type="submit"
+                      onClick={onSubmit}
+                      >Submit</Button> : <Button
+                      isDisabled ={ true}
+                      variant={'solid'} colorScheme="teal" size={'lg'} type="submit"
+                      >Please fill all fields
+                                </Button>}
+            </div>
               </div>
             </MDBRow>
           </MDBCard>

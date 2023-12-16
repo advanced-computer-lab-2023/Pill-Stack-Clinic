@@ -642,7 +642,14 @@ export const Home = () => {
           </div>
           <div className="Container3">
             <Box className="box2" onClick={openSecondModal}>Packages</Box>
-            <Link to="doctor-home/apptsD" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+
+
+
+            <Link to="/home/apptsP" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Appointments</Link>
+
+
+
+            
             <Box className="box22" onClick={openViewFamilyModal}>Family</Box>
 
           </div>
