@@ -153,11 +153,22 @@ res.json({ success: true });
 
 
 router.post("/payPack",userVerification,async (req,res,next)=>{
-  const username=req.body.Username;
+  const username=req.user.Username;
+  console.log(username);
   const packid=req.body.packID;
   const package =await packageModel.findById(packid);
+  const user=await userModel.findOne({Username:username});
+  let maxfamDis=0;
+   for(let i=0;i<user.LinkedPatientFam.length;i++){
+      const linkedFam = await userModel.findById(user.LinkedPatientFam[i].memberID);
+      for(let j=0;j<linkedFam.healthPackage.length;j++){
+         if(linkedFam.healthPackage[j].Status!="Unsubscribed"&&linkedFam.healthPackage[j].Owner==true &&linkedFam.healthPackage[j].Family_Discount>maxfamDis){
+            maxfamDis=linkedFam.healthPackage[j].Family_Discount;
+         }
+         }
+      }
   var amount;
-  amount=package.Price;
+  amount=package.Price-(package.Price*(maxfamDis/100));
   console.log(amount);
   const paymentIntent = await stripe.paymentIntents.create({
       amount: amount*100,
@@ -203,7 +214,7 @@ router.post('/payPack/confirm',userVerification, async (req, res) => {
    // }
    //else{
       for(let i=0;i<user.healthPackage.length;i++){
-         if(user.healthPackage[i].Owner==true){
+         if(user.healthPackage[i].Owner==true && user.healthPackage[i].Status=="Unsubscribed"){
          user.healthPackage[i].remove();}
       }
    const userPack=({
