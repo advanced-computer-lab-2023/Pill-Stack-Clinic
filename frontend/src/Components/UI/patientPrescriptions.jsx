@@ -26,6 +26,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import '../UI/button.css'
 import Prescription from '../UI/Prescription';
+import Navigation from "./Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
 
 const PrescriptionViewer = () => {
   const [prescriptions, setPrescriptions] = useState([]);

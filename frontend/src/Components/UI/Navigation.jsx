@@ -2,10 +2,11 @@
 import React from 'react';
 import { Box, Flex, Button, useColorModeValue } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@chakra-ui/icons'
+import '../UI/Styles/Navigation.css';
 
 import { useNavigate } from 'react-router-dom';
 
-const Navigation = () => {
+const Navigation = ({ pagetitle }) => {
   const navigate = useNavigate();
 
   return (
@@ -18,9 +19,9 @@ const Navigation = () => {
         px={{ base: 4 }}
         align={'center'}>
         {/* Replace the following text with your logo or any other content */}
-        <Box>
-      
-        </Box>
+        <div className='pageTitle'>
+        {pagetitle}
+        </div>
 
         {/* Square button with round edges and black background */}
         <Button

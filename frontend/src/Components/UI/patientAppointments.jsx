@@ -190,7 +190,7 @@ const AppointmentSearchAndTable = () => {
         </Button>
       </Box> */}
       <Navigation
-      />
+      pagetitle={'Appointments'}/>
        <Sidebar
 
       />
