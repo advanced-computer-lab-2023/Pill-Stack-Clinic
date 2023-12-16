@@ -36,13 +36,16 @@ This project serves as a learning opportunity to collaborate effectively within 
 ![Alt text](Subscribe_Pack.png)
 - Doctor's home page 
 ![Alt text](Doc_Home.png)
-- View doctor's patients
+- View doctor's patients 
+![Alt text](View_MyPatients.png) 
 - chat with a patient
 ![Alt text](Chat_With_PatPharm.png)
 - Add an appoinmment to my bookings
+![Alt text](Availibility_Slots.png)
 - Accept/Reject a follow up requested by a patient
 - Schedule a follow up for a patient
 - Admin home page
+![Alt text](Admin_Home.png)
 - Add a new admin to the system
 - Delete a user from the system
 - View doctor's applications

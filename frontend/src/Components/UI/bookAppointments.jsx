@@ -29,6 +29,9 @@ import {
 import { MdClear } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import axios from 'axios';
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
 
 export const BookAppointments = () => {
   const { doctorUsername} = useParams();
@@ -257,11 +260,17 @@ export const BookAppointments = () => {
   
 
   return (
-    <><Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <>
+      <Navigation
+      pagetitle={'Book Appointment'}/>
+       <Sidebar
+      />
+    {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
       <Text fontSize={'3xl'} color={'white'}>Book Appointment</Text>
       <button className="btn" onClick={back}>back</button>
-    </Box>
+    </Box> */}
     <Box p={4} borderWidth="1px" borderRadius="md" shadow="md">
+    <div className="content">
         {confirmationMessage && (
           <Alert status="success">
             <AlertIcon />
@@ -431,8 +440,9 @@ export const BookAppointments = () => {
             </ModalFooter>
           </ModalContent>
         </Modal>
-
-      </Box></>
+      </div>
+      </Box>
+      </>
         
   );
 };
