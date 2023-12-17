@@ -312,10 +312,11 @@ return (
                 <Td>
                   
                     <Button
-                      colorScheme="red"
+                      colorScheme="teal"
                       size="sm"
                       onClick={() => handleVideoAppointment(appointment.PatientUsername)}
-                      isDisabled={appointment.Status !== 'upcoming'}
+                      isDisabled={appointment.Status !== 'upcoming'|| Date.now() < new Date(appointment.StartDate).getTime() ||
+                      Date.now() > new Date(appointment.EndDate).getTime()}
                     >
                       Go appointment
                     </Button>
