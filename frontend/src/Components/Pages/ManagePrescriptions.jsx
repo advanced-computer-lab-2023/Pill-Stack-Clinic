@@ -29,6 +29,9 @@ import { Box,
 
 
  } from '@chakra-ui/react';
+ import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import Sidebar from '../Pages/side';
 import Prescription from '../UI/Prescription';
 
 const ManagePrescriptions = () => {
@@ -148,6 +151,9 @@ const ManagePrescriptions = () => {
 
   return (
     <>
+     <Navigation
+      pagetitle={''}/>
+     
         <Box m={20}>
             <Flex justifyContent={'space-between'}>
             <Text fontSize={'4xl'}> Available Prescriptions

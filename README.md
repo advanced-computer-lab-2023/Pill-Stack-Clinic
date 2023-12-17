@@ -513,9 +513,57 @@ Viwing all doctor's applications
    ![Alt text](screenshots/View_Appointments.png)
 10. Navigate back to home page and select `Appointments` and then select `Family Appointments` to view appointments booked for your family members.Also rescheduling, cancelling, and requesting a follow up 
    ![Alt text](screenshots/Family_Appointments.png)
-11. Inorder to check the packages offered my the system, Navigate back to the home page and select `Packages` and then `Subscribe`
+11. Inorder to check the packages offered my the system, Navigate back to the home page and select `Packages` and then `Subscribe`.
    ![Alt text](screenshots/pack-1.png)
    ![Alt text](screenshots/Subscribe_Pack.png)
+12. Select your required package and choose your payment option.
+13. From the side bar select `packages` and then my `My packages` to view your current subscriptions.Cancellation of package can happen here.
+   ![Alt text](screenshots/View_MyPacks.png)
+14. To upload medical documents head to `Medical Documents` from the side bar. You can upload and view your medical documents as a pdf.
+   ![Alt text](screenshots/uploadMed.png)
+15. The chat icon on the bottom right side in the home page , allows you to chat with doctors.
+   ![Alt text](screenshots/chat_With_Doc.png)
+### As a Doctor:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
+2. Select `Join Now` and redirection to login page occurs
+ ![Alt text](screenshots/image-13.png) 
+3. Enter your credentials and a redirection the the doctor-home page will occur.
+ ![Alt text](screenshots/Doc_Home.png) 
+4. Through the `Availability` page, the doctor can add time slots according to his schedule.
+ ![Alt text](screenshots/Availibility_Slots.png) 
+5. Through the `Appointments` page the doctor can view  his past and upcoming appointments. Cancelling,rescheduling, and accessing the appointment can all happen in this page
+ ![Alt text](screenshots/docApp.png) 
+6. Through the `My patients` page the dcotor can view his patients.
+ ![Alt text](screenshots/View_MyPatients.png)
+7. Doctor can view the details of a patient by selecting the desired patient.In this page, doctor can manage prescriptions, add health records, chat with patient. 
+  ![Alt text](screenshots/onePatient.png) 
+
+
+
+
+
+
+
+
+
+
+
+5. The chat icon on the bottom right side in the home page , allows you to chat with patients and pharmacists.
+![Alt text](screenshots/chat_With_PatPharm.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    
    
