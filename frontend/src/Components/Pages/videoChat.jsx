@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 
 
 
 export default function VideoApp() {
     const { doctorUsername,patientUsername} = useParams();
+    const navigate = useNavigate();
       const roomID = doctorUsername;
       let myMeeting = async (element) => {
      // generate Kit Token
@@ -37,11 +38,18 @@ export default function VideoApp() {
 
 
   };
+  const handleBack = () => {
+    // You can perform any cleanup or additional logic here before navigating back
+    navigate(-1); // Equivalent to navigating back one step
+  };
+  
 
   return (
-    <div
-      ref={myMeeting}
-      style={{ width: '100vw', height: '100vh' }}
-    ></div>
-  );
+    <div>
+      <button onClick={handleBack} class="btn btn-primary">
+        Back
+      </button>
+      <div ref={myMeeting} style={{ width: '100vw', height: '100vh' }}></div>
+    </div>
+      );
 }
