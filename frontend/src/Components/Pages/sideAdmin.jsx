@@ -105,38 +105,11 @@ function SidebarAdmin(props) {
       </Box>
     </AccordionButton>
     </Link>
-    <Link to="/admin-home/pharmaRequests">
-    <AccordionButton>
-      <Box as="span" flex='1' textAlign='left' ml={10}>
-        Pharmacists Requests
-      </Box>
-    </AccordionButton>
-    </Link>
+   
   </AccordionPanel>
 </AccordionItem>
 
-<AccordionItem>
-  <h2>
- 
-    <AccordionButton >
-      <HamburgerIcon w={7} h={7} mr={3}></HamburgerIcon>
-      <Box as="span" flex='1' textAlign='left'>
-        Control
-      </Box>
-      <AccordionIcon />
-    </AccordionButton>
 
-  </h2>
-  <AccordionPanel p={0}>
-  <Link to={"/medicineControl"}>
-    <AccordionButton onClick={openAddDeliveryModal}>
-      <Box as="span" flex='1' textAlign='left' ml={10}>
-        Medicine Control
-      </Box>
-    </AccordionButton>
-    </Link>
-  </AccordionPanel>
-</AccordionItem>
 
 <AccordionItem style={{ position: 'fixed', bottom: 10, marginTop: 'auto' }}>
   <AccordionButton
