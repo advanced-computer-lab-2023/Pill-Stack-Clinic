@@ -279,8 +279,8 @@ export const AdminHome = () => {
          
       
           <Link to="admin-packs" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Packages</Link>
-            <Link to="admin-requests" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Dr Requests</Link>
-            <Link to="admin-users" className="box22" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Users</Link>
+            <Link to="admin-requests" className="box2dq" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Dr Requests</Link>
+            <Link to="admin-users" className="box2u" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Users</Link>
 
           </div>
         </div>
