@@ -218,7 +218,7 @@ function AdminPacks() {
                         />
                     ))}
                     <Button h={'50%'} variant={'outline'} colorScheme='teal' rounded={10} 
-                    onClick={handleModal}
+                    onClick={handleModal} minH={'sm'}
                     >
                         <Stack alignItems={'center'}>
                         <Icon as={AddIcon} fontSize={'6xl'} />

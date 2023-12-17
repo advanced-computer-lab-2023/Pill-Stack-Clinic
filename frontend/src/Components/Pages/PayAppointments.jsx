@@ -7,7 +7,8 @@ import CheckoutForm from "../UI/Payment";
 import { useNavigate } from "react-router-dom";
 import '../UI/button.css'
 import {Box,Text} from '@chakra-ui/react';
-
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
 // This is your test publishable API key.
@@ -53,11 +54,10 @@ export default function PayAppointments() {
 
       return (
         <>
-        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
-      <Text fontSize={'3xl'} color={'white'}>Pay Credit Card</Text>
-      <button className="btn" onClick={back}>back</button>
-    </Box>
-          <h1>React Stripe and the Payment Element</h1>
+         <Navigation
+      pagetitle={'Online Payment'}/>
+     
+      
           {clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <CheckoutForm paymentParams={paymentParams}/>

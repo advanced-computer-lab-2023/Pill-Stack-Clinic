@@ -50,8 +50,11 @@ This project serves as a learning opportunity to collaborate effectively within 
 - Admin home page
 ![Alt text](Admin_Home.png)
 - Add a new admin to the system
+![Alt text](Add_Admin.png)  
 - Delete a user from the system
+![Alt text](Manage_Users.png)
 - View doctor's applications
+![Alt text](Doc_Request.png)
 
 
 
@@ -488,11 +491,48 @@ Doctor adding availability to the system
 Viwing all doctor's applications  
 ![Alt text](screenshots/image-12.png)  
 # How to Use
-1. Open `http://localhost:3000/ ` to view the login page in your browser.  
-![Alt text](screenshots/image-13.png) 
+### As a patient:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
 2. Register as a patient in order to be able to login into the system.  
-3. Enter your registered credientials, and a redirection to the home page will occur.  
-4. 
+![Alt text](screenshots/registerPatient.png)
+3. Upon successful registeration, a redirection to the login page will occur.  
+ ![Alt text](screenshots/image-13.png) 
+4. Upon successful login, a redirection to the home page will occur
+  ![Alt text](screenshots/Patient_Home.png)
+5. In order to view the list of doctors, click on `View Available Doctors`
+   ![Alt text](screenshots/sideBarDoctors.png)
+   ![Alt text](screenshots/view_Doctors.png)
+6. Press on `Book Appointments` in order to view the details of the doctor
+   ![Alt text](screenshots/doctorDetails.png)
+7. Press on `Book Appointments` in order to view the availability of the doctor
+   ![Alt text](screenshots/bookApp.png)
+8. Select the desired appointment,and select between you and your family members and your desired payment method.
+   ![Alt text](screenshots/bookApp2.png)
+9. To view your appointments, navigate back to the home page and select `Appointments`. Rescheduling,cancelling, and requesting a follow up can be done through this page.
+   ![Alt text](screenshots/View_Appointments.png)
+10. Navigate back to home page and select `Appointments` and then select `Family Appointments` to view appointments booked for your family members.Also rescheduling, cancelling, and requesting a follow up 
+   ![Alt text](screenshots/Family_Appointments.png)
+11. Inorder to check the packages offered my the system, Navigate back to the home page and select `Packages` and then `Subscribe`
+   ![Alt text](screenshots/pack-1.png)
+   ![Alt text](screenshots/Subscribe_Pack.png)
+
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Contribute 
@@ -515,7 +555,7 @@ Thank you for considering contributing to our project! We welcome contributions 
 - [JWT Authentication](https://www.freecodecamp.org/news/how-to-secure-your-mern-stack-application/)
 - [Stripe](https://youtu.be/e-whXipfRvg?si=-zWhuRFVhuLKciS9)  
 # License
-- The Stripe is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+- Stripe is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 
 

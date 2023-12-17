@@ -56,6 +56,7 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
  );
  console.log(Appointment)
  if(Appointment){
+   let userApp;
    if(linkedFamMember==='undefined'){
       if(manualFamMember==='undefined'){
          const docApp=({
@@ -68,7 +69,7 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
-         const userApp=({
+          userApp=({
             _id:Appointment._id,
             DoctorUsername:doctorUserName,
             DoctorName:doctor.Name,
@@ -89,7 +90,7 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
-         const userApp=({
+          userApp=({
             _id:Appointment._id,
             PatientName:manualFamMember,
             DoctorUsername:doctorUserName,
@@ -115,7 +116,7 @@ router.post('/pay/confirm',userVerification, async (req, res) => {
             Status:'upcoming',
          });
          doctor.BookedAppointments.push(docApp);
-         const userApp=({
+          userApp=({
             _id:Appointment._id,
             DoctorUsername:doctorUserName,
             DoctorName:doctor.Name,
@@ -142,9 +143,10 @@ doctor.save();
 user.save();
 const emailText = `Hello, Your new appointment is scheduled for ${formattedDate} at ${formattedTimeStart} to ${formattedTimeEnd}`;
 await sendEmail(user.Email, "New Appointment ",emailText );
-await sendEmail(doctor.Email,"New Appointment",emailText)
+await sendEmail(doctor.Email,"New Appointment",emailText);
+res.json({ success: true,app:userApp });
+
  }
-res.json({ success: true });
 
 
 });

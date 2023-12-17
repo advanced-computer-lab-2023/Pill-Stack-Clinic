@@ -307,14 +307,20 @@ const AppointmentSearchAndTable = () => {
                     </Button>
                 {/* /)} */}
                 </Td>
-                <Button
-                      colorScheme="red"
-                      size="sm"
-                      onClick={() => handleVideoAppointment(appointment.DoctorUsername)}
-                      isDisabled={appointment.Status !== 'upcoming'}
-                    >
-                      Go Appointment
-                    </Button>
+                <Td>
+  <Button
+    colorScheme="teal"
+    size="sm"
+    onClick={() => handleVideoAppointment(appointment.DoctorUsername)}
+    isDisabled={
+      appointment.Status !== 'upcoming' ||
+      Date.now() < new Date(appointment.StartDate).getTime() ||
+      Date.now() > new Date(appointment.EndDate).getTime()
+    }
+  >
+    Go Appointment
+  </Button>
+</Td>
               </Tr>
             ))}
           </Tbody>
