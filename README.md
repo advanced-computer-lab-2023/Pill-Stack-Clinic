@@ -509,6 +509,20 @@ Viwing all doctor's applications
    ![Alt text](screenshots/bookApp.png)
 8. Select the desired appointment,and select between you and your family members and your desired payment method.
    ![Alt text](screenshots/bookApp2.png)
+9. To view your appointments, navigate back to the home page and select `Appointments`. Rescheduling,cancelling, and requesting a follow up can be done through this page.
+   ![Alt text](screenshots/View_Appointments.png)
+10. Navigate back to home page and select `Appointments` and then select `Family Appointments` to view appointments booked for your family members.Also rescheduling, cancelling, and requesting a follow up 
+   ![Alt text](screenshots/Family_Appointments.png)
+11. Inorder to check the packages offered my the system, Navigate back to the home page and select `Packages` and then `Subscribe`
+   ![Alt text](screenshots/pack-1.png)
+   ![Alt text](screenshots/Subscribe_Pack.png)
+
+   
+   
+
+
+
+
 
 
 
