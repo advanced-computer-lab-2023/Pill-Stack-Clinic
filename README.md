@@ -550,7 +550,7 @@ Viwing all doctor's applications
 ![Alt text](screenshots/Landing.png)
 2. Select `Join Now` and redirection to login page occurs
  ![Alt text](screenshots/image-13.png) 
-3. Enter your credentials and a redirection the the doctor-home page will occur.
+3. Enter your credentials and a redirection the the admin-home page will occur.
  ![Alt text](screenshots/adminHome.png) 
  4. Through Packages, the admin can edit and add packages
   ![Alt text](screenshots/managePack.png) 
