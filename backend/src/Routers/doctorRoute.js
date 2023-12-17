@@ -14,10 +14,10 @@ const {viewProfile,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,getFullAccount
     ,updateContractStatus,addPrescription,generateRoom,join,getPatientUsername,sendMessage  , editPrescription ,joinPharmacist,getpharmacistUsername,sendMessagePharmacist,sendMessage2 
     ,handleFollowUp,getDoctorFollowUps
-    ,acceptFollowUp,rejectFollowUp } = require('../Routes/doctorController.js');
+    ,acceptFollowUp,rejectFollowUp, rescheduleAppointment } = require('../Routes/doctorController.js');
 
 
-
+router.post('/rescheduleAppointment',userVerification,rescheduleAppointment);
 router.post('/addHealthRecord', userVerification, addHealthRecord);
 // router.post('/register', registerDoctor);        
 router.get('/', async(req,res) => {res.render('doc_home')});

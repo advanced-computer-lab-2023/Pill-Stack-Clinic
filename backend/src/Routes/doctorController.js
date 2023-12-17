@@ -63,7 +63,6 @@ const updateContractStatus=async(req,res)=>{
   
   const editProfileInfo = async (req, res) => {
     const { id } = req.params;
-  
     try {
       const profile = await doctorModel.findById(id);
       if (!profile) {
@@ -71,9 +70,9 @@ const updateContractStatus=async(req,res)=>{
       }
   
       // Update the specific fields based on the JSON data sent in the request body
-      profile.Email = req.body.email;
+      profile.Email = req.body.Email;
       profile.HourlyRate = req.body.HourlyRate;
-      profile.Affiliation = req.body.affiliation;
+      profile.Affiliation = req.body.Affiliation;
   
       await profile.save();
   
@@ -1377,6 +1376,64 @@ const rejectFollowUp = async (req, res) => {
 };
 
 
+const rescheduleAppointment = async (req, res) => {
+  try {
+      // Extract necessary information from the request (e.g., username, appointment details)
+      const appointmentId = req.body.appointmentId;
+      const newDate = new Date(req.body.newDate); // Convert newDate to a Date object
+     //  const username = req.user.Username;
+     const doctor = await doctorModel.findOne({Username:req.user.Username});
+     const doctorAppointment = doctor.BookedAppointments.find(
+      (appointment) => appointment._id.toString() === appointmentId
+      );
+
+
+      console.log(String(newDate));
+
+      const patient = await userModel.findOne({ "BookedAppointments._id": appointmentId });
+
+      if (!patient) {
+          return res.status(404).json({ message: 'Patient not found' });
+      }
+
+      // Find the appointment to be rescheduled
+      const Appointment = patient.BookedAppointments.find(
+          (appointment) => appointment._id.toString() === appointmentId
+      );
+
+      if (!Appointment) {
+          return res.status(404).json({ message: 'Appointment not found' });
+      }
+
+      if (!doctorAppointment) {
+        return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+
+      // Update the appointment details with the new information
+      Appointment.StartDate = newDate;
+      Appointment.EndDate = newDate;
+      Appointment.Status = 'rescheduled';
+
+      doctorAppointment.StartDate = newDate;
+      doctorAppointment.EndDate = newDate;
+      doctorAppointment.Status = 'rescheduled';
+
+      // Save the updated patient document
+      await patient.save();
+      await doctor.save();
+
+      console.log(patient);
+
+      res.status(200).json({ message: 'Appointment rescheduled successfully' });
+  } catch (error) {
+      console.error('Error rescheduling appointment:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 module.exports = {
     viewProfile,editView,editProfile,
     viewMyPatients,convertToPDF,
@@ -1387,5 +1444,5 @@ module.exports = {
    scheduleAppointment,viewContract,deleteContract,
     addHealthRecord,activateAndDeleteContract,addAvailability,viewAvailability,updateContractStatus, getFullAccount,
     addPrescription, editPrescription, sendMessage, join, getPatientUsername,generateRoom,getpharmacistUsername,sendMessagePharmacist,sendMessage2,joinPharmacist
-    ,handleFollowUp,getDoctorFollowUps,acceptFollowUp,rejectFollowUp
+    ,handleFollowUp,getDoctorFollowUps,acceptFollowUp,rejectFollowUp, rescheduleAppointment
 }

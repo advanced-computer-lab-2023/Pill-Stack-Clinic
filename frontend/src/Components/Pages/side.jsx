@@ -45,9 +45,11 @@ function Sidebar(props) {
 
   return (
     <div className="sidebar" style={sidebarStyle}>
+      <Link to="/home">
       <Box textAlign="center" p={5} mb={1} mr={1}>
         <img src={pillstackLogo} alt="Logo" width="220" />
       </Box>
+    </Link>
 
      <br />
       <Accordion defaultIndex={[0]} allowToggle={true} allowMultiple={false} theme={customAccordionTheme}>
@@ -62,7 +64,7 @@ function Sidebar(props) {
             </AccordionButton>
           </h2>
           <AccordionPanel p={0}>
-          <Link to="prescriptions" style={{ textDecoration: 'none', color: 'inherit' }}> 
+          <Link to="/home/prescriptions" style={{ textDecoration: 'none', color: 'inherit' }}> 
             <AccordionButton>
               <Box as="span" flex='1' textAlign='left' ml={10}>
               
@@ -121,14 +123,14 @@ function Sidebar(props) {
     </AccordionButton>
   </h2>
   <AccordionPanel p={0}>
-  <Link to="viewDoctors">
+  <Link to="/home/viewDoctors">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Book
       </Box>
     </AccordionButton>
     </Link>
-    <Link to="apptsP">
+    <Link to="/home/apptsP">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         My Appointments
@@ -137,7 +139,7 @@ function Sidebar(props) {
     </Link>
 
     
-    <Link to="familyAppointments">
+    <Link to="/home/familyAppointments">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         Family Appointments
@@ -208,7 +210,7 @@ function Sidebar(props) {
   <AccordionPanel p={0}>
 
   
-  <Link to="viewDoctors">
+  <Link to="/home/viewDoctors">
     <AccordionButton>
       <Box as="span" flex='1' textAlign='left' ml={10}>
         View Available Doctors 

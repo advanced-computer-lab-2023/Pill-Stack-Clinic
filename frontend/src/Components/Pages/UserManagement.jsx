@@ -42,6 +42,9 @@ import { faUserDoctor,
     faUserNurse,
  } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
+import Navigation from "../UI/Navigation";
+import '../UI/Styles/innerPages.css';
+import SidebarAdmin from '../Pages/sideAdmin';
 
 
 function UserManagement() {
@@ -151,10 +154,17 @@ function UserManagement() {
 
   return (
     <>
-        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+    <Navigation
+      pagetitle={'Manage Users'}/>
+       <SidebarAdmin
+      />
+    
+    <div className="content">
+        {/* <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
+        
             <Text fontSize={'3xl'} color={'white'} >Manage Users</Text>
             <button className="btn" onClick={back}>back</button>
-        </Box>
+        </Box> */}
         <Box  display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
             {/* <HStack m={10}>
               <CheckboxGroup colorScheme='green' defaultValue={['admin', 'doctor' ,'patient']} size={'lg'} 
@@ -168,15 +178,15 @@ function UserManagement() {
             </HStack> */}
             {/* far right alighnment */}
             <Flex justifyContent={'end'} alignItems={'center'} m={10}>
-              <Button colorScheme='blue' variant='solid' size='lg' mr={10}
+              <Button bg='#2CAED8'colorScheme='blue' variant='solid' size='lg' mr={10}  _hover={{ bg: '#23859B' }}
               onClick={openModal}>
                 Add New Admin
               </Button>
             </Flex>
-        <TableContainer w={'90%'}>
+        <TableContainer w={'100%'} mr={10}>
             <Table size='lg'> 
               <Thead>
-                <Tr bg={'#2d2d2e'}>
+                <Tr bg={'#2CAED8'}>
                   <Th color={'white'}>Userame</Th>
                   <Th color={'white'}>Name</Th>
                   <Th color={'white'}><Center> Role </Center></Th>
@@ -234,10 +244,13 @@ function UserManagement() {
                     }
                 </Tbody>
             </Table>
+            
         </TableContainer>
+        
         </Box>
+        
         <ToastContainer />
-        {/* add new admin modal */}
+        
         <Modal isOpen={isOpen} onClose={closeModal}>
           <ModalOverlay />
           <ModalContent>
@@ -273,6 +286,7 @@ function UserManagement() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        </div>
     </>
   )
 }

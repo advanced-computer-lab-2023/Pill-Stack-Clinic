@@ -180,7 +180,10 @@ const  FamilyAppointments = () => {
     refreshAppointments();
   };
 
-
+  const handleVideoAppointment= async (docUsername)=>{
+    const { data } = await axios.post("http://localhost:8000", {}, { withCredentials: true });
+    const { user } = data;
+    window.location.href = `http://localhost:3000/videoChat/${docUsername}/${user}?roomID=${docUsername}`;}
   return (
     <>
       <Navigation
@@ -259,6 +262,7 @@ const  FamilyAppointments = () => {
               <Th>Appointment Status</Th>
               <Th>Actions</Th>
               <Th>Actions</Th>
+              <Th>Go appointment</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -290,6 +294,8 @@ const  FamilyAppointments = () => {
                     </Button>
                   )}
                 </Td>
+                
+                
                 <Td>
                 <Button
                       colorScheme="teal"
@@ -301,7 +307,21 @@ const  FamilyAppointments = () => {
                     </Button>
                 {/* /)} */}
                 </Td>
+                <Td>
+                <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleVideoAppointment(appointment.DoctorUsername)}
+                      isDisabled={appointment.Status !== 'upcoming'|| Date.now() < new Date(appointment.StartDate).getTime() ||
+                      Date.now() > new Date(appointment.EndDate).getTime()}
+                    >
+                      Go Appointment
+                    </Button>
+                    </Td>
+
+                
               </Tr>
+              
             ))}
           </Tbody>
         </Table>

@@ -143,19 +143,20 @@ function DocReqs() {
 
   return (
     <>
-      <Navigation
+     <Navigation
       pagetitle={'Doctor Requests'}/>
        <SidebarAdmin
       />
-        <Box bg={"linear-gradient(45deg, #1E9AFE, #60DFCD)"} p={5} boxShadow='2xl' mb={10}>
-            <Text fontSize={'3xl'} color={'white'} > Doctor Requests </Text>
-            <button className="btn" onClick={back}>back</button>
+ <div className="content">  
+        <Box  p={5} pl={2} mb={0}>
+        
+      
         </Box>
         <Center>
-        <TableContainer w={'90%'}>
+        <TableContainer w={'100%'} mr={14}>
             <Table size='lg'> 
               <Thead>
-                <Tr bg={'#2d2d2e'}>
+                <Tr bg={'#2CAED8'}>
                     <Th color={'white'}>Name</Th>
                     <Th color={'white'}>Userame</Th>
                     <Th color={'white'}><Center>Request Date </Center></Th>
@@ -195,9 +196,10 @@ function DocReqs() {
                 </Tbody>
             </Table>
         </TableContainer>
+        
         </Center>
+        
         <Center>
-
       <Modal onClose={onClose} size='xl' isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
@@ -220,7 +222,9 @@ function DocReqs() {
               src={`data:${viewReq.medicalDegreeDocument.contentType};base64, ${Buffer.from(viewReq.medicalDegreeDocument.data).toString('base64')}`}  />}
              {available && License &&viewReq.medicalDegreeDocument.contentType!="application/pdf" &&<img width='100%' height='100%'
               src={`data:${viewReq.medicalDegreeDocument.contentType};base64, ${Buffer.from(viewReq.medicalDegreeDocument.data).toString('base64')}`}  />}
+         
          </Box>
+         
          <br></br>
          
      
@@ -248,7 +252,9 @@ function DocReqs() {
                 </Badge>
                 </Text>
                 <Text fontSize='sm'> {viewReq.Username }</Text>
+                
             </Box>
+            
             </Flex>
                 
             </DrawerHeader>
@@ -339,7 +345,10 @@ function DocReqs() {
             </DrawerFooter>
 
         </DrawerContent>
+        
         </Drawer>
+        </div>
+  
     </>
 
   )

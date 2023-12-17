@@ -183,7 +183,10 @@ const PrescriptionViewer = () => {
 
         <Box m={7}>
         <Divider my={5}/>
-            <SimpleGrid  minChildWidth="30%" columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+            <SimpleGrid templateColumns={{
+                          base: "repeat(auto-fill, minmax( 220px, auto ))",
+                          lg: "repeat(auto-fill, minmax( 350px, auto ))",
+                        }} columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
             {
             //if prescriptions > 0 
             filteredPrescriptions &&
@@ -191,7 +194,7 @@ const PrescriptionViewer = () => {
             filteredPrescriptions.map((prescription, index) => (
                 <>
                 {console.log("presss", prescription)}
-                <Prescription data={prescription} keyId={prescription._id} openModal={()=>openModal(prescription)} download={()=>Download(prescription)}/>
+                <Prescription data={prescription} keyId={prescription._id}  openModal={()=>openModal(prescription)} download={()=>Download(prescription)}/>
 
                 </>
               ))

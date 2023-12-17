@@ -111,7 +111,8 @@
     transition: transform 0.1s ease-in-out;
   }
   
-  .box1:hover, .boxW:hover, .box2:hover, .box21:hover,.box22:hover,.box23:hover,.box24:hover,.box2c:hover {
+  .box1:hover, .boxW:hover, .box2:hover, .box21:hover,.box2u:hover
+  .box22:hover,.box23:hover,.box24:hover,.box2c:hover,.box2av:hover,.box2mp:hover,.box2dq:hover {
     transform: scale(1.005); /* Adjust the values for the desired diagonal movement */
   }
 
@@ -136,6 +137,43 @@
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
   }
+  .box2dq{
+    background-image: url('../Images/DrReq.png');
+    background-position: center 55% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 65%;
+    font-size: 25px;
+    top: 40%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+  .box2u{
+    background-image: url('../Images/users.png');
+    background-position: center 55% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 65%;
+    font-size: 25px;
+    top: 40%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+
 
   .box21 {
     background-image: url('../Images/Appointments.png');
@@ -176,6 +214,42 @@
   }
   .box2c {
     background-image: url('../Images/Contract.png');
+    background-position: center 60% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 63%;
+    font-size: 25px;
+    top: 38%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+  .box2av {
+    background-image: url('../Images/Av.png');
+    background-position: center 58% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 345px;
+    height: 295px;
+    justify-content: center;
+    display: flex;
+    font-family: 'Futura Maxi CG Bold';
+    padding-top: 63%;
+    font-size: 25px;
+    top: 38%;
+    color: #4C4C4C;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow values as needed */
+  }
+  .box2mp {
+    background-image: url('../Images/MyPatients.png');
     background-position: center 60% !important;
     background-size: cover;
     background-repeat: no-repeat;

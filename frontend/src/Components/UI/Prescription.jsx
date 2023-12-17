@@ -30,10 +30,10 @@ import { EditIcon,
     DeleteIcon
  } from '@chakra-ui/icons';
 import { m } from 'framer-motion';
-
+import { Link } from "react-router-dom";
 
 function Prescription(
-    {data, keyId, callback,openModal, download}
+    {data, keyId, callback,gotoshop,openModal, download}
 ) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [inputList, setinputList]= useState(data.Medicine);
@@ -108,7 +108,8 @@ function Prescription(
                 </>
               ))
             }
-
+ <Spacer></Spacer>
+           {!callback && <Button colorScheme="teal"><Link to={"http://localhost:3001/medicine"}>Buy</Link></Button>}
             <Flex mt={10} alignItems={'center'}>
             {
               data.Status === 'Unfilled' && callback&&
@@ -125,6 +126,7 @@ function Prescription(
             {console.log(data)}
             {callback && <Button colorScheme="teal" left="5%" onClick={() => download(data)}>Download</Button>}
            {!callback && <Button colorScheme="teal"  onClick={() => download(data)}>Download</Button>}
+          
          <Spacer></Spacer>
 
 

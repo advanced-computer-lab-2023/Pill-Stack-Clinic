@@ -21,6 +21,7 @@ This project serves as a learning opportunity to collaborate effectively within 
 - View all doctors on the platform
 ![Alt text](screenshots/View_Doctors.png)
 - Book an appointment
+![Alt text](Book_Appointment.png) 
 - chat with a doctor 
 ![Alt text](Chat_With_Doc.png)
 - Add a family member
@@ -30,6 +31,7 @@ This project serves as a learning opportunity to collaborate effectively within 
 - View my appointments 
 ![Alt text](View_Appointments.png)
 - View my family's appointments
+![Alt text](Family_Appointments.png) 
 - View my health packages
 ![Alt text](View_MyPacks.png)
 - Subscribe to a health package
@@ -44,11 +46,15 @@ This project serves as a learning opportunity to collaborate effectively within 
 ![Alt text](Availibility_Slots.png)
 - Accept/Reject a follow up requested by a patient
 - Schedule a follow up for a patient
+![Alt text](View_PatientFull.png)
 - Admin home page
 ![Alt text](Admin_Home.png)
 - Add a new admin to the system
+![Alt text](Add_Admin.png)  
 - Delete a user from the system
+![Alt text](Manage_Users.png)
 - View doctor's applications
+![Alt text](Doc_Request.png)
 
 
 
@@ -485,11 +491,112 @@ Doctor adding availability to the system
 Viwing all doctor's applications  
 ![Alt text](screenshots/image-12.png)  
 # How to Use
-1. Open `http://localhost:3000/ ` to view the login page in your browser.  
-![Alt text](screenshots/image-13.png) 
+### As a patient:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
 2. Register as a patient in order to be able to login into the system.  
-3. Enter your registered credientials, and a redirection to the home page will occur.  
-4. 
+![Alt text](screenshots/registerPatient.png)
+3. Upon successful registeration, a redirection to the login page will occur.  
+ ![Alt text](screenshots/image-13.png) 
+4. Upon successful login, a redirection to the home page will occur
+  ![Alt text](screenshots/Patient_Home.png)
+5. In order to view the list of doctors, click on `View Available Doctors`
+   ![Alt text](screenshots/sideBarDoctors.png)
+   ![Alt text](screenshots/view_Doctors.png)
+6. Press on `Book Appointments` in order to view the details of the doctor
+   ![Alt text](screenshots/doctorDetails.png)
+7. Press on `Book Appointments` in order to view the availability of the doctor
+   ![Alt text](screenshots/bookApp.png)
+8. Select the desired appointment,and select between you and your family members and your desired payment method.
+   ![Alt text](screenshots/bookApp2.png)
+9. To view your appointments, navigate back to the home page and select `Appointments`. Rescheduling,cancelling, and requesting a follow up can be done through this page.
+   ![Alt text](screenshots/View_Appointments.png)
+10. Navigate back to home page and select `Appointments` and then select `Family Appointments` to view appointments booked for your family members.Also rescheduling, cancelling, and requesting a follow up 
+   ![Alt text](screenshots/Family_Appointments.png)
+11. Inorder to check the packages offered my the system, Navigate back to the home page and select `Packages` and then `Subscribe`.
+   ![Alt text](screenshots/pack-1.png)
+   ![Alt text](screenshots/Subscribe_Pack.png)
+12. Select your required package and choose your payment option.
+13. From the side bar select `packages` and then my `My packages` to view your current subscriptions.Cancellation of package can happen here.
+   ![Alt text](screenshots/View_MyPacks.png)
+14. To upload medical documents head to `Medical Documents` from the side bar. You can upload and view your medical documents as a pdf.
+   ![Alt text](screenshots/uploadMed.png)
+15. The chat icon on the bottom right side in the home page , allows you to chat with doctors.
+   ![Alt text](screenshots/chat_With_Doc.png)
+### As a Doctor:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
+2. Select `Join Now` and redirection to login page occurs
+ ![Alt text](screenshots/image-13.png) 
+3. Enter your credentials and a redirection the the doctor-home page will occur.
+ ![Alt text](screenshots/Doc_Home.png) 
+4. Through the `Availability` page, the doctor can add time slots according to his schedule.
+ ![Alt text](screenshots/Availibility_Slots.png) 
+5. Through the `Appointments` page the doctor can view  his past and upcoming appointments. Cancelling,rescheduling, and accessing the appointment can all happen in this page
+ ![Alt text](screenshots/docApp.png) 
+6. Through the `My patients` page the dcotor can view his patients.
+ ![Alt text](screenshots/View_MyPatients.png)
+7. Doctor can view the details of a patient by selecting the desired patient.In this page, doctor can manage prescriptions, add health records, chat with patient. 
+  ![Alt text](screenshots/onePatient.png) 
+  ![Alt text](screenshots/prescrip.png)
+  ![Alt text](screenshots/chatDoc.png) 
+8. From the side bar `Personal/Followups` shows the doctor the follow up requests, where the doc can accept and reject.
+   ![Alt text](screenshots/followups.png) 
+
+5. The chat icon on the bottom right side in the home page , allows you to chat with patients and pharmacists.
+![Alt text](screenshots/chat_With_PatPharm.png)
+### As an Admin:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
+2. Select `Join Now` and redirection to login page occurs
+ ![Alt text](screenshots/image-13.png) 
+3. Enter your credentials and a redirection the the admin-home page will occur.
+ ![Alt text](screenshots/adminHome.png) 
+ 4. Through Packages, the admin can edit and add packages
+  ![Alt text](screenshots/managePack.png) 
+5. Through `doctor requests`, the admin can view all requests sumbitted and accept or reject.
+  ![Alt text](screenshots/docRequests.png) 
+![Alt text](screenshots/Doc_Request.png) 
+6. Through `Users`, the admin can view all users on the system and remove any user or add new Admin.
+![Alt text](screenshots/adminP.png) 
+![Alt text](screenshots/Add_Admin.png) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Contribute 
@@ -512,7 +619,7 @@ Thank you for considering contributing to our project! We welcome contributions 
 - [JWT Authentication](https://www.freecodecamp.org/news/how-to-secure-your-mern-stack-application/)
 - [Stripe](https://youtu.be/e-whXipfRvg?si=-zWhuRFVhuLKciS9)  
 # License
-- The Stripe is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+- Stripe is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 
 

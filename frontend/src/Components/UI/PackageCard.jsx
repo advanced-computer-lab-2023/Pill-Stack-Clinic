@@ -27,7 +27,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-function PackageCard( {pack,count}) {
+function PackageCard( {pack,count,callBackEdit,callBackDelete, ...rest}) {
     
     const { Package_Name, Price, Family_Discount,Pharmacy_Discount , Session_Discount } = pack;
     
@@ -35,52 +35,57 @@ function PackageCard( {pack,count}) {
     let message='A';
     const Navigate=useNavigate();
     
-    const handleEdit = () => {
-        const ID = pack._id;
-        const Price = document.getElementById('Price').value;
-        const Family_Discount = document.getElementById('Family_Discount').value;
-        const Pharmacy_Discount = document.getElementById('Pharmacy_Discount').value;
-        const Session_Discount = document.getElementById('Session_Discount').value;
-        let test=true;
+//     const handleEdit = () => {
+//         const ID = pack._id;
+//         const Price = document.getElementById('Price').value;
+//         const Family_Discount = document.getElementById('Family_Discount').value;
+//         const Pharmacy_Discount = document.getElementById('Pharmacy_Discount').value;
+//         const Session_Discount = document.getElementById('Session_Discount').value;
+//         let test=true;
         
-        if(Price<0){
-            test=false;
-            toast.error("Price can not be negative");
-            message="Price can not be negative";
-        }
-        if(Family_Discount>100 || Family_Discount<0){
-            test=false;
-            toast.error("Family Discount must be between [0,100]");
-            message="Family Discount must be between [0,100]";
-        }
-        if(Session_Discount>100 || Session_Discount<0){
-            test=false;
-            toast.error("Session Discount must be between [0,100]");
-            message="Session Discount must be between [0,100]";
-        }
-        if(Pharmacy_Discount>100 || Pharmacy_Discount<0){
-            test=false;
-            toast.error("Pharmacy Discount must be between [0,100]");
-            message="Pharmacy Discount must be between [0,100]";
-        }
-        if(test){
-        try {
-            axios.post("http://localhost:8000/admin/editPack/"+ ID, {
-                Price,
-                Family_Discount,
-                Pharmacy_Discount,
-                Session_Discount
-            }, {
-                withCredentials: true,
-            }); 
-        }
-        catch (err) {
-            console.log(err);
-        }
-        onClose();
+//         if(Price<0){
+//             test=false;
+//             toast.error("Price can not be negative");
+//             message="Price can not be negative";
+//         }
+//         if(Family_Discount>100 || Family_Discount<0){
+//             test=false;
+//             toast.error("Family Discount must be between [0,100]");
+//             message="Family Discount must be between [0,100]";
+//         }
+//         if(Session_Discount>100 || Session_Discount<0){
+//             test=false;
+//             toast.error("Session Discount must be between [0,100]");
+//             message="Session Discount must be between [0,100]";
+//         }
+//         if(Pharmacy_Discount>100 || Pharmacy_Discount<0){
+//             test=false;
+//             toast.error("Pharmacy Discount must be between [0,100]");
+//             message="Pharmacy Discount must be between [0,100]";
+//         }
+//         if(test){
+//         try {
+//             console.log("surprise");
+//             axios.post("http://localhost:8000/admin/editPack/"+ ID, {
+//                 Price,
+//                 Family_Discount,
+//                 Pharmacy_Discount,
+//                 Session_Discount
+//             }, {
+//                 withCredentials: true,
+//             }); 
+//             console.log("surprise2");
+//             toast.success("Edited Succesfully");
+//             console.log("surprise");
+//         }
+//         catch (err) {
+//             console.log(err);
+//         }
 
-    }
-}
+//         onClose();
+
+//     }
+// }
 
     const openModal = () => {
         onOpen()
@@ -88,17 +93,17 @@ function PackageCard( {pack,count}) {
 
 
 
-    const handleDelete = () => {
-        const ID = pack._id;
-        try {
-            axios.post("http://localhost:8000/admin/deletePack/"+ ID, null, {
-                withCredentials: true,
-            }); 
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
+    // const handleDelete = () => {
+    //     const ID = pack._id;
+    //     try {
+    //         axios.post("http://localhost:8000/admin/deletePack/"+ ID, null, {
+    //             withCredentials: true,
+    //         }); 
+    //     }
+    //     catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 
 
   return (
@@ -132,7 +137,11 @@ function PackageCard( {pack,count}) {
                 <Button  size="md" onClick={openModal}>
                     Edit
                 </Button>
-                <Button  size="md" onClick={handleDelete}>
+                <Button  size="md" 
+                onClick={() => {
+                    callBackDelete(pack);
+                }
+                }>
                     Delete
                 </Button>
             </HStack>
@@ -179,7 +188,21 @@ function PackageCard( {pack,count}) {
             </ModalBody>
             <ModalFooter>
                 <Button colorScheme="blue" mr={3}
-                onClick={handleEdit}>
+                onClick={() => {
+                    const ID = pack._id;
+                    const Price = document.getElementById('Price').value;
+                    const Family_Discount = document.getElementById('Family_Discount').value;
+                    const Pharmacy_Discount = document.getElementById('Pharmacy_Discount').value;
+                    const Session_Discount = document.getElementById('Session_Discount').value;
+                    const newData = {
+                        Price,
+                        Family_Discount,
+                        Pharmacy_Discount,
+                        Session_Discount
+                    }
+                    callBackEdit(pack, newData);
+                    onClose();
+                }}>
                     Save Changes
                 </Button>
             </ModalFooter>

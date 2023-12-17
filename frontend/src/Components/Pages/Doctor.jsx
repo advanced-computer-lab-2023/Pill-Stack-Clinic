@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Button, FormControl, FormLabel, Input, Center } from "@chakra-ui/react";
 import DoctorShortcuts from "../UI/DoctorShortcuts";
 import DoctorInfoCard from "../UI/DoctorInfoCard";
-import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon,EditIcon } from "@chakra-ui/icons";
+import { ChatIcon, Icon, EmailIcon,PhoneIcon,BellIcon,EditIcon,CheckCircleIcon } from "@chakra-ui/icons";
 import WithSubnavigation from "../UI/navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -157,17 +157,23 @@ export const Doctor = () => {
       });
   
       if (response.ok) {
+        // Update doctorData with editedData
+        setDoctorData((prevDoctorData) => ({
+          ...prevDoctorData,
+          Email: editedData.Email,
+          HourlyRate: editedData.HourlyRate,
+          Affiliation: editedData.Affiliation,
+        }));
+  
         toast.success('Information Updated Successfully', {
           position: 'top-right',
-          autoClose: 3000, // 3 seconds
+          autoClose: 3000,
         });
         setIsEditing(false);
       } else {
-        // Handle error response
         console.error('Error:', response.status, response.statusText);
       }
     } catch (error) {
-      // Handle network-related errors
       console.error('Network Error:', error.message);
     }
   };
@@ -195,6 +201,7 @@ export const Doctor = () => {
 </div>
       <SidebarDR
       username={doctorData.Username}
+      onLogout={Logout}
       />
       <div className="home_page">
       <div className="home_page_content" >
@@ -238,10 +245,11 @@ export const Doctor = () => {
   <div className="line">
     <EmailIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
     {isEditing ? (
-      <input
+        <input
         type="text"
-        name="email"
-        value={editedData.email}
+        className="info1"
+        name="Email"
+        value={editedData.Email}
         onChange={handleInputChange}
         style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
       />
@@ -255,6 +263,7 @@ export const Doctor = () => {
     {isEditing ? (
       <input
         type="text"
+        className="info1"
         name="HourlyRate"
         value={editedData.HourlyRate}
         onChange={handleInputChange}
@@ -269,19 +278,24 @@ export const Doctor = () => {
     <PhoneIcon color='#2CAED8' boxSize={6} style={{ margin: 0, padding: 0, display: "inline-block" }} />
     {isEditing ? (
       <input
-        type="text"
-        name="affiliation"
-        value={editedData.Affiliation}
-        onChange={handleInputChange}
-        style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
-      />
+      type="text"
+      className="info1"
+      name="Affiliation"
+      value={editedData.Affiliation}
+      onChange={handleInputChange}
+      style={{ margin: '0px 0px 0px 19px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}
+    />
     ) : (
       <div className="info1" style={{ margin: '0px 0px 0px 18px', padding: 0, display: "inline-block", transform: 'translateY(-5px)' }}>{`Affiliation:  ${doctorData.Affiliation}`}</div>
     )}
   </div>
 
   <div className="square" style={{transform: 'translateX(550px) translateY(-220px)'}} onClick={isEditing ? handleSaveClick : handleEditClick}>
-    <EditIcon boxSize={8} />
+    {isEditing ? (
+      <CheckCircleIcon boxSize={8} />
+    ) : (
+      <EditIcon boxSize={8} />
+    )}
   </div>
 </Box>
 
@@ -408,7 +422,7 @@ export const Doctor = () => {
 
      
          
-          <Link to="/doctor-home/myAvailability" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
+          <Link to="/doctor-home/myAvailability" className="box2av" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
        
           {/* ahmedaliiiiii */}
 
@@ -423,7 +437,7 @@ export const Doctor = () => {
 
 
             <Link to={`myPatients/${doctorData.Username}`}>
-            <Box className="box22" >My Patients</Box>
+            <Box className="box2mp" >My Patients</Box>
             </Link>
           </div>
         </div>

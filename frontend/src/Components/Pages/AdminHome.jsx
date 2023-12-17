@@ -126,6 +126,7 @@ export const AdminHome = () => {
      <div style={{ position: 'fixed', top: '0', left: '0', right: '0', zIndex: '1000'}}>
       <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} onLogout={Logout} />
       <SidebarAdmin
+      onLogout={Logout}
       />
       </div>
       <div className="home_page">
@@ -174,12 +175,7 @@ export const AdminHome = () => {
             </div>
             </Box>
 
-            <Box className="boxL1" >
-            {/* <div className="boxT">Recent</div> */}
-            <Link to="pharmaRequests" className="box23" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Pharmacists Requests</Link>
-            <Link to="/medicineControl" className="box24"style={{ color: '#4C4C4C', textDecoration: 'none' }} >Medicine Control</Link>
-            
-            </Box>
+           
           </div>
 
           
@@ -283,8 +279,8 @@ export const AdminHome = () => {
          
       
           <Link to="admin-packs" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Packages</Link>
-            <Link to="admin-requests" className="box21" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Dr Requests</Link>
-            <Link to="admin-users" className="box22" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Users</Link>
+            <Link to="admin-requests" className="box2dq" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Dr Requests</Link>
+            <Link to="admin-users" className="box2u" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Users</Link>
 
           </div>
         </div>
