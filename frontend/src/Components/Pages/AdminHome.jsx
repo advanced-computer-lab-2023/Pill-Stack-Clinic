@@ -175,12 +175,7 @@ export const AdminHome = () => {
             </div>
             </Box>
 
-            <Box className="boxL1" >
-            {/* <div className="boxT">Recent</div> */}
-            <Link to="pharmaRequests" className="box23" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Pharmacists Requests</Link>
-            <Link to="/medicineControl" className="box24"style={{ color: '#4C4C4C', textDecoration: 'none' }} >Medicine Control</Link>
-            
-            </Box>
+           
           </div>
 
           

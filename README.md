@@ -538,19 +538,35 @@ Viwing all doctor's applications
  ![Alt text](screenshots/View_MyPatients.png)
 7. Doctor can view the details of a patient by selecting the desired patient.In this page, doctor can manage prescriptions, add health records, chat with patient. 
   ![Alt text](screenshots/onePatient.png) 
-
-
-
-
-
-
-
-
-
-
+  ![Alt text](screenshots/prescrip.png)
+  ![Alt text](screenshots/chatDoc.png) 
+8. From the side bar `Personal/Followups` shows the doctor the follow up requests, where the doc can accept and reject.
+   ![Alt text](screenshots/followups.png) 
 
 5. The chat icon on the bottom right side in the home page , allows you to chat with patients and pharmacists.
 ![Alt text](screenshots/chat_With_PatPharm.png)
+### As an Admin:
+1. Open `http://localhost:3000/ ` to view the landing page in your browser.  
+![Alt text](screenshots/Landing.png)
+2. Select `Join Now` and redirection to login page occurs
+ ![Alt text](screenshots/image-13.png) 
+3. Enter your credentials and a redirection the the doctor-home page will occur.
+ ![Alt text](screenshots/adminHome.png) 
+ 4. Through Packages, the admin can edit and add packages
+  ![Alt text](screenshots/managePack.png) 
+5. Through `doctor requests`, the admin can view all requests sumbitted and accept or reject.
+  ![Alt text](screenshots/docRequests.png) 
+![Alt text](screenshots/Doc_Request.png) 
+6. Through `Users`, the admin can view all users on the system and remove any user or add new Admin.
+![Alt text](screenshots/adminP.png) 
+![Alt text](screenshots/Add_Admin.png) 
+
+
+
+
+
+
+
 
 
 
