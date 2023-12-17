@@ -422,7 +422,7 @@ export const Doctor = () => {
 
      
          
-          <Link to="/doctor-home/myAvailability" className="box2" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
+          <Link to="/doctor-home/myAvailability" className="box2av" style={{ color: '#4C4C4C', textDecoration: 'none' }}>Availabilty</Link>
        
           {/* ahmedaliiiiii */}
 
@@ -437,7 +437,7 @@ export const Doctor = () => {
 
 
             <Link to={`myPatients/${doctorData.Username}`}>
-            <Box className="box22" >My Patients</Box>
+            <Box className="box2mp" >My Patients</Box>
             </Link>
           </div>
         </div>
