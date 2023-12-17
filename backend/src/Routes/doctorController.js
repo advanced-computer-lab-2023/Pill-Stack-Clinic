@@ -63,7 +63,6 @@ const updateContractStatus=async(req,res)=>{
   
   const editProfileInfo = async (req, res) => {
     const { id } = req.params;
-  
     try {
       const profile = await doctorModel.findById(id);
       if (!profile) {
@@ -71,9 +70,9 @@ const updateContractStatus=async(req,res)=>{
       }
   
       // Update the specific fields based on the JSON data sent in the request body
-      profile.Email = req.body.email;
+      profile.Email = req.body.Email;
       profile.HourlyRate = req.body.HourlyRate;
-      profile.Affiliation = req.body.affiliation;
+      profile.Affiliation = req.body.Affiliation;
   
       await profile.save();
   
