@@ -155,6 +155,8 @@ import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import wallpaper from '../UI/Images/tealWall.jpg'
+import Navigation2 from "../UI/Navigation2";
+import '../UI/Styles/innerPages.css';
 
 //mdb style
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
@@ -240,6 +242,9 @@ function PatientRegisterForm() {
     }
   };
   return (
+    <>
+    <Navigation2
+    />
     <div className="container-fluid">
   <div className="row justify-content-center">
     <MDBContainer fluid className=' d-flex justify-content-center'  
@@ -337,7 +342,7 @@ function PatientRegisterForm() {
     </MDBContainer>
 </div>
 </div>
-
+</>
   );
 }
 
