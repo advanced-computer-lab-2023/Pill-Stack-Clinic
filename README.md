@@ -534,6 +534,14 @@ Viwing all doctor's applications
  ![Alt text](screenshots/Availibility_Slots.png) 
 5. Through the `Appointments` page the doctor can view  his past and upcoming appointments. Cancelling,rescheduling, and accessing the appointment can all happen in this page
  ![Alt text](screenshots/docApp.png) 
+6. Through the `My patients` page the dcotor can view his patients.
+ ![Alt text](screenshots/View_MyPatients.png)
+7. Doctor can view the details of a patient by selecting the desired patient.In this page, doctor can manage prescriptions, add health records, chat with patient. 
+  ![Alt text](screenshots/onePatient.png) 
+
+
+
+
 
 
 
