@@ -195,6 +195,7 @@ export const Doctor = () => {
 </div>
       <SidebarDR
       username={doctorData.Username}
+      onLogout={Logout}
       />
       <div className="home_page">
       <div className="home_page_content" >

@@ -126,6 +126,7 @@ export const AdminHome = () => {
      <div style={{ position: 'fixed', top: '0', left: '0', right: '0', zIndex: '1000'}}>
       <WithSubnavigation username={adminData.Username} onOpenModal={onOpen} onLogout={Logout} />
       <SidebarAdmin
+      onLogout={Logout}
       />
       </div>
       <div className="home_page">
